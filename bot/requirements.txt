@@ -13,15 +13,18 @@ requests==2.34.2           # requêtes sync (extra, general)
 
 # ── API dashboard (FastAPI) ─────────────────────────────────────────
 fastapi==0.141.1           # backend REST du dashboard
+pydantic==2.13.5           # schémas de validation (dépendance FastAPI, épinglée)
 uvicorn==0.53.0            # serveur ASGI
 slowapi==0.1.10            # limitation de débit
 aiosqlite==0.22.1          # bases SQLite async (config + modules)
+aiofiles==25.1.0           # fichiers async (logging)
 
 # ── Config / utilitaires ────────────────────────────────────────────
 python-dotenv==1.2.3       # chargement du .env
 PyYAML==6.0.3              # config.yml
 colorama==0.4.6            # couleurs console
 psutil==7.2.2              # stats système (API admin)
+pytz==2026.3.post1         # fuseaux horaires (giveaways)
 
 # ── Musique (Lavalink v4) ───────────────────────────────────────────
 wavelink==3.5.2            # client Lavalink v4 (API v3 : Playable, Pool)
@@ -34,6 +37,7 @@ mcstatus==14.2.0           # statut serveurs Minecraft
 
 # ── IA / traduction / voix ──────────────────────────────────────────
 openai==3.18.0             # client OpenAI-compatible (Groq via API_BASE_URL)
+google-generativeai==0.8.6 # Gemini (optionnel : import gardé en try/except dans ai.py ; package DÉPRÉCIÉ par Google → migrer vers `google.genai` un jour)
 duckduckgo-search==6.3.7   # recherche web pour l'IA (6.x : dernière ligne avec AsyncDDGS, requis par utils/ai_utils.py — 7+/8 l'ont supprimé)
 langdetect==1.0.9          # détection de langue (TTS)
 gTTS==2.5.4                # synthèse vocale

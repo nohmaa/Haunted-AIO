@@ -14,6 +14,13 @@
 - URLs mises à jour : badge GitHub + `git clone` + `GIT_ADDRESS` (`README.md`, `bot/README.md`).
 - Ligne « Repo d'origine » ci-dessous conservée pour l'historique.
 
+## 2026-09-23 — Dépendances manquantes (audit AST complet)
+Crash Pterodactyl `No module named 'pytz'` : l'audit manuel avait raté des imports. Nouvel audit exhaustif par AST de tous les `.py` (`audit_imports.py`, hors stdlib et paquets locaux).
+- Ajoutés à `bot/requirements.txt` (dernières versions PyPI vérifiées) : `pytz==2026.3.post1` (giveaways), `aiofiles==25.1.0` (logging), `pydantic==2.13.5` (explicite), `google-generativeai==0.8.6` (Gemini, import gardé en try/except — package déprécié par Google, migrer vers `google.genai` plus tard).
+- `imagine.py` (`from prodia… import`) : **code mort**, jamais chargé (`cogs/__init__.py` ne l'importe pas, aucune référence) + aucun paquet `prodia`/`prodia-python` n'existe sur PyPI → rien à installer, à supprimer ou réparer plus tard.
+- Supprimé : `bot/cogs/commands/leveling_original.py` (backup corrompu, null bytes, jamais importé).
+- Vérifications : install complète en venv vierge OK, `import pytz/aiofiles/google.generativeai/pydantic` OK, `compileall` OK sur tout `bot/`.
+
 ## 2026-09-23 — Fix crash Pterodactyl (pip sauté + CWD + BDD suivies)
 Cause du crash `ModuleNotFoundError: No module named 'aiohttp'` : avec la méthode git, `REQUIREMENTS_FILE` restait à `requirements.txt` (racine) alors que le fichier est dans `bot/` → le garde `if [[ -f … ]]` de l'egg sautait l'install pip en silence.
 - Docs Pterodactyl (`README.md`, `bot/README.md`) : méthode git documentée en premier (`GIT_ADDRESS`+`BRANCH=main`+`AUTO_UPDATE=1`, `PY_FILE=bot/haunted.py`, `REQUIREMENTS_FILE=bot/requirements.txt` + avertissement), upload manuel en alternative.
