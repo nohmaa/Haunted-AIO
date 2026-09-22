@@ -4,6 +4,12 @@
 > Objectifs actuels : (1) traduction en français, (2) nouvelle identité **Haunted**, (3) activation/désactivation des modules depuis le dashboard.
 > Mettre à jour ce fichier à chaque changement (date + fichiers + comportement).
 
+## 2026-09-23 — Repo renommé `Haunted-AIO`
+- Renommage GitHub `ZyroX-CV2-AIO-With-Dashboard` → `Haunted-AIO` (fait manuellement côté web).
+- Remote local mis à jour (`origin` → `https://github.com/nohmaa/Haunted-AIO.git`).
+- URLs mises à jour : badge GitHub + `git clone` + `GIT_ADDRESS` (`README.md`, `bot/README.md`).
+- Ligne « Repo d'origine » ci-dessous conservée pour l'historique.
+
 ## 2026-09-23 — Fix crash Pterodactyl (pip sauté + CWD + BDD suivies)
 Cause du crash `ModuleNotFoundError: No module named 'aiohttp'` : avec la méthode git, `REQUIREMENTS_FILE` restait à `requirements.txt` (racine) alors que le fichier est dans `bot/` → le garde `if [[ -f … ]]` de l'egg sautait l'install pip en silence.
 - Docs Pterodactyl (`README.md`, `bot/README.md`) : méthode git documentée en premier (`GIT_ADDRESS`+`BRANCH=main`+`AUTO_UPDATE=1`, `PY_FILE=bot/haunted.py`, `REQUIREMENTS_FILE=bot/requirements.txt` + avertissement), upload manuel en alternative.

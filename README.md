@@ -19,7 +19,7 @@
 </p>
 <p>
   <a href="LICENSE"><img src="https://img.shields.io/badge/Licence-MIT-red?style=for-the-badge"/></a>
-  <a href="https://github.com/nohmaa/ZyroX-CV2-AIO-With-Dashboard"><img src="https://img.shields.io/badge/GitHub-Haunted-181717?style=for-the-badge&logo=github&logoColor=white"/></a>
+  <a href="https://github.com/nohmaa/Haunted-AIO"><img src="https://img.shields.io/badge/GitHub-Haunted-181717?style=for-the-badge&logo=github&logoColor=white"/></a>
 </p>
 
 </div>
@@ -156,8 +156,8 @@ Haunted/
 **1 — Cloner le dépôt**
 
 ```bash
-git clone https://github.com/nohmaa/ZyroX-CV2-AIO-With-Dashboard
-cd ZyroX-CV2-AIO-With-Dashboard/bot
+git clone https://github.com/nohmaa/Haunted-AIO
+cd Haunted-AIO/bot
 ```
 
 **2 — Installer les dépendances**
@@ -377,7 +377,7 @@ Le bot se déploie sur un serveur **Pterodactyl** avec l'egg générique **pytho
 **2 — Récupérer les fichiers (méthode git, recommandée)**
 
 - Dans l'onglet **Startup**, laissez `User Uploaded Files` (`USER_UPLOAD`) à `0` et renseignez :
-  - `Git Repo Address` (`GIT_ADDRESS`) : `https://github.com/nohmaa/ZyroX-CV2-AIO-With-Dashboard`
+  - `Git Repo Address` (`GIT_ADDRESS`) : `https://github.com/nohmaa/Haunted-AIO`
   - `Git Branch` (`BRANCH`) : `main`
   - `Auto Update` (`AUTO_UPDATE`) : `1` (le serveur se met à jour à chaque redémarrage ; `.env` et bases SQLite ne sont pas écrasées car ignorées par git)
 - Le dépôt est cloné à la racine du serveur : le point d'entrée est donc `bot/haunted.py` et les dépendances `bot/requirements.txt`.

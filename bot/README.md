@@ -314,7 +314,7 @@ Le bot se déploie sur un serveur **Pterodactyl** avec l'egg générique **pytho
 **2 — Récupérer les fichiers (méthode git, recommandée)**
 
 - Dans l'onglet **Startup**, laissez `User Uploaded Files` (`USER_UPLOAD`) à `0` et renseignez :
-  - `Git Repo Address` (`GIT_ADDRESS`) : `https://github.com/nohmaa/ZyroX-CV2-AIO-With-Dashboard`
+  - `Git Repo Address` (`GIT_ADDRESS`) : `https://github.com/nohmaa/Haunted-AIO`
   - `Git Branch` (`BRANCH`) : `main`
   - `Auto Update` (`AUTO_UPDATE`) : `1`
 - Le dépôt est cloné à la racine : le point d'entrée est donc `bot/haunted.py` et les dépendances `bot/requirements.txt`.
