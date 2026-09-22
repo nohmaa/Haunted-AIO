@@ -47,6 +47,15 @@ build/
 .env.local
 .env.*.local
 
+# Données runtime du bot — modifiées à chaque exécution, recréées
+# automatiquement au démarrage (CREATE TABLE IF NOT EXISTS / fichiers
+# JSON). Ne jamais les commiter : sinon `git pull` échoue sur les
+# serveurs (ex. Pterodactyl avec AUTO_UPDATE=1).
+bot/db/*.db
+bot/*.db
+bot/db/counting.json
+bot/jsondb/*.json
+
 # Ignore node_modules
 node_modules/
 package-lock.json

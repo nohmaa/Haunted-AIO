@@ -374,21 +374,28 @@ Le bot se déploie sur un serveur **Pterodactyl** avec l'egg générique **pytho
 - Vérifiez que l'egg *python generic* est importé (Nests → Import Egg → URL `https://eggs.pterodactyl.io/egg/generic-python-generic`).
 - Créez un serveur avec cet egg et sélectionnez l'image Docker `Python 3.13` (`ghcr.io/ptero-eggs/yolks:python_3.13`).
 
-**2 — Uploader les fichiers**
+**2 — Récupérer les fichiers (méthode git, recommandée)**
 
-- Dans l'onglet **Startup**, mettez `User Uploaded Files` (`USER_UPLOAD`) à `1`.
-- Via **Files** (ou SFTP), uploadez le **contenu du dossier `bot/`** à la racine du serveur (`haunted.py`, `requirements.txt`, `cogs/`, `api/`, `core/`, `utils/`, … à la racine, pas dans un sous-dossier — le bot utilise des chemins relatifs comme `db/`).
+- Dans l'onglet **Startup**, laissez `User Uploaded Files` (`USER_UPLOAD`) à `0` et renseignez :
+  - `Git Repo Address` (`GIT_ADDRESS`) : `https://github.com/nohmaa/ZyroX-CV2-AIO-With-Dashboard`
+  - `Git Branch` (`BRANCH`) : `main`
+  - `Auto Update` (`AUTO_UPDATE`) : `1` (le serveur se met à jour à chaque redémarrage ; `.env` et bases SQLite ne sont pas écrasées car ignorées par git)
+- Le dépôt est cloné à la racine du serveur : le point d'entrée est donc `bot/haunted.py` et les dépendances `bot/requirements.txt`.
+
+*Alternative — upload manuel : mettez `USER_UPLOAD` à `1` et uploadez via **Files** (ou SFTP) le **contenu du dossier `bot/`** à la racine du serveur (`haunted.py`, `requirements.txt`, `cogs/`, `api/`, `core/`, `utils/`, … à la racine, pas dans un sous-dossier — le bot utilise des chemins relatifs comme `db/`). Dans ce cas `PY_FILE=haunted.py` et `REQUIREMENTS_FILE=requirements.txt`.*
 
 **3 — Régler le démarrage**
 
-Dans l'onglet **Startup** :
+Dans l'onglet **Startup** (méthode git) :
 
 | Variable | Valeur |
 |---|---|
-| `App py file` (`PY_FILE`) | `haunted.py` |
-| `Requirements file` (`REQUIREMENTS_FILE`) | `requirements.txt` |
+| `App py file` (`PY_FILE`) | `bot/haunted.py` |
+| `Requirements file` (`REQUIREMENTS_FILE`) | `bot/requirements.txt` |
 
-À chaque (re)démarrage, l'egg installe automatiquement les dépendances (`pip install -U -r requirements.txt`).
+⚠️ Ne laissez pas `REQUIREMENTS_FILE` à `requirements.txt` : le fichier est dans `bot/`, et sans lui l'installation pip est silencieusement sautée (`ModuleNotFoundError` au démarrage).
+
+À chaque (re)démarrage, l'egg installe automatiquement les dépendances (`pip install -U -r bot/requirements.txt`).
 
 **4 — Détection du démarrage**
 

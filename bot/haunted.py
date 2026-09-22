@@ -22,6 +22,12 @@ from datetime import datetime
 import random
 import time
 
+# Toujours travailler depuis le dossier du bot : les chemins relatifs
+# (db/, jsondb/, .env…) doivent fonctionner quel que soit le dossier
+# depuis lequel le script est lancé (ex. Pterodactyl exécute
+# /home/container/bot/haunted.py avec /home/container comme dossier courant).
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 import aiohttp
 import discord
 from discord import Spotify

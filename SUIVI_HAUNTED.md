@@ -4,6 +4,13 @@
 > Objectifs actuels : (1) traduction en français, (2) nouvelle identité **Haunted**, (3) activation/désactivation des modules depuis le dashboard.
 > Mettre à jour ce fichier à chaque changement (date + fichiers + comportement).
 
+## 2026-09-23 — Fix crash Pterodactyl (pip sauté + CWD + BDD suivies)
+Cause du crash `ModuleNotFoundError: No module named 'aiohttp'` : avec la méthode git, `REQUIREMENTS_FILE` restait à `requirements.txt` (racine) alors que le fichier est dans `bot/` → le garde `if [[ -f … ]]` de l'egg sautait l'install pip en silence.
+- Docs Pterodactyl (`README.md`, `bot/README.md`) : méthode git documentée en premier (`GIT_ADDRESS`+`BRANCH=main`+`AUTO_UPDATE=1`, `PY_FILE=bot/haunted.py`, `REQUIREMENTS_FILE=bot/requirements.txt` + avertissement), upload manuel en alternative.
+- `bot/haunted.py` : `os.chdir()` vers son propre dossier au démarrage — les chemins relatifs (`db/`, `jsondb/`, `.env`) fonctionnent quel que soit le CWD (l'egg lance depuis `/home/container`).
+- BDD/JSON runtime désuivis de git (`git rm --cached` : `bot/db/*.db`, `bot/*.db`, `bot/db/counting.json`, `bot/jsondb/*.json`) + `.gitignore` : le bot les recrée seul (`CREATE TABLE IF NOT EXISTS`, gardes `os.path.exists`). Sans ça, `AUTO_UPDATE=1` aurait fait échouer les `git pull` futurs (fichiers modifiés localement).
+- À faire côté serveur : mettre `REQUIREMENTS_FILE=bot/requirements.txt` dans Startup puis redémarrer (récupère aussi le fix CWD via `AUTO_UPDATE`).
+
 ## 2026-09-23 — Renommage `CodeX.py` → `haunted.py`
 - `git mv bot/CodeX.py bot/haunted.py` (historique conservé).
 - Docstrings mises à jour : `bot/api/dependencies.py`, `bot/api/server.py` (+ « Haunted Bot Dashboard »), `bot/utils/tunnel.py`.
