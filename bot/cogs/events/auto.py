@@ -17,7 +17,7 @@ from utils.emoji import ARROWRED, ZMODULE
 from discord.utils import *
 from core import zyrox, Cog
 from utils.Tools import *
-from utils.config import BotName, serverLink
+from utils.config import BotName, serverLink, SUPPORT_SERVER
 from discord.ext import commands
 from discord.ui import Button, View
 
@@ -31,14 +31,14 @@ class Autorole(Cog):
         async for entry in guild.audit_logs(limit=3):
             if entry.action == discord.AuditLogAction.bot_add:
                 embed = discord.Embed(
-                   description=f"{ZMODULE} **Thanks for adding me.**\n\n{ARROWRED} My default prefix is `>`\n{ARROWRED}> Use the `>help` command to see a list of commands\n{ARROWRED} For detailed guides, FAQ and information, visit our **[Support Server](https://discord.gg/codexdev)**",
+                   description=f"{ZMODULE} **Thanks for adding me.**\n\n{ARROWRED} My default prefix is `>`\n{ARROWRED}> Use the `>help` command to see a list of commands\n{ARROWRED} For detailed guides, FAQ and information, visit our **[Support Server]({SUPPORT_SERVER})**",
                     color=0xFF0000
                )
                 embed.set_thumbnail(url=entry.user.avatar.url if entry.user.avatar else entry.user.default_avatar.url)
                 embed.set_author(name=f"{guild.name}", icon_url=guild.me.display_avatar.url)
                
                 website_button = Button(label='Website', style=discord.ButtonStyle.link, url='https://.vercel.app')
-                support_button = Button(label='Support', style=discord.ButtonStyle.link, url='https://discord.gg/codexdev')
+                support_button = Button(label='Support', style=discord.ButtonStyle.link, url=SUPPORT_SERVER)
                 vote_button = Button(label='Vote for Me', style=discord.ButtonStyle.link, url=f'https://top.gg/bot/{self.bot.user.id}/vote')
                 view = View()
                 view.add_item(support_button)

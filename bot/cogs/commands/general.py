@@ -92,7 +92,7 @@ class AvatarView(View):
       await interaction.response.edit_message(embed=embed)
 
 
-from utils.config import BotName
+from utils.config import BotName, SUPPORT_SERVER
 
 class General(commands.Cog):
 
@@ -392,7 +392,7 @@ class General(commands.Cog):
       invite_text = (
           "```Empower your server with blazing-fast features and 24/7 support!```\n"
           f"{ZYROXLINKS} **Quick Actions**\n"
-          f">>> **[Invite {BotName}](https://discord.com/oauth2/authorize?client_id=1396114795102470196&permissions=8&integration_type=0&scope=bot+applications.commands)**\n"
-          "**[Support Server](https://discord.gg/codexdev)**"
+          f">>> **[Invite {BotName}](https://discord.com/oauth2/authorize?client_id={ctx.bot.user.id}&permissions=8&integration_type=0&scope=bot+applications.commands)**\n"
+          f"**[Support Server]({SUPPORT_SERVER})**"
       )
       await ctx.send(view=CV2(f"{ZYROXCONNECTION} {BotName} Integration Hub!", invite_text))

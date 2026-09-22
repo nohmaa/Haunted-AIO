@@ -13,7 +13,7 @@
 # ╚══════════════════════════════════════════════════════════════════╝
 
 """
-Centralized emoji module for the Zyrox bot.
+Centralized emoji module for the Haunted bot.
 All emoji definitions are stored here for easy management and consistency.
 """
 

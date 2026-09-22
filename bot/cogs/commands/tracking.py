@@ -21,7 +21,7 @@ from utils.cv2 import CV2
 INVITE_DB = "db/invite.db"
 EMOJI_INVITE = ARROWRED
 
-from utils.config import BotName
+from utils.config import BotName, SUPPORT_SERVER
 
 class Tracking(commands.Cog):
     def __init__(self, bot):
@@ -157,7 +157,7 @@ class Tracking(commands.Cog):
             f"**Fake:** `{fake}`\n"
             f"**Left:** `{left}`\n"
             f"**Rejoins:** `{rejoin}`\n\n"
-            f"{EMOJI_INVITE} **Get {BotName} Premium Lifetime [Join Support Here](https://discord.gg/codexdev)**"
+            f"{EMOJI_INVITE} **Get {BotName} Premium Lifetime [Join Support Here]({SUPPORT_SERVER})**"
         )
         await ctx.send(view=CV2(f"Invite Log - {member.name}", desc))
 

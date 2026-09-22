@@ -13,6 +13,7 @@
 # ╚══════════════════════════════════════════════════════════════════╝
 
 import discord
+from utils.config import SUPPORT_SERVER
 from discord.ext import commands
 from discord.ui import Button, View
 
@@ -44,7 +45,7 @@ class Nitro(commands.Cog):
         claim_button = Button(
             style=discord.ButtonStyle.primary,
             label="Click me!",
-            url="https://discord.gg/codexdev",
+            url=SUPPORT_SERVER,
             disabled=False,
         )
 

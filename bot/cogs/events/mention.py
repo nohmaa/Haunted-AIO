@@ -13,7 +13,7 @@
 # ╚══════════════════════════════════════════════════════════════════╝
 
 from utils import getConfig
-from utils.config import BotName
+from utils.config import BotName, SUPPORT_SERVER
 import discord
 from utils.emoji import ARROWRED, CODEBASE, HEART3, INDEX, ZYROXLINKS
 from discord.ui import LayoutView, TextDisplay, Separator, Container, ActionRow, Select
@@ -87,8 +87,8 @@ class MentionSelectView(LayoutView):
             )
         elif selected == "Links":
             content = (
-                f"**[Invite {BotName}](https://discord.com/oauth2/authorize?client_id=1396114795102470196)**\n"
-                "**[Join Support Server](https://discord.gg/codexdev)**"
+                f"**[Invite {BotName}](https://discord.com/oauth2/authorize?client_id={self.message.guild.me.id}&permissions=8&integration_type=0&scope=bot+applications.commands)**\n"
+                f"**[Join Support Server]({SUPPORT_SERVER})**"
             )
 
         new_container = Container(

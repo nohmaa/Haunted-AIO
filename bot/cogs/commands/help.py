@@ -157,7 +157,7 @@ class HelpCommand(commands.HelpCommand):
     )
 
     embed.set_footer(
-      text=f"Requested By {self.context.author} | [Support](https://discord.gg/codexdev)",
+      text=f"Requested By {self.context.author} | [Support]({SUPPORT_SERVER})",
     )
     
     view = vhelp.View(mapping=mapping, ctx=self.context, homeembed=embed, ui=2)

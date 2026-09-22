@@ -13,7 +13,7 @@
 # ╚══════════════════════════════════════════════════════════════════╝
 
 """
-HTTPS Tunnel for the ZyroX API — Cloudflare Tunnel via pycloudflared.
+HTTPS Tunnel for the Haunted API — Cloudflare Tunnel via pycloudflared.
 
 Zero manual installs. Just:
   1. pip install pycloudflared  (already in requirements.txt)
@@ -28,16 +28,16 @@ How to get your CF_TUNNEL_TOKEN (browser only, no CLI needed)
 1. Go to https://one.dash.cloudflare.com
 2. Networks → Tunnels → Create a tunnel
 3. Choose "Cloudflared" as connector type
-4. Give it a name (e.g. zyrox-api) and click Save
+4. Give it a name (e.g. haunted-api) and click Save
 5. On the "Install connector" step, find the token in the command shown:
       cloudflared tunnel run --token <YOUR_TOKEN_HERE>
    Copy just the token string.
 6. Go to "Published Application Routes" tab → Add a Published Application Routes:
-      Subdomain: zyrox-api   Domain: yourdomain.com   Service: http://localhost:8000
+      Subdomain: haunted-api   Domain: yourdomain.com   Service: http://localhost:8000
    (Or use any domain you have on Cloudflare)
 7. Paste the token into your .env:
       CF_TUNNEL_TOKEN = "eyJhIjoiX..."
-      CF_TUNNEL_URL   = "https://zyrox-api.yourdomain.com"
+      CF_TUNNEL_URL   = "https://haunted-api.yourdomain.com"
 
 That's the permanent URL — never changes between restarts.
 Unlimited bandwidth, unlimited requests, free.

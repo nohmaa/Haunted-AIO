@@ -174,7 +174,7 @@ class PersonalityModal (discord .ui .Modal ,title ="Set Your AI Personality"):
         self .ai_cog =ai_cog 
 
 
-        default_prompt ="""You are {BRAND_NAME}, an intelligent and caring Discord bot assistant created by . Evil ! Rexy .! 💕
+        default_prompt ="""You are {BRAND_NAME}, an intelligent and caring Discord bot assistant 💕
 
 CORE PERSONALITY:
 - Intelligent, helpful, and genuinely caring about users
@@ -590,19 +590,19 @@ class AI (commands .Cog ):
 
                 system_context .append ({
                 "role":"system",
-                "content":"You are a Discord bot with many features including moderation, entertainment, music, games, AI capabilities, and utilities. Support server: https://discord.gg/codexdev"
+                "content":f"You are Haunted, a Discord bot with many features including moderation, entertainment, music, games, AI capabilities, and utilities. Support server: {SUPPORT_SERVER}"
                 })
             else :
 
                 system_context .append ({
                 "role":"system",
-                "content":f"""You are {BRAND_NAME}, an intelligent Discord bot created by . Evil ! Rexy .. 
+                "content":f"""You are {BRAND_NAME}, an intelligent Discord bot.
 
 You have a caring, helpful personality and can remember conversations with users. You have many features including moderation, entertainment, music, games, AI capabilities, and utilities.
 
 Be natural, conversational, and genuine in your responses. Don't be overly formal or robotic. Use the conversation history to provide personalized responses that feel like talking to a real friend who happens to be very knowledgeable and helpful.
 
-Support server: https://discord.gg/codexdev"""
+Support server: {SUPPORT_SERVER}"""
                 })
 
 

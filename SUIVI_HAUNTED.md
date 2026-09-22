@@ -4,6 +4,18 @@
 > Objectifs actuels : (1) traduction en français, (2) nouvelle identité **Haunted**, (3) activation/désactivation des modules depuis le dashboard.
 > Mettre à jour ce fichier à chaque changement (date + fichiers + comportement).
 
+## 2026-09-23 — Identités restantes dans le bot
+Inventaire par script AST (hors filigranes) + corrections :
+- Bannière console `on_ready` : art COCX → art HAUNTED (`bot/haunted.py`).
+- `"""Zyrox Games"""` → `"""Haunted Games"""`, docstrings `emoji.py`/`tunnel.py` → Haunted/haunted-api.
+- **Liens support centralisés** : nouveau `SUPPORT_SERVER` (`.env`, défaut `discord.gg/codexdev`) utilisé par `server`/`serverLink` et 15 endroits (blacklist, bienvenue, invite, help, noprefix, nitro, tracking, mention, musique, on_guild). Pour changer de serveur support : une seule variable.
+- **Bug identité critique** : la commande `invite` et le menu `mention` pointaient vers l'ancien `client_id=1396114795102470196` (l'ancien bot !) → URL construite avec l'ID du bot en ligne (`ctx.bot.user.id` / `guild.me.id`).
+- **Bug liens musique** : les titres ajoutés en file pointaient vers le serveur support → vraie URI (`track.uri`, `external_urls.spotify` avec replis).
+- Prompts IA : nom Haunted + suppression du texte créateur corrompu (« created by . Evil ! Rexy .. »).
+- Volontairement inchangés : classe `zyrox`, dossier `cogs/zyrox/`, constantes d'emojis `ZYROX_*`, filigranes de crédit, URLs tierces (codexdevs.in, grainy-gradients).
+- Reste : liens `discord.gg/codexdev` par défaut tant que vous ne renseignez pas votre propre `SUPPORT_SERVER` ; mentions créateurs (stats Team Info, mention Developer Info) à mettre à jour avec vos IDs.
+- Vérification : `compileall` OK, plus aucune URL support en dur hors valeur par défaut.
+
 ## 2026-09-23 — Installation simplifiée (.env d'abord)
 - `README.md` : parcours réécrit — prérequis en checklist avec liens, `.env` **avant** l'install, modèle annoté (où trouver chaque valeur), ordre bot → dashboard, et ✅ « ça marche si » avec la ligne `NEXT_PUBLIC_API_URL` à copier.
 - `bot/README.md` et `dashboard/README.md` alignés sur le même ordre (`.env` en étape 1, renvoi vers la version guidée du README racine).
