@@ -135,7 +135,18 @@ Ouvrez [http://localhost:3000](http://localhost:3000) et connectez-vous avec Dis
 
 ## ✦ Mise en production
 
-Le dashboard ne tourne pas sur l'image Python de Pterodactyl (réservée au bot) : servez-le depuis toute machine avec **Node.js 22+**.
+Le dashboard ne tourne pas sur l'image Python de Pterodactyl (réservée au bot).
+
+### Option A — Vercel (recommandé)
+
+1. Sur [vercel.com](https://vercel.com) → **Add New → Project** → importez `Haunted-AIO` → **Root Directory** : `dashboard`.
+2. Dans **Settings → Environment Variables**, ajoutez toutes les clés du tableau « Référence des variables » (avec les valeurs de production ci-dessous).
+3. **Deploy** → notez l'URL. Si elle diffère de `NEXTAUTH_URL`, mettez à jour puis **Redeploy** (les `NEXT_PUBLIC_*` sont figées au build).
+4. Dans Discord → votre application → **OAuth2 → Redirects**, ajoutez `https://votre-app.vercel.app/api/auth/callback/discord`.
+
+### Option B — Node.js manuel
+
+Sur toute machine avec Node.js 22+ :
 
 ```bash
 npm run build

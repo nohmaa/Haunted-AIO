@@ -443,7 +443,40 @@ Le bot affiche cette ligne dans la console quand il est connecté — le panel p
 - Créez le fichier `.env` (via **Files**) en copiant `.env.example`, puis renseignez au minimum `TOKEN`, `OWNER_IDS`, `DASHBOARD_API_KEY` et le tunnel Cloudflare (`CF_TUNNEL_TOKEN`, `CF_TUNNEL_URL`).
 - Onglet **Console** → **Start**. `pycloudflared` télécharge le binaire automatiquement au premier lancement.
 
-> Le dashboard Next.js ne tourne pas sur cette image Python : lancez-le en local (`npm run dev`) ou sur toute machine avec Node.js 22+ (`npm run build` puis `npm start`), en pointant `NEXT_PUBLIC_API_URL` vers l'URL du tunnel du bot.
+> Le dashboard Next.js ne tourne pas sur cette image Python : lancez-le en local (`npm run dev`) ou hébergez-le (Vercel ci-dessous, ou toute machine avec Node.js 22+), en pointant `NEXT_PUBLIC_API_URL` vers l'URL du tunnel du bot.
+
+### 🌐 Dashboard — Vercel
+
+1. Sur [vercel.com](https://vercel.com) → **Add New → Project** → importez `Haunted-AIO` → **Root Directory** : `dashboard` (le preset Next.js est détecté automatiquement).
+2. Dans **Settings → Environment Variables**, ajoutez :
+   ```env
+   NEXT_PUBLIC_API_URL=https://haunted-api.votredomaine.com/api/v1
+   NEXT_PUBLIC_DASHBOARD_API_KEY=le_meme_secret_que_cote_bot
+   NEXTAUTH_URL=https://votre-app.vercel.app
+   NEXTAUTH_SECRET=<openssl rand -base64 32>
+   DISCORD_CLIENT_ID=...
+   DISCORD_CLIENT_SECRET=...
+   NEXT_PUBLIC_ADMIN_IDS=votre_id_discord
+   NEXT_PUBLIC_BRAND_NAME="Haunted"
+   NEXT_PUBLIC_BRAND_NAME_WORD="H"
+   ```
+3. **Deploy** → notez l'URL (ex. `https://votre-app.vercel.app`).
+4. Si l'URL diffère de `NEXTAUTH_URL`, mettez à jour la variable → **Redeploy** (les variables `NEXT_PUBLIC_*` sont figées au build : tout changement impose un redeploy).
+5. Dans le portail Discord → votre application → **OAuth2 → Redirects**, ajoutez :
+   ```
+   https://votre-app.vercel.app/api/auth/callback/discord
+   ```
+
+### 🌐 Dashboard — Node.js manuel
+
+Sur toute machine avec Node.js 22+ :
+
+```bash
+cd dashboard
+npm install
+npm run build
+npm start   # http://localhost:3000, derrière un reverse proxy en prod
+```
 
 ---
 

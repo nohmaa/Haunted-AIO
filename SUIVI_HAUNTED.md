@@ -4,6 +4,9 @@
 > Objectifs actuels : (1) traduction en français, (2) nouvelle identité **Haunted**, (3) activation/désactivation des modules depuis le dashboard.
 > Mettre à jour ce fichier à chaque changement (date + fichiers + comportement).
 
+## 2026-09-23 — Setup Vercel du dashboard dans les docs
+- `README.md` (section Déploiement) + `dashboard/README.md` (« Mise en production ») : pas-à-pas Vercel (Root Directory `dashboard`, variables, redirect OAuth, redeploy obligatoire après changement des `NEXT_PUBLIC_*`) + option Node.js manuel conservée.
+
 ## 2026-09-23 — Constat prod (bot en ligne, rien à changer)
 - Log 23:39 : bot OK (`Loaded & Online!`, tunnel live, 264 commandes + 89 slash synchronisées).
 - 4 échecs EmojiSync (`BugHunterLvl2`, `error`, `HypesquadEvents`, `PartneredServerOwner`) : **bénins**. Le sync retélécharge la source depuis `cdn.discordapp.com/emojis/{ancien_ID}.webp` et ces IDs (badges d'autres apps) ne s'y trouvent plus → 404 ignoré, sync marquée complète (140/144 OK). Pour faire taire : `EMOJI_SYNC=false` une fois stable.
