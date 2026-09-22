@@ -28,6 +28,22 @@ import time
 # /home/container/bot/haunted.py avec /home/container comme dossier courant).
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
+# Vérification des dépendances AVANT tout import : sur Pterodactyl, si
+# REQUIREMENTS_FILE pointe mal, l'egg saute `pip install` en silence et
+# le bot crash ici avec un ModuleNotFoundError brut. Ce garde affiche
+# la cause probable et l'action corrective.
+try:
+    import aiohttp  # noqa: F401
+    import discord  # noqa: F401
+    import fastapi  # noqa: F401
+except ModuleNotFoundError as _e:
+    raise SystemExit(
+        "[Haunted] Dépendance manquante : {}.\n"
+        "  → En local : pip install -r requirements.txt\n"
+        "  → Sur Pterodactyl : vérifiez REQUIREMENTS_FILE=bot/requirements.txt "
+        "dans l'onglet Startup (sans ça, l'installation pip est sautée en silence).".format(_e.name)
+    ) from None
+
 import aiohttp
 import discord
 from discord import Spotify
