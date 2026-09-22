@@ -6,7 +6,7 @@
 # ║                                                                  ║
 # ║            © 2026 Arsonist   — All Rights Reserved              ║
 # ║                                                                  ║
-# ║   discord  ──  https://discord.gg/codexdev                      ║
+# ║   discord  ──  https://discord.gg/DvetGPq9q5                    ║
 # ║                                                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 
@@ -21,7 +21,7 @@ NAME       = BRAND_NAME
 BotName    = BRAND_NAME
 
 # ── Serveur support (modifiable sans toucher au code) ───────────────────────
-SUPPORT_SERVER = os.environ.get("SUPPORT_SERVER", "https://discord.gg/codexdev")
+SUPPORT_SERVER = os.environ.get("SUPPORT_SERVER", "https://discord.gg/DvetGPq9q5")
 
 server     = SUPPORT_SERVER
 serverLink = SUPPORT_SERVER

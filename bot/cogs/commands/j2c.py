@@ -6,7 +6,7 @@
 # ║                                                                  ║
 # ║            © 2026 Arsonist   — All Rights Reserved              ║
 # ║                                                                  ║
-# ║   discord  ──  https://discord.gg/codexdev                      ║
+# ║   discord  ──  https://discord.gg/DvetGPq9q5                    ║
 # ║                                                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 

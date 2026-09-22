@@ -4,6 +4,13 @@
 > Objectifs actuels : (1) traduction en français, (2) nouvelle identité **Haunted**, (3) activation/désactivation des modules depuis le dashboard.
 > Mettre à jour ce fichier à chaque changement (date + fichiers + comportement).
 
+## 2026-09-23 — Licence Arsonist + serveur support
+- `LICENSE` (racine, `bot/`, `dashboard`) : `Copyright (c) 2026 Arsonist`.
+- Nouveau lien support `https://discord.gg/DvetGPq9q5` : défaut `SUPPORT_SERVER` (`config.py`), `.env.example`, tables des READMEs, `help_footer` (EN+FR), et ligne discord des 268 filigranes (cadres réalignés).
+- Le bot en ligne bascule dessus au prochain redémarrage (`AUTO_UPDATE=1`) sans toucher au `.env` (variable non définie = défaut).
+- Restent volontaires : crédits historiques « basé sur ZyroX-CV2 par CodeX Devs » (README + SUIVI), `codexdevs.in` (User-Agent map.py), `ch` (config.py).
+- Vérification : `compileall` OK.
+
 ## 2026-09-23 — Filigranes de crédit → Arsonist
 Selon vos réponses : nom `Arsonist`, Discord gardé (`discord.gg/codexdev`), ligne YouTube supprimée, ligne GitHub supprimée.
 - Script appliqué sur 268 fichiers (`.py/.tsx/.ts/.mjs/.js`, en-têtes ≤16 lignes) : `© 2026 CodeX Devs` → `© 2026 Arsonist` (largeur de cadre conservée), suppression des lignes YouTube/GitHub.

@@ -226,7 +226,7 @@ python haunted.py
 |---|---|---|
 | `TOKEN` | — | Token du bot Discord |
 | `brand_name` | `Haunted` | Nom affiché du bot |
-| `SUPPORT_SERVER` | `https://discord.gg/codexdev` | Serveur Discord des liens « Support » (mettez le vôtre) |
+| `SUPPORT_SERVER` | `https://discord.gg/DvetGPq9q5` | Serveur Discord des liens « Support » (mettez le vôtre) |
 | `OWNER_IDS` | — | IDs Discord des propriétaires, séparés par des virgules |
 | `LAVALINK_HOST` | — | Hôte du serveur Lavalink (sans protocole) |
 | `LAVALINK_PASSWORD` | — | Mot de passe Lavalink |
