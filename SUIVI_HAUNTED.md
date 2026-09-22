@@ -4,6 +4,11 @@
 > Objectifs actuels : (1) traduction en français, (2) nouvelle identité **Haunted**, (3) activation/désactivation des modules depuis le dashboard.
 > Mettre à jour ce fichier à chaque changement (date + fichiers + comportement).
 
+## 2026-09-23 — Constat prod (bot en ligne, rien à changer)
+- Log 23:39 : bot OK (`Loaded & Online!`, tunnel live, 264 commandes + 89 slash synchronisées).
+- 4 échecs EmojiSync (`BugHunterLvl2`, `error`, `HypesquadEvents`, `PartneredServerOwner`) : **bénins**. Le sync retélécharge la source depuis `cdn.discordapp.com/emojis/{ancien_ID}.webp` et ces IDs (badges d'autres apps) ne s'y trouvent plus → 404 ignoré, sync marquée complète (140/144 OK). Pour faire taire : `EMOJI_SYNC=false` une fois stable.
+- Bannière console encore ancienne sur ce log → simple `Restart` (récupère `AUTO_UPDATE=1` : bannière Haunted + correctifs identité).
+
 ## 2026-09-23 — Assets : aucun ZyroX + fix fond leaderboard
 - Vérifié visuellement : `background.png` (texture sombre neutre), `leaderboardlevel.gif` (scène anime sans texte), `minecraft.ttf` → aucun nom/logo ZyroX. Grep binaire : rien.
 - Bug trouvé au passage : `leveling.py` cherchait le fond en absolu `/home/container/assets/…` (inexistant en méthode git → fond uni silencieux). Nouveau helper `_leaderboard_bg()` : chemin relatif au dossier du bot d'abord, repli historique sinon. Couverture git + upload.
