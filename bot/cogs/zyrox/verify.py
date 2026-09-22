@@ -17,6 +17,8 @@ from utils.emoji import THUNDER
 from discord .ext import commands 
 
 class _verify(commands .Cog ):
+
+    module_key = "verification"
     def __init__ (self ,bot ):
         self.bot=bot 
 

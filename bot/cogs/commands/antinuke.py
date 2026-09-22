@@ -26,6 +26,8 @@ from utils.config import *
 
 
 class Antinuke(commands.Cog):
+
+  module_key = "antinuke"
   def __init__(self, bot):
     self.bot = bot
     self.bot.loop.create_task(self.initialize_db())

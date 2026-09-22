@@ -335,6 +335,8 @@ class MusicControlView(LayoutView):
 
 
 class Music(commands.Cog):
+
+    module_key = "music"
     def __init__(self, client: zyrox):
         self.client = client
         self.client.loop.create_task(self.connect_nodes())

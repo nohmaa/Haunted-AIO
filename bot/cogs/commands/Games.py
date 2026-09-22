@@ -26,6 +26,8 @@ import asyncio
 
 
 class Games(Cog):
+
+    module_key = "games"
     """Zyrox Games"""
 
     def __init__(self, client: zyrox):

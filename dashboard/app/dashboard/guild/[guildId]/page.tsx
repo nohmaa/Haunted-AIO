@@ -15,9 +15,9 @@
  */
 
 import React from "react";
-import { 
-  Plus, 
-  Settings2, 
+import Link from "next/link";
+import {
+  Settings2,
   Terminal, 
   Database,
   Search,
@@ -31,10 +31,10 @@ import {
 
 export default function GuildOverviewPage({ params }: { params: { guildId: string } }) {
   const modules = [
-    { title: "Auto Moderation", desc: "Anti-spam, bad words, and links protection.", icon: ShieldCheck, status: "Active" },
-    { title: "Ticket System", desc: "Helpdesk for user support and inquiries.", icon: Ticket, status: "Configured" },
-    { title: "Leveling", desc: "Gamify your community with XP and ranks.", icon: BarChart4, status: "Active" },
-    { title: "Event Logging", desc: "Detailed audit logs for every server event.", icon: FileText, status: "Active" },
+    { title: "Auto-modération", desc: "Anti-spam, insultes et protection contre les liens.", icon: ShieldCheck, status: "Actif" },
+    { title: "Tickets", desc: "Assistance pour le support et les demandes.", icon: Ticket, status: "Configuré" },
+    { title: "Niveaux", desc: "Animez votre communauté avec les XP et les rangs.", icon: BarChart4, status: "Actif" },
+    { title: "Journaux d'événements", desc: "Journaux détaillés de chaque événement du serveur.", icon: FileText, status: "Actif" },
   ];
 
   return (
@@ -43,9 +43,9 @@ export default function GuildOverviewPage({ params }: { params: { guildId: strin
       <div className="space-y-8">
         <section>
           <div className="flex items-center gap-2 mb-6">
-            <h2 className="text-xl font-bold text-white tracking-tight">Active Modules</h2>
+            <h2 className="text-xl font-bold text-white tracking-tight">Modules actifs</h2>
             <div className="h-[2px] flex-1 bg-slate-800" />
-            <Plus className="h-4 w-4 text-slate-600 cursor-pointer hover:text-white transition-colors" />
+            <Link href={`/dashboard/guild/${params.guildId}/modules`} className="text-[11px] font-bold text-primary hover:underline whitespace-nowrap">Gérer les modules →</Link>
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -68,7 +68,7 @@ export default function GuildOverviewPage({ params }: { params: { guildId: strin
 
         <section>
           <div className="flex items-center gap-2 mb-6">
-            <h2 className="text-xl font-bold text-white tracking-tight">System Console</h2>
+            <h2 className="text-xl font-bold text-white tracking-tight">Console système</h2>
             <div className="h-[2px] flex-1 bg-slate-800" />
           </div>
           <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 font-mono text-xs overflow-hidden shadow-2xl">
@@ -92,14 +92,14 @@ export default function GuildOverviewPage({ params }: { params: { guildId: strin
           <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-125 transition-transform">
             <Database className="h-48 w-48 text-white" />
           </div>
-          <h2 className="text-2xl font-black text-white mb-2 italic tracking-tighter">Database Status</h2>
-          <p className="text-slate-400 text-sm mb-8 max-w-[280px]">All guild data is encrypted and replicated across our high-performance edge network.</p>
+          <h2 className="text-2xl font-black text-white mb-2 italic tracking-tighter">État de la base de données</h2>
+          <p className="text-slate-400 text-sm mb-8 max-w-[280px]">Toutes les données du serveur sont chiffrées et répliquées sur notre réseau haute performance.</p>
           
           <div className="space-y-4 relative z-10">
             {[
-              { label: 'Uptime', value: '99.98%', icon: Zap },
-              { label: 'Sync Delay', value: '12ms', icon: Activity },
-              { label: 'Region', value: 'Global Edges', icon: GlobalizationIcon }
+              { label: 'Disponibilité', value: '99,98 %', icon: Zap },
+              { label: 'Latence sync', value: '12 ms', icon: Activity },
+              { label: 'Région', value: 'Europe', icon: GlobalizationIcon }
             ].map((stat) => (stat.icon && 
               <div key={stat.label} className="flex items-center justify-between p-4 bg-black/20 backdrop-blur-md rounded-2xl border border-white/5">
                 <div className="flex items-center gap-3">
@@ -115,7 +115,7 @@ export default function GuildOverviewPage({ params }: { params: { guildId: strin
         </section>
 
         <section className="bg-[#141B2D] border border-slate-800 rounded-3xl p-8">
-           <h2 className="text-xl font-bold text-white mb-6">Security Context</h2>
+           <h2 className="text-xl font-bold text-white mb-6">Contexte de sécurité</h2>
            <div className="flex items-center gap-6">
               <div className="h-20 w-20 rounded-full border-4 border-emerald-500/20 flex items-center justify-center relative shadow-[0_0_20px_rgba(16,185,129,0.1)]">
                 <div className="h-16 w-16 rounded-full border-4 border-emerald-500 flex items-center justify-center text-emerald-500 font-black text-xl italic">
@@ -123,8 +123,8 @@ export default function GuildOverviewPage({ params }: { params: { guildId: strin
                 </div>
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">Trust Factor</h3>
-                <p className="text-slate-400 text-sm">Bot is fully authenticated with administrator privileges.</p>
+                <h3 className="text-lg font-bold text-white">Indice de confiance</h3>
+                <p className="text-slate-400 text-sm">Le bot est entièrement authentifié avec les permissions administrateur.</p>
               </div>
            </div>
         </section>

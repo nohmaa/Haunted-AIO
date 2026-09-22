@@ -269,6 +269,8 @@ class CategoryConfigView(discord.ui.View):
         self.stop()
 
 class TicketCog(commands.Cog, name="Ticket System"):
+
+    module_key = "tickets"
     def __init__(self, bot):
         self.bot, self.db = bot, TicketDatabase(DB_PATH)
         self.bot.loop.create_task(self.load_persistent_views())

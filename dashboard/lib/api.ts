@@ -230,6 +230,19 @@ export const api = {
       body: JSON.stringify(data),
     }),
 
+  // Modules on/off
+  getModules: (guildId: string) => request<{ guild_id: number; modules: any[] }>(`/guilds/${guildId}/modules`),
+  setModule: (guildId: string, moduleKey: string, enabled: boolean) =>
+    request<any>(`/guilds/${guildId}/modules/${moduleKey}`, {
+      method: "PATCH",
+      body: JSON.stringify({ enabled }),
+    }),
+  updateModules: (guildId: string, modules: Record<string, boolean>) =>
+    request<{ guild_id: number; modules: any[] }>(`/guilds/${guildId}/modules`, {
+      method: "PATCH",
+      body: JSON.stringify({ modules }),
+    }),
+
   // Admin
   getAdminStats: () => request<AdminStats>("/admin/stats"),
   getAdminConfig: () => request<AdminConfig>("/admin/config"),

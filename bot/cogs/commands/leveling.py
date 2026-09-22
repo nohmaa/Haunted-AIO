@@ -287,6 +287,7 @@ class LevelConfigModal (discord .ui .Modal ,title ="Leveling System Configuratio
             )
 
 class Leveling (commands .Cog ):
+    module_key = "leveling"
     def __init__ (self ,bot ):
         self .bot =bot 
         self .message_cooldowns ={}

@@ -18,6 +18,7 @@ from discord .ext import commands
 
 
 class _leveling (commands .Cog ):
+    module_key = "leveling"
     def __init__ (self ,bot ):
         self .bot =bot 
 

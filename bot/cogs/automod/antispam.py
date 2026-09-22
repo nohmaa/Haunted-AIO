@@ -20,6 +20,8 @@ import asyncio
 from datetime import timedelta
 
 class AntiSpam(commands.Cog):
+
+    module_key = "automod"
     def __init__(self, bot):
         self.bot = bot
         self.spam_threshold = 5

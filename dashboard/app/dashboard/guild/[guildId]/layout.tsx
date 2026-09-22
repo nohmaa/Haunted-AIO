@@ -62,10 +62,10 @@ export default async function GuildLayout({
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] border-2 border-dashed border-red-500/20 rounded-3xl bg-red-500/5 p-12 text-center">
         <ShieldAlert className="h-16 w-16 text-red-500 mb-6 opacity-50" />
-        <h2 className="text-2xl font-bold text-white">Access Denied</h2>
-        <p className="text-slate-400 mt-2 max-w-md">{error || "This guild does not exist or you do not have permission to manage it."}</p>
+        <h2 className="text-2xl font-bold text-white">Accès refusé</h2>
+        <p className="text-slate-400 mt-2 max-w-md">{error || "Ce serveur n'existe pas ou vous n'avez pas la permission de le gérer."}</p>
         <Link href="/dashboard/guilds" className="mt-8">
-          <Button variant="outline">Back to Servers</Button>
+          <Button variant="outline">Retour aux serveurs</Button>
         </Link>
       </div>
     );
@@ -76,7 +76,7 @@ export default async function GuildLayout({
       {/* Breadcrumb / Back button */}
       <Link href="/dashboard/guilds" className="inline-flex items-center gap-2 text-slate-500 hover:text-white transition-colors text-sm font-medium group">
         <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-        Back to all servers
+        Retour à tous les serveurs
       </Link>
 
       {/* Guild Header */}
@@ -109,14 +109,14 @@ export default async function GuildLayout({
                   ID: {guildId}
                 </span>
               </div>
-              <p className="text-slate-400 mt-1 italic opacity-80">Server Owner Dashboard</p>
+              <p className="text-slate-400 mt-1 italic opacity-80">Tableau de bord du serveur</p>
             </div>
 
             <div className="flex flex-wrap gap-4">
               {[
-                { label: "Members", value: guild.member_count, icon: Users, color: "text-blue-400" },
-                { label: "Roles", value: guild.role_count, icon: Shield, color: "text-emerald-400" },
-                { label: "Channels", value: guild.channel_count, icon: Hash, color: "text-purple-400" },
+                { label: "Membres", value: guild.member_count, icon: Users, color: "text-blue-400" },
+                { label: "Rôles", value: guild.role_count, icon: Shield, color: "text-emerald-400" },
+                { label: "Salons", value: guild.channel_count, icon: Hash, color: "text-purple-400" },
               ].map((item) => (
                 <div key={item.label} className="flex items-center gap-3 bg-slate-800/50 px-5 py-3 rounded-2xl border border-white/5 shadow-inner">
                   <div className={cn("p-2 rounded-lg bg-slate-900/50", item.color)}>
@@ -134,12 +134,12 @@ export default async function GuildLayout({
           <div className="flex flex-col sm:flex-row lg:flex-col gap-3">
             <Link href={`/dashboard/guild/${guildId}`} className="w-full">
              <Button className="w-full">
-               Refresh 
+               Actualiser 
              </Button>
             </Link>
              <Link href={`/dashboard/guild/${guildId}/settings`} className="w-full">
               <Button variant="secondary" className="w-full">
-                Server Settings
+                Paramètres du serveur
               </Button>
              </Link>
           </div>

@@ -21,6 +21,8 @@ from datetime import timedelta
 import asyncio
 
 class AntiEmojiSpam(commands.Cog):
+
+    module_key = "automod"
     def __init__(self, bot):
         self.bot = bot
         self.emoji_threshold = 5  

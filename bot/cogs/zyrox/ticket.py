@@ -19,6 +19,8 @@ from discord.ext import commands
 
 class _ticket(commands.Cog):
 
+    module_key = "tickets"
+
     def __init__(self, bot):
 
         self.bot = bot

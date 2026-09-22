@@ -22,6 +22,8 @@ from typing import Dict, List, Optional
 from utils.cv2 import CV2, build_container
 
 class JoinToCreate(commands.Cog):
+
+    module_key = "j2c"
     def __init__(self, bot):
         self.bot = bot
         self.private_channels: Dict[int, Dict] = {}

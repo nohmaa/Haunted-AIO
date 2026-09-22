@@ -21,6 +21,8 @@ from datetime import timedelta
 import re
 
 class AntiInvite(commands.Cog):
+
+    module_key = "automod"
     def __init__(self, bot):
         self.bot = bot
         self.invite_pattern = re.compile(r'(https?://)?(www\.)?(discord\.gg|discordapp\.com/invite|discord\.com/invite)/\S+')

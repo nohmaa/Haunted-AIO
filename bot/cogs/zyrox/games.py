@@ -18,6 +18,8 @@ from discord.ext import commands
 
 
 class _games(commands.Cog):
+
+    module_key = "games"
     def __init__(self, bot):
         self.bot = bot
 

@@ -17,6 +17,8 @@ from utils.emoji import ZBOT
 from discord.ext import commands
 
 class _automod(commands.Cog):
+
+    module_key = "automod"
     def __init__(self, bot):
         self.bot = bot
 

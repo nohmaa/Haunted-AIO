@@ -27,9 +27,9 @@ export default async function GuildSettingsPage({ params }: { params: { guildId:
       <div>
         <h2 className="text-2xl font-bold text-white flex items-center gap-2">
           <Settings2 className="h-6 w-6 text-primary" />
-          General Settings
+          Paramètres généraux
         </h2>
-        <p className="text-slate-400 mt-1">Manage core bot configuration for this server.</p>
+        <p className="text-slate-400 mt-1">Gérez la configuration principale du bot pour ce serveur.</p>
       </div>
 
       <SettingsForm initialPrefix={config.prefix} guildId={params.guildId} />

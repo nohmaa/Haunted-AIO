@@ -107,6 +107,8 @@ class ConfirmDisable(LayoutView):
 
         
 class Automod(commands.Cog):
+
+    module_key = "automod"
     def __init__(self, bot):
         self.bot = bot
         self.default_punishment = "Mute"

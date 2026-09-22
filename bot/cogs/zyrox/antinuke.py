@@ -18,6 +18,8 @@ from discord.ext import commands
 
 
 class _antinuke(commands.Cog):
+
+    module_key = "antinuke"
     def __init__(self, bot):
         self.bot = bot
 

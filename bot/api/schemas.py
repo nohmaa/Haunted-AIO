@@ -322,6 +322,25 @@ class LeaderboardEntry(BaseModel):
     level: int
     xp: int
 
+# --- Module on/off (dashboard) ---
+
+class ModuleState(BaseModel):
+    key: str
+    label: str
+    description: str
+    route: Optional[str] = None
+    enabled: bool = True
+
+class ModulesConfig(BaseModel):
+    guild_id: int
+    modules: List[ModuleState]
+
+class ModulesUpdate(BaseModel):
+    modules: Dict[str, bool]
+
+class ModuleKeyUpdate(BaseModel):
+    enabled: bool
+
 # --- Admin Schemas ---
 
 class AdminNodeStatus(BaseModel):

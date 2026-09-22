@@ -24,11 +24,11 @@ import { AuthProvider } from "@/components/auth-provider";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
-const brandName = process.env.NEXT_PUBLIC_BRAND_NAME || "Zyrox";
+const brandName = process.env.NEXT_PUBLIC_BRAND_NAME || "Haunted";
 
 export const metadata: Metadata = {
-  title: `${brandName} - Ultimate Discord Bot`,
-  description: "Advanced Discord community management and security.",
+  title: `${brandName} - Bot Discord ultime`,
+  description: "Gestion et sécurité avancées pour communautés Discord.",
 };
 
 export default function RootLayout({
@@ -37,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${outfit.variable}`}>
+    <html lang="fr" className={`${inter.variable} ${outfit.variable}`}>
       <body className="font-sans antialiased text-slate-200">
         <AuthProvider>
           {children}

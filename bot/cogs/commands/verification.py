@@ -1082,6 +1082,7 @@ class ButtonOnlyVerificationView (discord .ui .View ):
             await interaction .response .send_message (embed =embed ,ephemeral =True )
 
 class Verification (commands .Cog ):
+    module_key = "verification"
     def __init__ (self ,bot ):
         self .bot =bot 
         self .bot .loop .create_task (self .create_tables ())

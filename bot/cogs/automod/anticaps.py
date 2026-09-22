@@ -20,6 +20,8 @@ import asyncio
 from datetime import timedelta
 
 class AntiCaps(commands.Cog):
+
+    module_key = "automod"
     def __init__(self, bot):
         self.bot = bot
         self.caps_threshold = 70

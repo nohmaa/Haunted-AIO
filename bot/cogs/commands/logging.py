@@ -1121,6 +1121,8 @@ class ChannelSelectView(View):
 
 
 class Logging(commands.Cog):
+
+    module_key = "logging"
     """Comprehensive logging cog with modern UI and expanded event coverage."""
 
     def __init__(self, bot: commands.Bot):

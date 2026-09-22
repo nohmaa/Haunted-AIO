@@ -140,6 +140,24 @@ class zyrox(commands.AutoShardedBot):
                 return
             await self.invoke(ctx)
 
+    async def invoke(self, ctx: Context) -> None:
+        """Bloque les commandes des modules désactivés depuis le dashboard."""
+        try:
+            if ctx.guild is not None and ctx.command is not None and ctx.command.cog is not None:
+                from api.modules_registry import COG_MODULE_MAP, MODULE_LABELS
+                cog = ctx.command.cog
+                key = getattr(cog, "module_key", None) or COG_MODULE_MAP.get(type(cog).__name__)
+                if key:
+                    from utils.modules import is_module_enabled
+                    if not await is_module_enabled(ctx.guild.id, key):
+                        from utils.i18n import t
+                        label = MODULE_LABELS.get(key, key)
+                        await ctx.send(t("module_disabled", module=label))
+                        return
+        except Exception:
+            pass
+        await super().invoke(ctx)
+
 def setup_bot():
     intents = discord.Intents.all()
     bot = zyrox(intents=intents)

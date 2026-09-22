@@ -19,6 +19,8 @@ from discord.ext import commands
 
 class _J2C(commands.Cog):
 
+    module_key = "j2c"
+
     def __init__(self, bot):
 
         self.bot = bot

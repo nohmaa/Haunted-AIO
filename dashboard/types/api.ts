@@ -253,6 +253,19 @@ export interface AutoRoleUpdate {
   humans?: string[];
 }
 
+export interface ModuleState {
+  key: string;
+  label: string;
+  description: string;
+  route: string | null;
+  enabled: boolean;
+}
+
+export interface ModulesConfig {
+  guild_id: number;
+  modules: ModuleState[];
+}
+
 export interface AdminNodeStatus {
   name: string;
   status: string;

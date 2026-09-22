@@ -17,6 +17,7 @@ from utils.emoji import CAST
 from discord .ext import commands 
 
 class _logging (commands .Cog ):
+    module_key = "logging"
     def __init__ (self ,bot ):
         self .bot =bot 
 

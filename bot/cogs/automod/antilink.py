@@ -21,6 +21,8 @@ from datetime import timedelta
 import re
 
 class AntiLink(commands.Cog):
+
+    module_key = "automod"
     def __init__(self, bot):
         self.bot = bot
         self.link_pattern = re.compile(r'http[s]?://\S+')

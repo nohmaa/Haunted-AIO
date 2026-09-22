@@ -18,7 +18,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 TOKEN      = os.environ.get("TOKEN")
-BRAND_NAME = os.environ.get("brand_name", "Zyrox X")
+BRAND_NAME = os.environ.get("brand_name", "Haunted")
 NAME       = BRAND_NAME
 BotName    = BRAND_NAME
 

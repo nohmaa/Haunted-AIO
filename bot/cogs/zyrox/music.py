@@ -18,6 +18,8 @@ from discord.ext import commands
 
 
 class _music(commands.Cog):
+
+    module_key = "music"
     def __init__(self, bot):
         self.bot = bot
 
