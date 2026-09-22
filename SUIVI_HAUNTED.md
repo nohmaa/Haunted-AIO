@@ -4,6 +4,10 @@
 > Objectifs actuels : (1) traduction en français, (2) nouvelle identité **Haunted**, (3) activation/désactivation des modules depuis le dashboard.
 > Mettre à jour ce fichier à chaque changement (date + fichiers + comportement).
 
+## 2026-09-22 — READMEs (FR + Haunted + modules)
+- `README.md` (racine), `bot/README.md`, `dashboard/README.md` réécrits en français : identité **Haunted**, exemples `.env` alignés (`brand_name='Haunted'`, `BOT_LANG`, `Haunted`/`H`), nouvelle section « Modules — activation/désactivation » (table des 19 clés + endpoints), dépannage FR (+ ligne modules), footer Haunted avec crédit d'origine.
+- Vérification : relecture des trois fichiers (pas de code touché, pas de tests requis).
+
 ## 2026-09-22 — Session initiale (état des lieux + fondations)
 Repo d'origine : https://github.com/nohmaa/ZyroX-CV2-AIO-With-Dashboard
 

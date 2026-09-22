@@ -1,17 +1,15 @@
 <div align="center">
 
 ```
-███████╗██╗   ██╗██████╗  ██████╗ ██╗  ██╗
-╚══███╔╝╚██╗ ██╔╝██╔══██╗██╔═══██╗╚██╗██╔╝
-  ███╔╝  ╚████╔╝ ██████╔╝██║   ██║ ╚███╔╝ 
- ███╔╝    ╚██╔╝  ██╔══██╗██║   ██║ ██╔██╗ 
-███████╗   ██║   ██║  ██║╚██████╔╝██╔╝ ██╗
-╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝
+██╗  ██╗ █████╗ ██╗   ██╗███╗   ██╗████████╗███████╗██████╗ 
+██║  ██║██╔══██╗██║   ██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗
+███████║███████║██║   ██║██╔██╗ ██║   ██║   █████╗  ██║  ██║
+██╔══██║██╔══██║██║   ██║██║╚██╗██║   ██║   ██╔══╝  ██║  ██║
+██║  ██║██║  ██║╚██████╔╝██║ ╚████║   ██║   ███████╗██████╔╝
+╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═════╝ 
 ```
 
-<h3>A feature-rich Discord bot paired with a sleek Next.js dashboard</h3>
-
-<a href="https://nexiohost.in"><img src="https://img.shields.io/badge/⭐%20PREMIUM%20HOSTING-NexioHost-FFD700?style=for-the-badge&labelColor=1a1a2e&color=FFD700&logoColor=FFD700"/></a>
+<h3>Un bot Discord riche en fonctionnalités, piloté depuis un dashboard Next.js élégant</h3>
 
 <p>
   <a href="https://python.org"><img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white"/></a>
@@ -20,86 +18,96 @@
   <a href="https://discordpy.readthedocs.io"><img src="https://img.shields.io/badge/Discord.py-v2-5865F2?style=for-the-badge&logo=discord&logoColor=white"/></a>
 </p>
 <p>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-red?style=for-the-badge"/></a>
-  <a href="https://discord.gg/codexdev"><img src="https://img.shields.io/badge/Discord-Join_Server-5865F2?style=for-the-badge&logo=discord&logoColor=white"/></a>
-  <a href="https://youtube.com/@CodeXDevs"><img src="https://img.shields.io/badge/YouTube-CodeXDevs-FF0000?style=for-the-badge&logo=youtube&logoColor=white"/></a>
-  <a href="https://github.com/RayExo"><img src="https://img.shields.io/badge/GitHub-RayExo-181717?style=for-the-badge&logo=github&logoColor=white"/></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/Licence-MIT-red?style=for-the-badge"/></a>
+  <a href="https://github.com/nohmaa/ZyroX-CV2-AIO-With-Dashboard"><img src="https://img.shields.io/badge/GitHub-Haunted-181717?style=for-the-badge&logo=github&logoColor=white"/></a>
 </p>
 
 </div>
 
 ---
 
-## ✦ Overview
+## ✦ Aperçu
 
-ZyroX is a fully-featured Discord bot with a modern web dashboard for managing everything from antinuke to music. Built on `discord.py v2`, `FastAPI`, and `Next.js 14` with Tailwind CSS.
+**Haunted** est un bot Discord complet, accompagné d'un dashboard web moderne pour tout gérer : de l'anti-nuke à la musique. Construit avec `discord.py v2`, `FastAPI` et `Next.js 14` + Tailwind CSS. L'interface (bot et dashboard) est en **français**, et chaque **module peut être activé ou désactivé depuis le dashboard**, serveur par serveur.
+
+> Basé sur [ZyroX-CV2](https://github.com/RayExo) par CodeX Devs — renommé, traduit et étendu (voir `SUIVI_HAUNTED.md`).
 
 ```
-ZyroX-CV2-With-Dashboard/
-├── 🤖  bot/                   Python Discord bot + FastAPI backend
-│   ├── api/                   Dashboard REST API (FastAPI)
-│   ├── cogs/                  All bot features (commands, events, antinuke, automod…)
-│   ├── core/                  Bot client, context, cog base
-│   ├── utils/                 Shared utilities (emoji, tools, sync, cloudflare tunnel…)
-│   ├── games/                 Standalone game modules
-│   ├── assets/                Fonts, backgrounds, GIFs
-│   └── CodeX.py               Entry point
+Haunted/
+├── 🤖  bot/                   Bot Discord Python + backend FastAPI
+│   ├── api/                   API REST du dashboard (FastAPI)
+│   │   ├── modules_registry.py  Registre central des modules on/off
+│   │   └── routes/modules.py    Endpoints GET/PATCH des modules
+│   ├── cogs/                  Toutes les fonctionnalités (commandes, events, antinuke, automod…)
+│   ├── core/                  Client du bot, contexte, classe Cog de base
+│   ├── lang/                  Traductions (lang.en.json, lang.fr.json)
+│   ├── utils/                 Utilitaires partagés (emoji, outils, sync, tunnel Cloudflare…)
+│   │   ├── i18n.py              Helper de traduction FR/EN
+│   │   └── modules.py           État on/off des modules (SQLite)
+│   ├── games/                 Modules de jeux autonomes
+│   ├── assets/                Polices, fonds, GIFs
+│   └── CodeX.py               Point d'entrée
 │
-└── 🌐  dashboard/             Next.js frontend
-    ├── app/                   App Router pages & API routes
-    ├── components/            Reusable UI components
-    ├── hooks/                 Custom React hooks
-    ├── lib/                   API helpers & utilities
-    └── types/                 TypeScript type definitions
+├── 🌐  dashboard/             Frontend Next.js (en français)
+│   ├── app/                   Pages App Router & routes API
+│   │   └── dashboard/guild/[guildId]/modules/  Page d'activation des modules
+│   ├── components/            Composants UI réutilisables
+│   │   └── dashboard/modules-manager.tsx  Interrupteurs on/off par module
+│   ├── hooks/                 Hooks React personnalisés
+│   ├── lib/                   Helpers API & utilitaires
+│   └── types/                 Définitions TypeScript
+│
+└── 📝  SUIVI_HAUNTED.md       Journal des modifications (pour les agents IA/humains)
 ```
 
 ---
 
-## ✦ Features
+## ✦ Fonctionnalités
 
 <table>
 <tr>
 <td width="50%">
 
-**🛡️ Security**
-- Antinuke — ban, kick, channel & role flood, webhook abuse, bot adds, prune
-- Automod — spam, caps, links, invites, mass mentions, emoji spam
-- Anti-member update protection
-- Whitelist / unwhitelist system
-- Emergency lockdown mode
+**🛡️ Sécurité**
+- Anti-nuke — ban, kick, flood de salons & rôles, abus de webhooks, ajouts de bots, prune
+- Auto-modération — spam, majuscules, liens, invitations, mentions de masse, spam d'emojis
+- Protection contre les modifications de membres
+- Système de whitelist / unwhitelist
+- Mode verrouillage d'urgence
 
 </td>
 <td width="50%">
 
-**🎵 Music**
-- Lavalink v4 powered playback
-- YouTube, SoundCloud, JioSaavn search
-- Queue, loop, autoplay, shuffle
-- Seek, rewind, forward controls
-- Fully configurable via `.env`
+**🎵 Musique**
+- Lecture via Lavalink v4
+- Recherche YouTube, SoundCloud, JioSaavn
+- File d'attente, boucle, lecture auto, mélange
+- Contrôles avancer/reculer/position
+- Entièrement configurable via `.env`
 
 </td>
 </tr>
 <tr>
 <td>
 
-**⚙️ Management**
-- Moderation — ban, kick, mute, warn, lock, jail, and more
-- Full logging system
-- Reaction roles, vanity roles, invite tracker
-- Tickets, giveaways, verification
-- Join-to-create voice channels
+**⚙️ Gestion**
+- Modération — ban, kick, muet, avertissement, verrouillage, prison, etc.
+- Système complet de journaux
+- Rôles à réactions, rôles vanity, suivi d'invitations
+- Tickets, giveaways, vérification
+- Salons vocaux temporaires (Join-to-Create)
 
 </td>
 <td>
 
 **🌐 Dashboard**
-- Discord OAuth2 login
-- Per-server settings management
-- Live bot stats & metrics
-- Fully branded & customisable
-- HTTPS via Cloudflare Tunnel (permanent URL)
-- Deploys to Vercel in minutes
+- Connexion via Discord OAuth2
+- Gestion des paramètres par serveur
+- **Activation/désactivation des modules par serveur**
+- Statistiques du bot en direct
+- Entièrement personnalisable (nom, abréviation)
+- HTTPS via tunnel Cloudflare (URL permanente)
+- Déployable sur Vercel en quelques minutes
 
 </td>
 </tr>
@@ -107,22 +115,22 @@ ZyroX-CV2-With-Dashboard/
 <td>
 
 **🎉 Engagement**
-- Leveling & XP system with leaderboard
-- Birthday tracker
-- 12+ mini-games (chess, battleship, wordle, 2048…)
-- AFK system, autorole, autoresponder, sticky messages
-- Counting, blackjack, slots, booster perks
+- Système de niveaux & XP avec classement
+- Suivi des anniversaires
+- 12+ mini-jeux (échecs, bataille navale, wordle, 2048…)
+- AFK, rôles auto, réponses auto, messages épinglés
+- Counting, blackjack, slots, avantages boosters
 
 </td>
 <td>
 
-**🔧 Developer**
-- Application emoji auto-sync on startup
-- Jishaku eval support
-- Slash + prefix commands
-- FastAPI backend with API key auth + rate limiting
-- Cloudflare Tunnel — unlimited bandwidth, permanent URL, zero system installs
-- CodeX Devs watermark on every source file
+**🔧 Développeur**
+- Synchronisation auto des emojis d'application au démarrage
+- Support d'évaluation Jishaku
+- Commandes slash + préfixe
+- Backend FastAPI avec clé API + limitation de débit
+- Tunnel Cloudflare — bande passante illimitée, URL permanente
+- Traductions FR/EN (`bot/lang/`, `bot/utils/i18n.py`)
 
 </td>
 </tr>
@@ -130,29 +138,29 @@ ZyroX-CV2-With-Dashboard/
 
 ---
 
-## ✦ Prerequisites
+## ✦ Prérequis
 
-| Requirement | Version / Notes |
+| Prérequis | Version / Notes |
 |---|---|
-| Python | 3.10 or higher |
-| Node.js | 18 or higher |
-| Lavalink node | v4 |
-| Discord bot token | — |
-| Discord OAuth app | for dashboard login |
-| Cloudflare account (free) | for HTTPS tunnel |
+| Python | 3.10 ou supérieur |
+| Node.js | 18 ou supérieur |
+| Nœud Lavalink | v4 |
+| Token du bot Discord | — |
+| Application Discord OAuth | pour la connexion au dashboard |
+| Compte Cloudflare (gratuit) | pour le tunnel HTTPS |
 
 ---
 
-## ✦ Bot Setup
+## ✦ Installation du bot
 
-**1 — Clone the repo**
+**1 — Cloner le dépôt**
 
 ```bash
-git clone https://github.com/RayExo/ZyroX-CV2-With-Dashboard
-cd ZyroX-CV2-With-Dashboard/bot
+git clone https://github.com/nohmaa/ZyroX-CV2-AIO-With-Dashboard
+cd ZyroX-CV2-AIO-With-Dashboard/bot
 ```
 
-**2 — Install dependencies**
+**2 — Installer les dépendances**
 
 ```bash
 python -m venv .venv
@@ -166,43 +174,43 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-**3 — Configure the environment**
+**3 — Configurer l'environnement**
 
-Copy `.env.example` to `.env` and fill in the values:
+Copiez `.env.example` vers `.env` et renseignez les valeurs :
 
 ```env
-# ── Core ──────────────────────────────────────────────────────────
-TOKEN              = your_discord_bot_token
-brand_name         = 'ZyroX'
+# ── Cœur ────────────────────────────────────────────────────────────
+TOKEN              = votre_token_discord
+brand_name         = 'Haunted'
 
-# ── Owner IDs (comma-separated) ───────────────────────────────────
+# ── IDs propriétaires (séparés par des virgules) ────────────────────
 OWNER_IDS          = 870179991462236170,767979794411028491
 
-# ── Lavalink ──────────────────────────────────────────────────────
-LAVALINK_HOST      = "your-lavalink-host"
-LAVALINK_PASSWORD  = "your_password"
+# ── Lavalink ────────────────────────────────────────────────────────
+LAVALINK_HOST      = "votre-hote-lavalink"
+LAVALINK_PASSWORD  = "votre_mot_de_passe"
 LAVALINK_SECURE    = "true"
 LAVALINK_PORT      = ""
 
-# ── Emoji Sync ────────────────────────────────────────────────────
+# ── Sync des emojis ─────────────────────────────────────────────────
 EMOJI_SYNC         = "true"
 
-# ── API / Dashboard Backend ───────────────────────────────────────
+# ── API / Backend dashboard ─────────────────────────────────────────
 API_ENABLED        = "true"
 API_PORT           = "8000"
-DASHBOARD_API_KEY  = "change_this_to_a_strong_secret"
+DASHBOARD_API_KEY  = "changez_ce_secret_robuste"
 CORS_ORIGINS       = ""
 
-# ── Cloudflare Tunnel ─────────────────────────────────────────────
+# ── Tunnel Cloudflare ───────────────────────────────────────────────
 TUNNEL_ENABLED     = "true"
-CF_TUNNEL_TOKEN    = "your_tunnel_token"
-CF_TUNNEL_URL      = "https://api.yourdomain.com"
+CF_TUNNEL_TOKEN    = "votre_token_tunnel"
+CF_TUNNEL_URL      = "https://api.votredomaine.com"
 
-# ── Webhooks ──────────────────────────────────────────────────────
+# ── Webhooks ────────────────────────────────────────────────────────
 WEBHOOK_URL        = "https://discord.com/api/webhooks/..."
 ```
 
-**4 — Run the bot**
+**4 — Lancer le bot**
 
 ```bash
 python CodeX.py
@@ -210,146 +218,178 @@ python CodeX.py
 
 ---
 
-## ✦ Dashboard Setup
+## ✦ Installation du dashboard
 
-**1 — Install dependencies**
+**1 — Installer les dépendances**
 
 ```bash
 cd dashboard
 npm install
 ```
 
-**2 — Configure the environment**
+**2 — Configurer l'environnement**
 
-Copy `.env.example` to `.env.local`:
+Copiez `.env.example` vers `.env.local` :
 
 ```env
-NEXT_PUBLIC_API_URL           = https://api.yourdomain.com/api/v1
-NEXT_PUBLIC_DASHBOARD_API_KEY = your_shared_api_key
+NEXT_PUBLIC_API_URL           = https://api.votredomaine.com/api/v1
+NEXT_PUBLIC_DASHBOARD_API_KEY = votre_cle_api_partagee
 
 NEXTAUTH_URL                  = http://localhost:3000
-NEXTAUTH_SECRET               = a_long_random_string
+NEXTAUTH_SECRET               = une_chaine_aleatoire_longue
 
-DISCORD_CLIENT_ID             = your_discord_oauth_client_id
-DISCORD_CLIENT_SECRET         = your_discord_oauth_client_secret
+DISCORD_CLIENT_ID             = votre_client_id_oauth_discord
+DISCORD_CLIENT_SECRET         = votre_client_secret_oauth_discord
 
-NEXT_PUBLIC_ADMIN_IDS         = your_discord_user_id
-NEXT_PUBLIC_BRAND_NAME        = "ZyroX"
-NEXT_PUBLIC_BRAND_NAME_WORD   = "ZX"
+NEXT_PUBLIC_ADMIN_IDS         = votre_id_utilisateur_discord
+NEXT_PUBLIC_BRAND_NAME        = "Haunted"
+NEXT_PUBLIC_BRAND_NAME_WORD   = "H"
 ```
 
-**3 — Run locally**
+**3 — Lancer en local**
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+Ouvrez [http://localhost:3000](http://localhost:3000)
 
 ---
 
-## ✦ Environment Reference
+## ✦ Référence des variables
 
 ### Bot — `bot/.env`
 
-| Variable | Default | Description |
+| Variable | Défaut | Description |
 |---|---|---|
-| `TOKEN` | — | Discord bot token |
-| `OWNER_IDS` | — | Comma-separated owner Discord user IDs |
-| `LAVALINK_HOST` | — | Lavalink server hostname (no protocol) |
-| `LAVALINK_PASSWORD` | — | Lavalink password |
+| `TOKEN` | — | Token du bot Discord |
+| `brand_name` | `Haunted` | Nom affiché du bot |
+| `OWNER_IDS` | — | IDs Discord des propriétaires, séparés par des virgules |
+| `LAVALINK_HOST` | — | Hôte du serveur Lavalink (sans protocole) |
+| `LAVALINK_PASSWORD` | — | Mot de passe Lavalink |
 | `LAVALINK_SECURE` | `true` | `true` = HTTPS, `false` = HTTP |
-| `LAVALINK_PORT` | _(empty)_ | Port — only needed when `LAVALINK_SECURE=false` |
-| `EMOJI_SYNC` | `true` | Run application emoji sync on startup |
-| `API_ENABLED` | `true` | Start the FastAPI dashboard backend |
-| `API_PORT` | `8000` | Port the backend listens on |
-| `DASHBOARD_API_KEY` | — | Shared secret between bot API and dashboard |
-| `CORS_ORIGINS` | _(empty)_ | Extra CORS-allowed origins, comma-separated |
-| `WEBHOOK_URL` | — | Discord webhook for command logs |
-| `TUNNEL_ENABLED` | `true` | Expose the API over HTTPS via Cloudflare Tunnel |
-| `CF_TUNNEL_TOKEN` | — | Token from Cloudflare Zero Trust dashboard |
-| `CF_TUNNEL_URL` | — | Your permanent public URL (e.g. `https://api.yourdomain.com`) |
+| `LAVALINK_PORT` | _(vide)_ | Port — uniquement si `LAVALINK_SECURE=false` |
+| `EMOJI_SYNC` | `true` | Synchroniser les emojis d'application au démarrage |
+| `API_ENABLED` | `true` | Démarrer le backend FastAPI du dashboard |
+| `API_PORT` | `8000` | Port d'écoute du backend |
+| `DASHBOARD_API_KEY` | — | Secret partagé entre l'API du bot et le dashboard |
+| `CORS_ORIGINS` | _(vide)_ | Origines CORS supplémentaires, séparées par des virgules |
+| `WEBHOOK_URL` | — | Webhook Discord pour les journaux de commandes |
+| `TUNNEL_ENABLED` | `true` | Exposer l'API en HTTPS via tunnel Cloudflare |
+| `CF_TUNNEL_TOKEN` | — | Token depuis le tableau Cloudflare Zero Trust |
+| `CF_TUNNEL_URL` | — | Votre URL publique permanente (ex. `https://api.votredomaine.com`) |
+| `BOT_LANG` | `fr` | Langue des messages du bot (`fr` ou `en`) |
 
 ### Dashboard — `dashboard/.env.local`
 
 | Variable | Description |
 |---|---|
-| `NEXT_PUBLIC_API_URL` | Full URL to the bot's FastAPI backend — use Cloudflare Tunnel URL |
-| `NEXT_PUBLIC_DASHBOARD_API_KEY` | Must match `DASHBOARD_API_KEY` in the bot |
-| `NEXTAUTH_URL` | Your dashboard's public URL |
-| `NEXTAUTH_SECRET` | Random secret for NextAuth session signing |
-| `DISCORD_CLIENT_ID` | Discord OAuth2 client ID |
-| `DISCORD_CLIENT_SECRET` | Discord OAuth2 client secret |
-| `NEXT_PUBLIC_ADMIN_IDS` | Comma-separated Discord user IDs with admin access |
-| `NEXT_PUBLIC_BRAND_NAME` | Bot name shown in the dashboard UI |
-| `NEXT_PUBLIC_BRAND_NAME_WORD` | Short abbreviation shown in the dashboard |
+| `NEXT_PUBLIC_API_URL` | URL complète du backend FastAPI — utilisez l'URL du tunnel Cloudflare |
+| `NEXT_PUBLIC_DASHBOARD_API_KEY` | Doit correspondre à `DASHBOARD_API_KEY` du bot |
+| `NEXTAUTH_URL` | URL publique de votre dashboard |
+| `NEXTAUTH_SECRET` | Secret aléatoire pour la signature des sessions NextAuth |
+| `DISCORD_CLIENT_ID` | ID client Discord OAuth2 |
+| `DISCORD_CLIENT_SECRET` | Secret client Discord OAuth2 |
+| `NEXT_PUBLIC_ADMIN_IDS` | IDs Discord des administrateurs, séparés par des virgules |
+| `NEXT_PUBLIC_BRAND_NAME` | Nom du bot affiché dans le dashboard |
+| `NEXT_PUBLIC_BRAND_NAME_WORD` | Abréviation affichée dans le dashboard |
 
 ---
 
-## ✦ HTTPS Tunnel (Cloudflare)
+## ✦ Modules — activation / désactivation
 
-The bot uses **pycloudflared** — a Python package that downloads the `cloudflared` binary automatically on first run. No CLI installs, no system packages — works on Pterodactyl and any Python host.
+Depuis le dashboard, page **Modules** d'un serveur : chaque module possède un interrupteur. Un module désactivé ne répond plus aux commandes sur ce serveur (message en français) ; les autres serveurs ne sont pas affectés. Tous les modules sont **activés par défaut**.
 
-**Why Cloudflare over ngrok:**
-- ✅ Unlimited bandwidth & requests — no monthly caps
-- ✅ Permanent URL that never changes between restarts
-- ✅ Free — no paid plan needed
-- ✅ Zero system installs — binary downloads via Python
+| Module | Clé | Page dashboard |
+|---|---|---|
+| Anti-Nuke | `antinuke` | `antinuke` |
+| Auto-modération | `automod` | `automod` |
+| Tickets | `tickets` | `tickets` |
+| Vérification | `verification` | `verification` |
+| Bienvenue | `welcome` | `welcome` |
+| Invitations | `invites` | `invites` |
+| Rôles automatiques | `autorole` | `autorole` |
+| Rôles à réactions | `reactionroles` | `reactionroles` |
+| Salons temporaires | `j2c` | `j2c` |
+| Rôle vocal | `invcrole` | `invcrole` |
+| Rôles vanity | `vanityroles` | `vanityroles` |
+| Réactions auto | `autoreact` | `autoreact` |
+| Rôles personnalisés | `customroles` | `customroles` |
+| MP de bienvenue | `joindm` | `joindm` |
+| Niveaux & XP | `leveling` | `leveling` |
+| Journaux | `logging` | `logging` |
+| Jeux & fun | `games` | (page Modules uniquement) |
+| Musique | `music` | (page Modules uniquement) |
+| Modération | `moderation` | (page Modules uniquement) |
 
-**Setup (browser only, no CLI needed):**
+**Côté technique :**
+- Registre unique : `bot/api/modules_registry.py` (`MODULES`, `COG_MODULE_MAP`)
+- État par serveur en SQLite : `db/modules.db` (`bot/utils/modules.py`)
+- Endpoints : `GET /api/v1/guilds/{guild_id}/modules`, `PATCH /api/v1/guilds/{guild_id}/modules`, `PATCH /api/v1/guilds/{guild_id}/modules/{clé}` avec `{"enabled": true/false}`
+- Garde côté bot : `zyrox.invoke()` refuse les commandes des modules désactivés (chaque cog porte un attribut `module_key`)
 
-1. Go to [one.dash.cloudflare.com](https://one.dash.cloudflare.com) → **Networks → Tunnels → Create a tunnel**
-2. Choose **Cloudflared**, give it a name (e.g. `zyrox-api`), save
-3. On the **Install connector** step, copy the token from the command shown:
+---
+
+## ✦ Tunnel HTTPS (Cloudflare)
+
+Le bot utilise **pycloudflared** — le binaire `cloudflared` est téléchargé automatiquement au premier lancement. Aucune installation système, aucun paquet — fonctionne sur Pterodactyl et tout hébergeur Python.
+
+**Pourquoi Cloudflare plutôt que ngrok :**
+- ✅ Bande passante & requêtes illimitées — sans plafonds mensuels
+- ✅ URL permanente qui ne change jamais entre les redémarrages
+- ✅ Gratuit — aucun abonnement requis
+- ✅ Zéro installation système — binaire téléchargé via Python
+
+**Configuration (navigateur uniquement, pas de CLI) :**
+
+1. Allez sur [one.dash.cloudflare.com](https://one.dash.cloudflare.com) → **Networks → Tunnels → Create a tunnel**
+2. Choisissez **Cloudflared**, donnez-lui un nom (ex. `haunted-api`), enregistrez
+3. À l'étape **Install connector**, copiez le token depuis la commande affichée :
    ```
-   cloudflared tunnel run --token <COPY_THIS>
+   cloudflared tunnel run --token <COPIEZ_CECI>
    ```
-4. Go to **Public Hostname** tab → add a hostname:
-   - Subdomain: `api` · Domain: `yourdomain.com` · Service: `http://localhost:8000`
-5. Add to `bot/.env`:
+4. Onglet **Public Hostname** → ajoutez un nom d'hôte :
+   - Subdomain : `api` · Domain : `votredomaine.com` · Service : `http://localhost:8000`
+5. Ajoutez dans `bot/.env` :
    ```env
    CF_TUNNEL_TOKEN = "eyJhIjoiXXXX..."
-   CF_TUNNEL_URL   = "https://api.yourdomain.com"
+   CF_TUNNEL_URL   = "https://api.votredomaine.com"
    ```
 
-On every startup the console prints:
+À chaque démarrage, la console affiche :
 ```
 ◈ Tunnel: cloudflared binary ready — starting tunnel on port 8000…
-◈ Tunnel: API is live at  https://api.yourdomain.com
-  ↳ NEXT_PUBLIC_API_URL = https://api.yourdomain.com/api/v1
+◈ Tunnel: API is live at  https://api.votredomaine.com
+  ↳ NEXT_PUBLIC_API_URL = https://api.votredomaine.com/api/v1
 ```
 
 ---
 
-## ✦ Deployment
+## ✦ Déploiement
 
-### 🤖 Bot — any Python host
+### 🤖 Bot — tout hébergeur Python
 
-1. Upload the entire `bot/` folder to your host (Pterodactyl, Render, Railway, Fly.io, VPS…)
-2. Set the start command to `python CodeX.py`
-3. Add all environment variables
-4. `pycloudflared` downloads the binary automatically on first run — no extra steps
-
-> Recommended free/cheap hosts: Render · Railway · Fly.io · VPS
->
-> ⭐ **[NexioHost](https://nexiohost.in)** — Premium bot hosting, built for Discord bots. Fast, reliable, and affordable.
+1. Uploadez tout le dossier `bot/` sur votre hébergeur (Pterodactyl, Render, Railway, Fly.io, VPS…)
+2. Commande de démarrage : `python CodeX.py`
+3. Ajoutez toutes les variables d'environnement
+4. `pycloudflared` télécharge le binaire automatiquement au premier lancement — rien d'autre à faire
 
 ### 🌐 Dashboard — Vercel
 
-1. Go to [vercel.com](https://vercel.com) → **Add New Project** → connect your GitHub repo
-2. Set root directory to `dashboard/`
-3. Add all environment variables under **Settings → Environment Variables**
-4. Add the OAuth redirect URI in Discord Developer Portal:
+1. Allez sur [vercel.com](https://vercel.com) → **Add New Project** → connectez votre dépôt GitHub
+2. Dossier racine : `dashboard/`
+3. Ajoutez toutes les variables d'environnement dans **Settings → Environment Variables**
+4. Ajoutez l'URI de redirection OAuth dans le portail développeur Discord :
    ```
-   https://your-app.vercel.app/api/auth/callback/discord
+   https://votre-app.vercel.app/api/auth/callback/discord
    ```
-5. Hit **Deploy** — done ✓
+5. Cliquez **Deploy** — terminé ✓
 
 ---
 
-## ✦ Emoji Sync
+## ✦ Sync des emojis
 
-Runs automatically on startup when `EMOJI_SYNC=true`:
+Tourne automatiquement au démarrage quand `EMOJI_SYNC=true` :
 
 ```
 ★ Starting Application Emoji Sync — 144 unique emojis found in emoji.py
@@ -360,54 +400,54 @@ Runs automatically on startup when `EMOJI_SYNC=true`:
 ★ Restarting bot to load updated emoji IDs...
 ```
 
-| Event | Action |
+| Événement | Action |
 |---|---|
-| New emoji found | Uploaded to application, ID written to `emoji.py` |
-| Stale ID detected | `emoji.py` patched automatically |
-| No changes | Sync completes instantly, no restart |
-| After any patch | Bot restarts itself so fresh IDs are live |
+| Nouvel emoji trouvé | Uploadé dans l'application, ID écrit dans `emoji.py` |
+| ID obsolète détecté | `emoji.py` corrigé automatiquement |
+| Aucun changement | Sync instantanée, pas de redémarrage |
+| Après toute correction | Le bot redémarre pour charger les nouveaux IDs |
 
 ---
 
-## ✦ Troubleshooting
+## ✦ Dépannage
 
-| Problem | Fix |
+| Problème | Solution |
 |---|---|
-| Bot fails to start | Check `TOKEN` is set and bot has correct gateway intents |
-| Music not working | Verify `LAVALINK_HOST`, `LAVALINK_SECURE`, and `LAVALINK_PORT` |
-| Dashboard auth error | Check Discord OAuth client ID/secret and redirect URI |
-| Dashboard can't load data | Confirm `API_ENABLED=true`, bot is running, `NEXT_PUBLIC_API_URL` is correct |
-| Emojis showing as plain text | Run with `EMOJI_SYNC=true` once to upload and patch IDs |
-| CORS errors from dashboard | Add your Vercel URL to `CORS_ORIGINS` in `bot/.env` |
-| Tunnel not starting | Check `CF_TUNNEL_TOKEN` is valid and `pycloudflared` is installed |
-| Tunnel URL changed | Set `CF_TUNNEL_URL` — named tunnels always produce the same URL |
+| Le bot ne démarre pas | Vérifiez `TOKEN` et les intents dans le portail développeur |
+| Musique hors service | Vérifiez `LAVALINK_HOST`, `LAVALINK_SECURE` et `LAVALINK_PORT` |
+| Erreur d'auth du dashboard | Vérifiez l'ID/secret OAuth Discord et l'URI de redirection |
+| Le dashboard ne charge pas les données | Vérifiez `API_ENABLED=true`, bot en ligne, `NEXT_PUBLIC_API_URL` correct |
+| Un module ne répond pas | Vérifiez qu'il est **activé** sur la page Modules du serveur |
+| Emojis affichés en texte brut | Lancez une fois avec `EMOJI_SYNC=true` |
+| Erreurs CORS depuis le dashboard | Ajoutez votre URL Vercel dans `CORS_ORIGINS` (`bot/.env`) |
+| Tunnel ne démarre pas | Vérifiez `CF_TUNNEL_TOKEN` et que `pycloudflared` est installé |
+| URL du tunnel a changé | Renseignez `CF_TUNNEL_URL` — les tunnels nommés gardent la même URL |
 
 ---
 
-## ✦ Security
+## ✦ Sécurité
 
-- Never commit `.env` files — `.gitignore` already covers them
-- Use a strong, unique `NEXTAUTH_SECRET` and `DASHBOARD_API_KEY`
-- Rotate any secret that gets accidentally exposed
-- The bot API is always behind an API key — never expose it without one
+- Ne commitez jamais les fichiers `.env` — `.gitignore` les couvre déjà
+- Utilisez un `NEXTAUTH_SECRET` et un `DASHBOARD_API_KEY` forts et uniques
+- Regénérez tout secret accidentellement exposé
+- L'API du bot est toujours protégée par clé API — ne l'exposez jamais sans elle
+
+---
+
+## ✦ Suivi des modifications
+
+Toutes les modifications (traduction, rebranding, modules) sont journalisées dans [`SUIVI_HAUNTED.md`](SUIVI_HAUNTED.md) — point d'entrée obligatoire pour tout agent IA ou humain qui intervient sur le projet.
 
 ---
 
 <div align="center">
 
-## ✦ CodeX Devs
+## ✦ Haunted
 
-*Built for protection. Designed for style.*
+*Conçu pour protéger. Pensé pour durer.*
 
-<a href="https://discord.gg/codexdev"><img src="https://discord.com/api/guilds/1301573144817045524/widget.png?style=banner2" alt="CodeX Development Discord Server" width="480"/></a>
+Basé sur ZyroX-CV2 par CodeX Devs — voir `SUIVI_HAUNTED.md`.
 
-<p>
-  <a href="https://discord.gg/codexdev"><img src="https://img.shields.io/badge/Discord-Join_Server-5865F2?style=for-the-badge&logo=discord&logoColor=white"/></a>
-  <a href="https://youtube.com/@CodeXDevs"><img src="https://img.shields.io/badge/YouTube-CodeXDevs-FF0000?style=for-the-badge&logo=youtube&logoColor=white"/></a>
-  <a href="https://github.com/RayExo"><img src="https://img.shields.io/badge/GitHub-RayExo-181717?style=for-the-badge&logo=github&logoColor=white"/></a>
-  <a href="https://nexiohost.in"><img src="https://img.shields.io/badge/⭐%20PREMIUM%20HOSTING-NexioHost-FFD700?style=for-the-badge&labelColor=1a1a2e&color=FFD700&logoColor=FFD700"/></a>
-</p>
-
-© 2026 CodeX Devs — MIT License
+© 2026 Haunted — Licence MIT
 
 </div>
