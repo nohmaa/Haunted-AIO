@@ -4,6 +4,12 @@
 > Objectifs actuels : (1) traduction en français, (2) nouvelle identité **Haunted**, (3) activation/désactivation des modules depuis le dashboard.
 > Mettre à jour ce fichier à chaque changement (date + fichiers + comportement).
 
+## 2026-09-23 — Filigranes de crédit → Arsonist
+Selon vos réponses : nom `Arsonist`, Discord gardé (`discord.gg/codexdev`), ligne YouTube supprimée, ligne GitHub supprimée.
+- Script appliqué sur 268 fichiers (`.py/.tsx/.ts/.mjs/.js`, en-têtes ≤16 lignes) : `© 2026 CodeX Devs` → `© 2026 Arsonist` (largeur de cadre conservée), suppression des lignes YouTube/GitHub.
+- Volontairement inchangés : fichiers `LICENSE` (attribution légale d'origine), mentions historiques dans `SUIVI_HAUNTED.md`.
+- Vérifications : `compileall` OK, `npm run build` OK.
+
 ## 2026-09-23 — Identités restantes dans le bot
 Inventaire par script AST (hors filigranes) + corrections :
 - Bannière console `on_ready` : art COCX → art HAUNTED (`bot/haunted.py`).

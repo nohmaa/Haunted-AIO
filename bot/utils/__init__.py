@@ -6,11 +6,9 @@
 # ║   ░█░░░█░█░█░█░█▀▀░▄▀▄   ░█░█░█▀▀░▀▄▀░▀▀█                     ║
 # ║   ░▀▀▀░▀▀▀░▀▀░░▀▀▀░▀░▀   ░▀▀░░▀▀▀░░▀░░▀▀▀                     ║
 # ║                                                                  ║
-# ║            © 2026 CodeX Devs — All Rights Reserved              ║
+# ║            © 2026 Arsonist   — All Rights Reserved              ║
 # ║                                                                  ║
 # ║   discord  ──  https://discord.gg/codexdev                      ║
-# ║   youtube  ──  https://youtube.com/@CodeXDevs                   ║
-# ║   github   ──  https://github.com/RayExo                        ║
 # ║                                                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 
