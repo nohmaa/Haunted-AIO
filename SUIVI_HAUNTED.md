@@ -4,8 +4,15 @@
 > Objectifs actuels : (1) traduction en français, (2) nouvelle identité **Haunted**, (3) activation/désactivation des modules depuis le dashboard.
 > Mettre à jour ce fichier à chaque changement (date + fichiers + comportement).
 
+## 2026-09-23 — Renommage `CodeX.py` → `haunted.py`
+- `git mv bot/CodeX.py bot/haunted.py` (historique conservé).
+- Docstrings mises à jour : `bot/api/dependencies.py`, `bot/api/server.py` (+ « Haunted Bot Dashboard »), `bot/utils/tunnel.py`.
+- Docs : `README.md`, `bot/README.md` (`python haunted.py`, arborescence, `PY_FILE=haunted.py` pour Pterodactyl).
+- Vérification : `compileall` OK sur `haunted.py`, plus aucune référence fonctionnelle à `CodeX.py` (les mentions ci-dessous sont historiques ; filigranes d'attribution CodeX Devs conservés).
+- ⚠️ Serveurs Pterodactyl existants : mettre `PY_FILE` à `haunted.py` dans l'onglet Startup.
+
 ## 2026-09-22 — Déploiement Pterodactyl unique + dépendances à jour
-- Déploiement documenté **uniquement** pour Pterodactyl (egg *python generic*, image `ghcr.io/ptero-eggs/yolks:python_3.13`) : `README.md`, `bot/README.md` (upload du contenu de `bot/` à la racine, `PY_FILE=CodeX.py`, `USER_UPLOAD=1`, `done` = `Loaded & Online!`, `.env` via Files). Mentions Render/Railway/Fly.io/Vercel/NexioHost supprimées des sections déploiement.
+- Déploiement documenté **uniquement** pour Pterodactyl (egg *python generic*, image `ghcr.io/ptero-eggs/yolks:python_3.13`) : `README.md`, `bot/README.md` (upload du contenu de `bot/` à la racine, `PY_FILE=haunted.py`, `USER_UPLOAD=1`, `done` = `Loaded & Online!`, `.env` via Files). Mentions Render/Railway/Fly.io/Vercel/NexioHost supprimées des sections déploiement.
 - `dashboard/README.md` : section Vercel remplacée par « Mise en production » générique Node 22+ (`npm run build` + `npm start`) ; le dashboard ne tourne pas sur l'image Python.
 - `bot/requirements.txt` réécrit : que des dépendances réellement importées, versions épinglées vérifiées sur PyPI (ex. `discord.py==2.7.1`, `fastapi==0.141.1`, `uvicorn==0.53.0`, `wavelink==3.5.2`, `Pillow==12.3.0`, `numpy==2.5.3`, `openai==3.18.0`, `mcstatus==14.2.0`). Exception : `duckduckgo-search==6.3.7` (dernière ligne avec `AsyncDDGS` requis par `utils/ai_utils.py`, supprimé en 7+/8).
 - `dashboard/package.json` : `next 16.3.6`, `react 19.3.0`, `tailwindcss 4.3.3` (+ `@tailwindcss/postcss`), `lucide-react 1.47.0`, `next-auth 4.24.15`, `sonner 2.0.8`, `tailwind-merge 3.7.0`, radix à jour, `typescript 5.9.3` (TS 7 testé : build OK mais `typescript-eslint` incompatible → 5.9.3, dernière 5.x), `eslint 9.39.5` (dernier 9.x : les plugins de `eslint-config-next` ne supportent pas ESLint 10).
@@ -83,7 +90,7 @@ Repo d'origine : https://github.com/nohmaa/ZyroX-CV2-AIO-With-Dashboard
 
 ### Rebranding Haunted — reste à faire
 - Remplacer les occurrences visibles restantes de « ZyroX/CodeX » (textes marketing `app/page.tsx`, `app/docs`, README, ASCII art `CodeX.py`, `config.yml`, webhooks/footers). Garder les fallbacks env déjà faits.
-- Choisir : renommer `bot/CodeX.py` → `bot/Haunted.py` (avec alias) ou garder le nom de fichier. Ne pas casser la commande de démarrage des hébergeurs sans préavis.
+- ~~Choisir : renommer `bot/CodeX.py` → `bot/Haunted.py` (avec alias) ou garder le nom de fichier.~~ Fait le 2026-09-23 : `bot/haunted.py` (minuscules, convention Python).
 - Mettre à jour `README.md` (nom, captures, `.env`).
 
 ### Modules on/off — comment ça marche
@@ -95,4 +102,4 @@ Repo d'origine : https://github.com/nohmaa/ZyroX-CV2-AIO-With-Dashboard
 - Backend : `python -m compileall` OK sur tous les fichiers touchés (dont `core/zyrox.py`, `api/*`, `utils/*`, cogs marqués).
 - Backend : script de test `test_modules2.py` → **ALL TESTS PASSED** (registre 19 modules, schémas pydantic, `get/set/is_module_enabled` + bulk + clé inconnue rejetée, `i18n.t` FR/EN/fallback). Nécessite `aiosqlite`, `pydantic`, `python-dotenv` (installés dans le Python système pour le test ; le bot utilise son `requirements.txt`).
 - Dashboard : `npx tsc --noEmit` **impossible dans cette session** — `node_modules/` absent du checkout (`Cannot find module 'react'` sur tout le projet, pré-existant, non lié à ces changements). À valider avec `npm install` puis `npm run dev` (`NEXT_PUBLIC_API_URL` → tunnel/serveur local).
-- Bot live non testé : à valider avec `python CodeX.py` (commande d'un module désactivé doit répondre le message FR).
+- Bot live non testé : à valider avec `python haunted.py` (commande d'un module désactivé doit répondre le message FR).

@@ -310,7 +310,7 @@ def _run_tunnel(binary: str, token: str, port: int, public_url: str) -> None:
 def start_tunnel() -> None:
     """
     Start the Cloudflare Tunnel in a background daemon thread.
-    Called from CodeX.py after keep_alive().
+    Called from haunted.py after keep_alive().
     """
     if not TUNNEL_ENABLED:
         print(f"{_YELLOW}◈ Tunnel: disabled via TUNNEL_ENABLED=false{_RESET}")

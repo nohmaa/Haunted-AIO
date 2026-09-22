@@ -57,7 +57,7 @@ def verify_api_key(credentials: HTTPAuthorizationCredentials = Security(security
 def set_bot(bot_instance: "zyrox"):
     """
     Sets the global bot instance. 
-    This should be called in CodeX.py during startup.
+    This should be called in haunted.py during startup.
     """
     global _bot_instance
     _bot_instance = bot_instance

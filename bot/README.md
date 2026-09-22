@@ -24,7 +24,7 @@
 
 ## ✦ Aperçu
 
-Ce dossier contient le bot Discord **Haunted** construit avec `discord.py v2`, accompagné d'un backend `FastAPI` qui alimente le dashboard web. Tout tourne avec une seule commande : `python CodeX.py`. Les messages sont en **français** (avec repli anglais) et chaque **module peut être activé/désactivé depuis le dashboard**.
+Ce dossier contient le bot Discord **Haunted** construit avec `discord.py v2`, accompagné d'un backend `FastAPI` qui alimente le dashboard web. Tout tourne avec une seule commande : `python haunted.py`. Les messages sont en **français** (avec repli anglais) et chaque **module peut être activé/désactivé depuis le dashboard**.
 
 ```
 bot/
@@ -45,7 +45,7 @@ bot/
 │   ├── i18n.py              Helper de traduction FR/EN
 │   └── modules.py           État on/off des modules (SQLite)
 ├── assets/                Polices, fonds, GIFs
-└── CodeX.py               Point d'entrée
+└── haunted.py             Point d'entrée
 ```
 
 ---
@@ -211,7 +211,7 @@ BOT_LANG           = "fr"
 ### 3 — Lancer
 
 ```bash
-python CodeX.py
+python haunted.py
 ```
 
 ---
@@ -314,13 +314,13 @@ Le bot se déploie sur un serveur **Pterodactyl** avec l'egg générique **pytho
 **2 — Uploader les fichiers**
 
 - Dans l'onglet **Startup**, mettez `User Uploaded Files` (`USER_UPLOAD`) à `1`.
-- Via **Files** (ou SFTP), uploadez le **contenu de ce dossier `bot/`** à la racine du serveur (`CodeX.py`, `requirements.txt`, `cogs/`, `api/`, … à la racine, pas dans un sous-dossier — le bot utilise des chemins relatifs comme `db/`).
+- Via **Files** (ou SFTP), uploadez le **contenu de ce dossier `bot/`** à la racine du serveur (`haunted.py`, `requirements.txt`, `cogs/`, `api/`, … à la racine, pas dans un sous-dossier — le bot utilise des chemins relatifs comme `db/`).
 
 **3 — Régler le démarrage**
 
 | Variable | Valeur |
 |---|---|
-| `App py file` (`PY_FILE`) | `CodeX.py` |
+| `App py file` (`PY_FILE`) | `haunted.py` |
 | `Requirements file` (`REQUIREMENTS_FILE`) | `requirements.txt` |
 
 L'egg installe les dépendances automatiquement à chaque (re)démarrage (`pip install -U -r requirements.txt`).

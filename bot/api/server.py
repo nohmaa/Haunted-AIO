@@ -46,8 +46,8 @@ async def lifespan(app: FastAPI):
 
 def create_app() -> FastAPI:
     """
-    Initializes the FastAPI application for the CodeX Bot Dashboard.
-    The bot instance will be attached to app.state.bot in CodeX.py at runtime.
+    Initializes the FastAPI application for the Haunted Bot Dashboard.
+    The bot instance will be attached to app.state.bot in haunted.py at runtime.
     """
     app = FastAPI(
         title=f"{BRAND_NAME} Bot API",

@@ -46,7 +46,7 @@ Haunted/
 │   │   └── modules.py           État on/off des modules (SQLite)
 │   ├── games/                 Modules de jeux autonomes
 │   ├── assets/                Polices, fonds, GIFs
-│   └── CodeX.py               Point d'entrée
+│   └── haunted.py             Point d'entrée
 │
 ├── 🌐  dashboard/             Frontend Next.js (en français)
 │   ├── app/                   Pages App Router & routes API
@@ -213,7 +213,7 @@ WEBHOOK_URL        = "https://discord.com/api/webhooks/..."
 **4 — Lancer le bot**
 
 ```bash
-python CodeX.py
+python haunted.py
 ```
 
 ---
@@ -377,7 +377,7 @@ Le bot se déploie sur un serveur **Pterodactyl** avec l'egg générique **pytho
 **2 — Uploader les fichiers**
 
 - Dans l'onglet **Startup**, mettez `User Uploaded Files` (`USER_UPLOAD`) à `1`.
-- Via **Files** (ou SFTP), uploadez le **contenu du dossier `bot/`** à la racine du serveur (`CodeX.py`, `requirements.txt`, `cogs/`, `api/`, `core/`, `utils/`, … à la racine, pas dans un sous-dossier — le bot utilise des chemins relatifs comme `db/`).
+- Via **Files** (ou SFTP), uploadez le **contenu du dossier `bot/`** à la racine du serveur (`haunted.py`, `requirements.txt`, `cogs/`, `api/`, `core/`, `utils/`, … à la racine, pas dans un sous-dossier — le bot utilise des chemins relatifs comme `db/`).
 
 **3 — Régler le démarrage**
 
@@ -385,7 +385,7 @@ Dans l'onglet **Startup** :
 
 | Variable | Valeur |
 |---|---|
-| `App py file` (`PY_FILE`) | `CodeX.py` |
+| `App py file` (`PY_FILE`) | `haunted.py` |
 | `Requirements file` (`REQUIREMENTS_FILE`) | `requirements.txt` |
 
 À chaque (re)démarrage, l'egg installe automatiquement les dépendances (`pip install -U -r requirements.txt`).
