@@ -12,8 +12,8 @@
 <h3>Un bot Discord riche en fonctionnalités, piloté depuis un dashboard Next.js élégant</h3>
 
 <p>
-  <a href="https://python.org"><img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white"/></a>
-  <a href="https://nextjs.org"><img src="https://img.shields.io/badge/Next.js-14+-000000?style=for-the-badge&logo=nextdotjs&logoColor=white"/></a>
+  <a href="https://python.org"><img src="https://img.shields.io/badge/Python-3.13-3776AB?style=for-the-badge&logo=python&logoColor=white"/></a>
+  <a href="https://nextjs.org"><img src="https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&logo=nextdotjs&logoColor=white"/></a>
   <a href="https://fastapi.tiangolo.com"><img src="https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge&logo=fastapi&logoColor=white"/></a>
   <a href="https://discordpy.readthedocs.io"><img src="https://img.shields.io/badge/Discord.py-v2-5865F2?style=for-the-badge&logo=discord&logoColor=white"/></a>
 </p>
@@ -107,7 +107,7 @@ Haunted/
 - Statistiques du bot en direct
 - Entièrement personnalisable (nom, abréviation)
 - HTTPS via tunnel Cloudflare (URL permanente)
-- Déployable sur Vercel en quelques minutes
+- Dashboard servi en production via `npm run build` puis `npm start`
 
 </td>
 </tr>
@@ -142,8 +142,8 @@ Haunted/
 
 | Prérequis | Version / Notes |
 |---|---|
-| Python | 3.10 ou supérieur |
-| Node.js | 18 ou supérieur |
+| Python | 3.13 (image Pterodactyl `ghcr.io/ptero-eggs/yolks:python_3.13`) |
+| Node.js | 22 LTS ou supérieur (dashboard) |
 | Nœud Lavalink | v4 |
 | Token du bot Discord | — |
 | Application Discord OAuth | pour la connexion au dashboard |
@@ -365,25 +365,47 @@ Le bot utilise **pycloudflared** — le binaire `cloudflared` est téléchargé 
 
 ---
 
-## ✦ Déploiement
+## ✦ Déploiement (Pterodactyl)
 
-### 🤖 Bot — tout hébergeur Python
+Le bot se déploie sur un serveur **Pterodactyl** avec l'egg générique **python generic** et l'image **Python 3.13** (`ghcr.io/ptero-eggs/yolks:python_3.13`). C'est la seule méthode documentée.
 
-1. Uploadez tout le dossier `bot/` sur votre hébergeur (Pterodactyl, Render, Railway, Fly.io, VPS…)
-2. Commande de démarrage : `python CodeX.py`
-3. Ajoutez toutes les variables d'environnement
-4. `pycloudflared` télécharge le binaire automatiquement au premier lancement — rien d'autre à faire
+**1 — Préparer l'egg (côté admin panel)**
 
-### 🌐 Dashboard — Vercel
+- Vérifiez que l'egg *python generic* est importé (Nests → Import Egg → URL `https://eggs.pterodactyl.io/egg/generic-python-generic`).
+- Créez un serveur avec cet egg et sélectionnez l'image Docker `Python 3.13` (`ghcr.io/ptero-eggs/yolks:python_3.13`).
 
-1. Allez sur [vercel.com](https://vercel.com) → **Add New Project** → connectez votre dépôt GitHub
-2. Dossier racine : `dashboard/`
-3. Ajoutez toutes les variables d'environnement dans **Settings → Environment Variables**
-4. Ajoutez l'URI de redirection OAuth dans le portail développeur Discord :
-   ```
-   https://votre-app.vercel.app/api/auth/callback/discord
-   ```
-5. Cliquez **Deploy** — terminé ✓
+**2 — Uploader les fichiers**
+
+- Dans l'onglet **Startup**, mettez `User Uploaded Files` (`USER_UPLOAD`) à `1`.
+- Via **Files** (ou SFTP), uploadez le **contenu du dossier `bot/`** à la racine du serveur (`CodeX.py`, `requirements.txt`, `cogs/`, `api/`, `core/`, `utils/`, … à la racine, pas dans un sous-dossier — le bot utilise des chemins relatifs comme `db/`).
+
+**3 — Régler le démarrage**
+
+Dans l'onglet **Startup** :
+
+| Variable | Valeur |
+|---|---|
+| `App py file` (`PY_FILE`) | `CodeX.py` |
+| `Requirements file` (`REQUIREMENTS_FILE`) | `requirements.txt` |
+
+À chaque (re)démarrage, l'egg installe automatiquement les dépendances (`pip install -U -r requirements.txt`).
+
+**4 — Détection du démarrage**
+
+Dans la **Start Configuration** de l'egg, la condition `done` doit contenir :
+
+```
+Loaded & Online!
+```
+
+Le bot affiche cette ligne dans la console quand il est connecté — le panel passe alors le serveur en `running`.
+
+**5 — Configurer et lancer**
+
+- Créez le fichier `.env` (via **Files**) en copiant `.env.example`, puis renseignez au minimum `TOKEN`, `OWNER_IDS`, `DASHBOARD_API_KEY` et le tunnel Cloudflare (`CF_TUNNEL_TOKEN`, `CF_TUNNEL_URL`).
+- Onglet **Console** → **Start**. `pycloudflared` télécharge le binaire automatiquement au premier lancement.
+
+> Le dashboard Next.js ne tourne pas sur cette image Python : lancez-le en local (`npm run dev`) ou sur toute machine avec Node.js 22+ (`npm run build` puis `npm start`), en pointant `NEXT_PUBLIC_API_URL` vers l'URL du tunnel du bot.
 
 ---
 
@@ -419,7 +441,7 @@ Tourne automatiquement au démarrage quand `EMOJI_SYNC=true` :
 | Le dashboard ne charge pas les données | Vérifiez `API_ENABLED=true`, bot en ligne, `NEXT_PUBLIC_API_URL` correct |
 | Un module ne répond pas | Vérifiez qu'il est **activé** sur la page Modules du serveur |
 | Emojis affichés en texte brut | Lancez une fois avec `EMOJI_SYNC=true` |
-| Erreurs CORS depuis le dashboard | Ajoutez votre URL Vercel dans `CORS_ORIGINS` (`bot/.env`) |
+| Erreurs CORS depuis le dashboard | Ajoutez l'URL de votre dashboard dans `CORS_ORIGINS` (`bot/.env`) |
 | Tunnel ne démarre pas | Vérifiez `CF_TUNNEL_TOKEN` et que `pycloudflared` est installé |
 | URL du tunnel a changé | Renseignez `CF_TUNNEL_URL` — les tunnels nommés gardent la même URL |
 

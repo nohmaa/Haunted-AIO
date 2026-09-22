@@ -23,10 +23,11 @@ const WelcomeForm = dynamic(() => import("@/components/dashboard/welcome-form").
   loading: () => <div className="h-96 w-full animate-pulse bg-slate-800/20 rounded-3xl" />
 });
 
-export default async function WelcomePage({ params }: { params: { guildId: string } }) {
+export default async function WelcomePage({ params }: { params: Promise<{ guildId: string }> }) {
+  const { guildId } = await params;
   const [welcomeData, channelsData] = await Promise.all([
-    api.getWelcome(params.guildId),
-    api.getChannels(params.guildId)
+    api.getWelcome(guildId),
+    api.getChannels(guildId)
   ]);
 
   if (!welcomeData) return null;
@@ -43,7 +44,7 @@ export default async function WelcomePage({ params }: { params: { guildId: strin
         </div>
       </div>
 
-      <WelcomeForm initialConfig={welcomeData} channels={channelsData} guildId={params.guildId} />
+      <WelcomeForm initialConfig={welcomeData} channels={channelsData} guildId={guildId} />
     </div>
   );
 }

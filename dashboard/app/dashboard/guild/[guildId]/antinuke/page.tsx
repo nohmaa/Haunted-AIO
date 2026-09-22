@@ -23,8 +23,9 @@ const AntiNukeForm = dynamic(() => import("@/components/dashboard/antinuke-form"
   loading: () => <div className="h-96 w-full animate-pulse bg-slate-800/20 rounded-3xl" />
 });
 
-export default async function AntiNukePage({ params }: { params: { guildId: string } }) {
-  const config = await api.getAntiNuke(params.guildId);
+export default async function AntiNukePage({ params }: { params: Promise<{ guildId: string }> }) {
+  const { guildId } = await params;
+  const config = await api.getAntiNuke(guildId);
 
   if (!config) return null;
 
@@ -40,7 +41,7 @@ export default async function AntiNukePage({ params }: { params: { guildId: stri
         </div>
       </div>
 
-      <AntiNukeForm initialConfig={config} guildId={params.guildId} />
+      <AntiNukeForm initialConfig={config} guildId={guildId} />
     </div>
   );
 }

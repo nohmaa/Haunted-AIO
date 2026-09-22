@@ -25,10 +25,10 @@ export function ModulesManager({
     setModules((prev) => prev.map((m) => (m.key === key ? { ...m, enabled } : m)));
     try {
       await api.setModule(guildId, key, enabled);
-    } catch (e: any) {
+    } catch (e: unknown) {
       // Annule en cas d'échec
       setModules((prev) => prev.map((m) => (m.key === key ? { ...m, enabled: !enabled } : m)));
-      setError(e?.message || "Échec de la mise à jour du module.");
+      setError(e instanceof Error ? e.message : "Échec de la mise à jour du module.");
     } finally {
       setPending(null);
     }

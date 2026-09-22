@@ -26,10 +26,11 @@ const AutoRoleForm = dynamic(() => import("@/components/dashboard/autorole-form"
   loading: () => <div className="h-96 w-full animate-pulse bg-slate-800/20 rounded-3xl" />
 });
 
-export default async function AutoRolePage({ params }: { params: { guildId: string } }) {
+export default async function AutoRolePage({ params }: { params: Promise<{ guildId: string }> }) {
+  const { guildId } = await params;
   const [config, roles] = await Promise.all([
-    api.getAutoRole(params.guildId),
-    api.getRoles(params.guildId)
+    api.getAutoRole(guildId),
+    api.getRoles(guildId)
   ]);
 
   return (
@@ -47,7 +48,7 @@ export default async function AutoRolePage({ params }: { params: { guildId: stri
       <AutoRoleForm 
         initialConfig={config} 
         roles={roles} 
-        guildId={params.guildId} 
+        guildId={guildId} 
       />
     </div>
   );

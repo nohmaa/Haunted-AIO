@@ -26,10 +26,11 @@ const J2CForm = dynamic(() => import("@/components/dashboard/j2c-form").then(mod
   loading: () => <div className="h-96 w-full animate-pulse bg-slate-800/20 rounded-3xl" />
 });
 
-export default async function J2CPage({ params }: { params: { guildId: string } }) {
+export default async function J2CPage({ params }: { params: Promise<{ guildId: string }> }) {
+  const { guildId } = await params;
   const [config, channels] = await Promise.all([
-    api.getJ2C(params.guildId),
-    api.getChannels(params.guildId),
+    api.getJ2C(guildId),
+    api.getChannels(guildId),
   ]);
 
   if (!config) return null;
@@ -46,7 +47,7 @@ export default async function J2CPage({ params }: { params: { guildId: string } 
         </div>
       </div>
 
-      <J2CForm initialConfig={config} channels={channels} guildId={params.guildId} />
+      <J2CForm initialConfig={config} channels={channels} guildId={guildId} />
     </div>
   );
 }

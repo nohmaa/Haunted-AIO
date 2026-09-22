@@ -4,6 +4,16 @@
 > Objectifs actuels : (1) traduction en français, (2) nouvelle identité **Haunted**, (3) activation/désactivation des modules depuis le dashboard.
 > Mettre à jour ce fichier à chaque changement (date + fichiers + comportement).
 
+## 2026-09-22 — Déploiement Pterodactyl unique + dépendances à jour
+- Déploiement documenté **uniquement** pour Pterodactyl (egg *python generic*, image `ghcr.io/ptero-eggs/yolks:python_3.13`) : `README.md`, `bot/README.md` (upload du contenu de `bot/` à la racine, `PY_FILE=CodeX.py`, `USER_UPLOAD=1`, `done` = `Loaded & Online!`, `.env` via Files). Mentions Render/Railway/Fly.io/Vercel/NexioHost supprimées des sections déploiement.
+- `dashboard/README.md` : section Vercel remplacée par « Mise en production » générique Node 22+ (`npm run build` + `npm start`) ; le dashboard ne tourne pas sur l'image Python.
+- `bot/requirements.txt` réécrit : que des dépendances réellement importées, versions épinglées vérifiées sur PyPI (ex. `discord.py==2.7.1`, `fastapi==0.141.1`, `uvicorn==0.53.0`, `wavelink==3.5.2`, `Pillow==12.3.0`, `numpy==2.5.3`, `openai==3.18.0`, `mcstatus==14.2.0`). Exception : `duckduckgo-search==6.3.7` (dernière ligne avec `AsyncDDGS` requis par `utils/ai_utils.py`, supprimé en 7+/8).
+- `dashboard/package.json` : `next 16.3.6`, `react 19.3.0`, `tailwindcss 4.3.3` (+ `@tailwindcss/postcss`), `lucide-react 1.47.0`, `next-auth 4.24.15`, `sonner 2.0.8`, `tailwind-merge 3.7.0`, radix à jour, `typescript 5.9.3` (TS 7 testé : build OK mais `typescript-eslint` incompatible → 5.9.3, dernière 5.x), `eslint 9.39.5` (dernier 9.x : les plugins de `eslint-config-next` ne supportent pas ESLint 10).
+- Migration Next 16 : 22 fichiers `params` → `Promise` + `await`/`use()` (script `params_codemod.py`), `postcss.config.mjs` → plugin v4, `app/globals.css` → `@import "tailwindcss"` + `@config`, `eslint.config.mjs` (flat config, `next lint` n'existe plus en v16), `next.config.js` en double supprimé, `tsconfig.json`/`next-env.d.ts` régénérés par le build.
+- Prérequis docs : Python 3.13, Node.js 22 LTS. Badges et `dashboard/.env.example` alignés.
+- Vérifications : `npm run build` → **succès** (toutes les routes dont `/modules`) ; `pip install -r requirements.txt` en venv vierge → **OK** + imports critiques testés (`discord 2.7.1`, `wavelink 3.5.2`, `JavaServer`, `AsyncDDGS`, `AsyncOpenAI`, `GoogleTranslator`…).
+- Dette signalée : `npm run lint` rapporte ~100 erreurs pré-existantes (`no-explicit-any`, `set-state-in-effect` des nouvelles règles react-hooks v7) — le build n'en dépend pas, à traiter par module. Bouton `Website` placeholder `https://.vercel.app` dans `bot/cogs/events/auto.py:40` laissé tel quel (URL du site à renseigner).
+
 ## 2026-09-22 — READMEs (FR + Haunted + modules)
 - `README.md` (racine), `bot/README.md`, `dashboard/README.md` réécrits en français : identité **Haunted**, exemples `.env` alignés (`brand_name='Haunted'`, `BOT_LANG`, `Haunted`/`H`), nouvelle section « Modules — activation/désactivation » (table des 19 clés + endpoints), dépannage FR (+ ligne modules), footer Haunted avec crédit d'origine.
 - Vérification : relecture des trois fichiers (pas de code touché, pas de tests requis).

@@ -16,7 +16,7 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { MousePointer2, RefreshCcw, Plus, Trash2, BellRing, Info, Save } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
@@ -26,7 +26,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 
-export default function ReactionRolesPage({ params }: { params: { guildId: string } }) {
+export default function ReactionRolesPage({ params }: { params: Promise<{ guildId: string }> }) {
+  const { guildId } = use(params);
   const [loading, setLoading] = useState(true);
   const [loadingAction, setLoadingAction] = useState(false);
   const [config, setConfig] = useState<any>({ dm_enabled: true, roles: [] });
@@ -37,8 +38,8 @@ export default function ReactionRolesPage({ params }: { params: { guildId: strin
     try {
       setLoading(true);
       const [configData, rolesData] = await Promise.all([
-        api.getRR(params.guildId),
-        api.getRoles(params.guildId),
+        api.getRR(guildId),
+        api.getRoles(guildId),
       ]);
       setConfig(configData);
       setRoles(rolesData);
@@ -50,13 +51,13 @@ export default function ReactionRolesPage({ params }: { params: { guildId: strin
     }
   };
 
-  useEffect(() => { fetchData(); }, [params.guildId]);
+  useEffect(() => { fetchData(); }, [guildId]);
 
   const filteredRoles = roles.filter(r => r.name !== "@everyone");
 
   const toggleDM = async (val: boolean) => {
     try {
-      await api.updateRR(params.guildId, { dm_enabled: val });
+      await api.updateRR(guildId, { dm_enabled: val });
       setConfig({ ...config, dm_enabled: val });
       toast.success(`DM notifications ${val ? "enabled" : "disabled"}`);
     } catch {
@@ -71,7 +72,7 @@ export default function ReactionRolesPage({ params }: { params: { guildId: strin
     }
     setLoadingAction(true);
     try {
-      await api.updateRR(params.guildId, {
+      await api.updateRR(guildId, {
         add_role: { message_id: newRR.message_id, emoji: newRR.emoji, role_id: newRR.role_id },
       });
       setConfig({
@@ -90,7 +91,7 @@ export default function ReactionRolesPage({ params }: { params: { guildId: strin
   const handleDelete = async (messageId: string, emoji: string) => {
     setLoadingAction(true);
     try {
-      await api.updateRR(params.guildId, {
+      await api.updateRR(guildId, {
         remove_role_message_id: messageId,
         remove_role_emoji: emoji,
       });

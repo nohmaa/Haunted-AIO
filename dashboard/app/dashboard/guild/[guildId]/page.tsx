@@ -29,7 +29,8 @@ import {
   Activity
 } from "lucide-react";
 
-export default function GuildOverviewPage({ params }: { params: { guildId: string } }) {
+export default async function GuildOverviewPage({ params }: { params: Promise<{ guildId: string }> }) {
+  const { guildId } = await params;
   const modules = [
     { title: "Auto-modération", desc: "Anti-spam, insultes et protection contre les liens.", icon: ShieldCheck, status: "Actif" },
     { title: "Tickets", desc: "Assistance pour le support et les demandes.", icon: Ticket, status: "Configuré" },
@@ -45,7 +46,7 @@ export default function GuildOverviewPage({ params }: { params: { guildId: strin
           <div className="flex items-center gap-2 mb-6">
             <h2 className="text-xl font-bold text-white tracking-tight">Modules actifs</h2>
             <div className="h-[2px] flex-1 bg-slate-800" />
-            <Link href={`/dashboard/guild/${params.guildId}/modules`} className="text-[11px] font-bold text-primary hover:underline whitespace-nowrap">Gérer les modules →</Link>
+            <Link href={`/dashboard/guild/${guildId}/modules`} className="text-[11px] font-bold text-primary hover:underline whitespace-nowrap">Gérer les modules →</Link>
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -74,7 +75,7 @@ export default function GuildOverviewPage({ params }: { params: { guildId: strin
           <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 font-mono text-xs overflow-hidden shadow-2xl">
             <div className="flex items-center gap-2 mb-3 border-b border-slate-800 pb-2">
               <Terminal className="h-4 w-4 text-primary" />
-              <span className="text-slate-400">guild_event_stream_{params.guildId}</span>
+              <span className="text-slate-400">guild_event_stream_{guildId}</span>
             </div>
             <div className="space-y-1.5 opacity-80">
               <p className="text-slate-500">[{new Date().toLocaleTimeString()}] <span className="text-emerald-500">INIT</span> Dashboard connected to WebSocket pool...</p>

@@ -40,14 +40,14 @@ import { GuildTabs } from "@/components/guild-tabs";
 
 interface GuildLayoutProps {
   children: React.ReactNode;
-  params: { guildId: string };
+  params: Promise<{ guildId: string }>;
 }
 
 export default async function GuildLayout({
   children,
   params,
 }: GuildLayoutProps) {
-  const guildId = params.guildId;
+  const { guildId } = await params;
   let guild;
   let error = null;
 

@@ -16,7 +16,7 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { Link2, RefreshCcw, Plus, Trash2, Info, Save } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
@@ -25,7 +25,8 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
-export default function VanityRolesPage({ params }: { params: { guildId: string } }) {
+export default function VanityRolesPage({ params }: { params: Promise<{ guildId: string }> }) {
+  const { guildId } = use(params);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [roles, setRoles] = useState<any[]>([]);
@@ -37,9 +38,9 @@ export default function VanityRolesPage({ params }: { params: { guildId: string 
     try {
       setLoading(true);
       const [setupsData, rolesData, channelsData] = await Promise.all([
-        api.getVanityRoles(params.guildId),
-        api.getRoles(params.guildId),
-        api.getChannels(params.guildId),
+        api.getVanityRoles(guildId),
+        api.getRoles(guildId),
+        api.getChannels(guildId),
       ]);
       setSetups(setupsData);
       setRoles(rolesData);
@@ -52,7 +53,7 @@ export default function VanityRolesPage({ params }: { params: { guildId: string 
     }
   };
 
-  useEffect(() => { fetchData(); }, [params.guildId]);
+  useEffect(() => { fetchData(); }, [guildId]);
 
   const textChannels = channels.filter(c => c.type === "0" || c.type === 0);
   const filteredRoles = roles.filter(r => r.name !== "@everyone");
@@ -64,7 +65,7 @@ export default function VanityRolesPage({ params }: { params: { guildId: string 
     }
     setSaving(true);
     try {
-      await api.addVanityRole(params.guildId, {
+      await api.addVanityRole(guildId, {
         vanity: newSetup.vanity,
         role_id: newSetup.role_id,
         log_channel_id: newSetup.log_channel_id,
@@ -81,7 +82,7 @@ export default function VanityRolesPage({ params }: { params: { guildId: string 
 
   const handleDelete = async (vanity: string) => {
     try {
-      await api.deleteVanityRole(params.guildId, vanity);
+      await api.deleteVanityRole(guildId, vanity);
       toast.success("Vanity role setup deleted");
       fetchData();
     } catch (error) {

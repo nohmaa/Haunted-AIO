@@ -16,7 +16,7 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { Search, Save, RefreshCcw, Bell } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
@@ -26,7 +26,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
-export default function TrackingPage({ params }: { params: { guildId: string } }) {
+export default function TrackingPage({ params }: { params: Promise<{ guildId: string }> }) {
+  const { guildId } = use(params);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [channels, setChannels] = useState<any[]>([]);
@@ -38,8 +39,8 @@ export default function TrackingPage({ params }: { params: { guildId: string } }
     try {
       setLoading(true);
       const [configData, channelsData] = await Promise.all([
-        api.getTracking(params.guildId),
-        api.getChannels(params.guildId),
+        api.getTracking(guildId),
+        api.getChannels(guildId),
       ]);
       setConfig(configData);
       setChannels(channelsData);
@@ -53,12 +54,12 @@ export default function TrackingPage({ params }: { params: { guildId: string } }
 
   useEffect(() => {
     fetchData();
-  }, [params.guildId]);
+  }, [guildId]);
 
   const handleSave = async () => {
     try {
       setSaving(true);
-      await api.updateTracking(params.guildId, config);
+      await api.updateTracking(guildId, config);
       toast.success("Tracking configuration saved successfully");
     } catch (error) {
       console.error("Failed to save tracking config:", error);

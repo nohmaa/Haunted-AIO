@@ -16,20 +16,21 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { TrendingUp, RefreshCcw, Medal, User, LogOut, UserMinus, UserPlus, Info } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
-export default function InvitesPage({ params }: { params: { guildId: string } }) {
+export default function InvitesPage({ params }: { params: Promise<{ guildId: string }> }) {
+  const { guildId } = use(params);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any[]>([]);
 
   const fetchLeaderboard = async () => {
     try {
       setLoading(true);
-      const res = await api.getInvites(params.guildId);
+      const res = await api.getInvites(guildId);
       setData(res.data || []);
     } catch (error) {
       console.error("Failed to fetch invites leaderboard:", error);
@@ -40,7 +41,7 @@ export default function InvitesPage({ params }: { params: { guildId: string } })
     }
   };
 
-  useEffect(() => { fetchLeaderboard(); }, [params.guildId]);
+  useEffect(() => { fetchLeaderboard(); }, [guildId]);
 
   if (loading) {
     return (

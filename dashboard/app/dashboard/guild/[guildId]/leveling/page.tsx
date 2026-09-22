@@ -19,8 +19,9 @@ import { BarChart4 } from "lucide-react";
 import { api } from "@/lib/api";
 import { LevelingForm } from "@/components/dashboard/leveling-form";
 
-export default async function LevelingPage({ params }: { params: { guildId: string } }) {
-  const config = await api.getLeveling(params.guildId);
+export default async function LevelingPage({ params }: { params: Promise<{ guildId: string }> }) {
+  const { guildId } = await params;
+  const config = await api.getLeveling(guildId);
 
   if (!config) return null;
 
@@ -36,7 +37,7 @@ export default async function LevelingPage({ params }: { params: { guildId: stri
         </div>
       </div>
 
-      <LevelingForm initialConfig={config} guildId={params.guildId} />
+      <LevelingForm initialConfig={config} guildId={guildId} />
     </div>
   );
 }

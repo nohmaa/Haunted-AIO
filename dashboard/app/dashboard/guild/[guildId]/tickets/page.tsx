@@ -24,8 +24,9 @@ const TicketsForm = dynamic(() => import("@/components/dashboard/tickets-form").
   loading: () => <div className="h-96 w-full animate-pulse bg-slate-800/20 rounded-3xl" />
 });
 
-export default async function TicketsPage({ params }: { params: { guildId: string } }) {
-  const config = await api.getTickets(params.guildId);
+export default async function TicketsPage({ params }: { params: Promise<{ guildId: string }> }) {
+  const { guildId } = await params;
+  const config = await api.getTickets(guildId);
 
   if (!config) return null;
 
@@ -51,7 +52,7 @@ export default async function TicketsPage({ params }: { params: { guildId: strin
         </div>
       </div>
 
-      <TicketsForm initialConfig={config} guildId={params.guildId} />
+      <TicketsForm initialConfig={config} guildId={guildId} />
     </div>
   );
 }

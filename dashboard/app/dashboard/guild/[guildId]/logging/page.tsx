@@ -27,10 +27,11 @@ const LoggingForm = dynamic(() => import("@/components/dashboard/logging-form").
   loading: () => <div className="h-96 w-full animate-pulse bg-slate-800/20 rounded-[40px]" />
 });
 
-export default async function LoggingPage({ params }: { params: { guildId: string } }) {
+export default async function LoggingPage({ params }: { params: Promise<{ guildId: string }> }) {
+  const { guildId } = await params;
   const [loggingData, channelsData] = await Promise.all([
-    api.getLogging(params.guildId),
-    api.getChannels(params.guildId)
+    api.getLogging(guildId),
+    api.getChannels(guildId)
   ]);
 
   if (!loggingData) return null;
@@ -56,7 +57,7 @@ export default async function LoggingPage({ params }: { params: { guildId: strin
       <LoggingForm 
         initialConfig={loggingData} 
         channels={channelsData} 
-        guildId={params.guildId} 
+        guildId={guildId} 
       />
     </div>
   );

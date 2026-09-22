@@ -16,7 +16,7 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { Volume2, Save, RefreshCcw, ShieldCheck, Info, Power } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
@@ -25,7 +25,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 
-export default function InvcRolePage({ params }: { params: { guildId: string } }) {
+export default function InvcRolePage({ params }: { params: Promise<{ guildId: string }> }) {
+  const { guildId } = use(params);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [roles, setRoles] = useState<any[]>([]);
@@ -35,8 +36,8 @@ export default function InvcRolePage({ params }: { params: { guildId: string } }
     try {
       setLoading(true);
       const [configData, rolesData] = await Promise.all([
-        api.getInvcRole(params.guildId),
-        api.getRoles(params.guildId),
+        api.getInvcRole(guildId),
+        api.getRoles(guildId),
       ]);
       setConfig(configData);
       setRoles(rolesData);
@@ -48,11 +49,11 @@ export default function InvcRolePage({ params }: { params: { guildId: string } }
     }
   };
 
-  useEffect(() => { fetchData(); }, [params.guildId]);
+  useEffect(() => { fetchData(); }, [guildId]);
 
   const handleSave = async () => {
     setSaving(true);
-    const promise = api.updateInvcRole(params.guildId, { 
+    const promise = api.updateInvcRole(guildId, { 
       role_id: config.role_id,
       enabled: config.enabled
     });

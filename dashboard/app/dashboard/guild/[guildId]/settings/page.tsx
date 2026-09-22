@@ -19,8 +19,9 @@ import { Settings2 } from "lucide-react";
 import { api } from "@/lib/api";
 import { SettingsForm } from "@/components/dashboard/settings-form";
 
-export default async function GuildSettingsPage({ params }: { params: { guildId: string } }) {
-  const config = await api.getPrefix(params.guildId);
+export default async function GuildSettingsPage({ params }: { params: Promise<{ guildId: string }> }) {
+  const { guildId } = await params;
+  const config = await api.getPrefix(guildId);
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
@@ -32,7 +33,7 @@ export default async function GuildSettingsPage({ params }: { params: { guildId:
         <p className="text-slate-400 mt-1">Gérez la configuration principale du bot pour ce serveur.</p>
       </div>
 
-      <SettingsForm initialPrefix={config.prefix} guildId={params.guildId} />
+      <SettingsForm initialPrefix={config.prefix} guildId={guildId} />
     </div>
   );
 }

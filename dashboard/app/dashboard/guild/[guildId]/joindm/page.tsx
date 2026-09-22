@@ -16,7 +16,7 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { MessageSquare, Save, RefreshCcw, Send } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
@@ -25,7 +25,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 
-export default function JoinDMPage({ params }: { params: { guildId: string } }) {
+export default function JoinDMPage({ params }: { params: Promise<{ guildId: string }> }) {
+  const { guildId } = use(params);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [config, setConfig] = useState<any>({
@@ -35,7 +36,7 @@ export default function JoinDMPage({ params }: { params: { guildId: string } }) 
   const fetchData = async () => {
     try {
       setLoading(true);
-      const configData = await api.getJoinDM(params.guildId);
+      const configData = await api.getJoinDM(guildId);
       setConfig(configData);
     } catch (error) {
       console.error("Failed to fetch JoinDM data:", error);
@@ -47,12 +48,12 @@ export default function JoinDMPage({ params }: { params: { guildId: string } }) 
 
   useEffect(() => {
     fetchData();
-  }, [params.guildId]);
+  }, [guildId]);
 
   const handleSave = async () => {
     try {
       setSaving(true);
-      await api.updateJoinDM(params.guildId, config);
+      await api.updateJoinDM(guildId, config);
       toast.success("Join DM configuration saved successfully");
     } catch (error) {
       console.error("Failed to save JoinDM config:", error);

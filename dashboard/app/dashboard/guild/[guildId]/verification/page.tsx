@@ -16,7 +16,7 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { Shield, Save, RefreshCcw, Power, Fingerprint, Bell, Hash, UserCheck, Info } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
@@ -25,7 +25,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 
-export default function VerificationPage({ params }: { params: { guildId: string } }) {
+export default function VerificationPage({ params }: { params: Promise<{ guildId: string }> }) {
+  const { guildId } = use(params);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [channels, setChannels] = useState<any[]>([]);
@@ -42,9 +43,9 @@ export default function VerificationPage({ params }: { params: { guildId: string
     try {
       setLoading(true);
       const [configData, channelsData, rolesData] = await Promise.all([
-        api.getVerification(params.guildId),
-        api.getChannels(params.guildId),
-        api.getRoles(params.guildId),
+        api.getVerification(guildId),
+        api.getChannels(guildId),
+        api.getRoles(guildId),
       ]);
       setConfig(configData);
       setChannels(channelsData);
@@ -57,11 +58,11 @@ export default function VerificationPage({ params }: { params: { guildId: string
     }
   };
 
-  useEffect(() => { fetchData(); }, [params.guildId]);
+  useEffect(() => { fetchData(); }, [guildId]);
 
   const handleSave = async () => {
     setSaving(true);
-    const promise = api.updateVerification(params.guildId, {
+    const promise = api.updateVerification(guildId, {
       verification_channel_id: config.verification_channel_id,
       verified_role_id: config.verified_role_id,
       log_channel_id: config.log_channel_id,

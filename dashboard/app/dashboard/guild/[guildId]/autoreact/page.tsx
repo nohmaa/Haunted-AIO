@@ -16,7 +16,7 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { Zap, Save, RefreshCcw, Plus, Trash2, Smile, Info } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
@@ -24,7 +24,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-export default function AutoReactPage({ params }: { params: { guildId: string } }) {
+export default function AutoReactPage({ params }: { params: Promise<{ guildId: string }> }) {
+  const { guildId } = use(params);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [config, setConfig] = useState<any>({ triggers: [] });
@@ -32,7 +33,7 @@ export default function AutoReactPage({ params }: { params: { guildId: string } 
   const fetchData = async () => {
     try {
       setLoading(true);
-      const configData = await api.getAutoReact(params.guildId);
+      const configData = await api.getAutoReact(guildId);
       setConfig(configData);
     } catch (error) {
       console.error("Failed to fetch auto react data:", error);
@@ -42,11 +43,11 @@ export default function AutoReactPage({ params }: { params: { guildId: string } 
     }
   };
 
-  useEffect(() => { fetchData(); }, [params.guildId]);
+  useEffect(() => { fetchData(); }, [guildId]);
 
   const handleSave = async () => {
     setSaving(true);
-    const promise = api.updateAutoReact(params.guildId, { triggers: config.triggers });
+    const promise = api.updateAutoReact(guildId, { triggers: config.triggers });
     toast.promise(promise, {
       loading: 'Saving auto react configuration...',
       success: 'Auto react settings saved!',

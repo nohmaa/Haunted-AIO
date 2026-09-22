@@ -23,10 +23,11 @@ const CustomRolesForm = dynamic(() => import("@/components/dashboard/customroles
   loading: () => <div className="h-96 w-full animate-pulse bg-slate-800/20 rounded-3xl" />
 });
 
-export default async function CustomRolesPage({ params }: { params: { guildId: string } }) {
+export default async function CustomRolesPage({ params }: { params: Promise<{ guildId: string }> }) {
+  const { guildId } = await params;
   const [config, roles] = await Promise.all([
-    api.getCustomRoles(params.guildId),
-    api.getRoles(params.guildId),
+    api.getCustomRoles(guildId),
+    api.getRoles(guildId),
   ]);
 
   if (!config) return null;
@@ -43,7 +44,7 @@ export default async function CustomRolesPage({ params }: { params: { guildId: s
         </div>
       </div>
 
-      <CustomRolesForm initialConfig={config} roles={roles} guildId={params.guildId} />
+      <CustomRolesForm initialConfig={config} roles={roles} guildId={guildId} />
     </div>
   );
 }

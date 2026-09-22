@@ -3,8 +3,9 @@ import { LayoutGrid } from "lucide-react";
 import { api } from "@/lib/api";
 import { ModulesManager } from "@/components/dashboard/modules-manager";
 
-export default async function GuildModulesPage({ params }: { params: { guildId: string } }) {
-  const config = await api.getModules(params.guildId);
+export default async function GuildModulesPage({ params }: { params: Promise<{ guildId: string }> }) {
+  const { guildId } = await params;
+  const config = await api.getModules(guildId);
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
@@ -18,7 +19,7 @@ export default async function GuildModulesPage({ params }: { params: { guildId: 
         </p>
       </div>
 
-      <ModulesManager guildId={params.guildId} initialModules={config.modules} />
+      <ModulesManager guildId={guildId} initialModules={config.modules} />
     </div>
   );
 }

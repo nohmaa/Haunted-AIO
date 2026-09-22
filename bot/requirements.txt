@@ -1,42 +1,43 @@
-Quart
-discord
-discord.py
-discord.ui
-jishaku
-mcstatus
-asyncio
-discord-ext-menus
-aiohttp
-datetime
-flask
-typing
-psutil
-collection
-requests
-pathlib
-pymongo
-wavelink>=2.0.0
-httpx
-discord.ext-context
-tasksio
-motor
-Augmentor
-numpy
-aiosqlite
-gtts
-langdetect
-python-dotenv
-pyttsx3
-PyYAML
-Requests
-openai
-duckduckgo-search==6.3.6
-# pillow==11.0.0
-colorama
-chess
-python-dateutil
-deep-translator==1.11.4
-uvicorn==0.46.0
-fastapi
-slowapi
-pycloudflared
+# Haunted Bot — dépendances Python (versions épinglées, vérifiées le 2026-09-22)
+# Installation : pip install -r requirements.txt
+# Python recommandé : 3.13 (image Pterodactyl ghcr.io/ptero-eggs/yolks:python_3.13)
+
+# ── Discord ─────────────────────────────────────────────────────────
+discord.py==2.7.1          # API Discord (client, commandes, slash)
+jishaku==2.7.5             # évaluateur Python pour les propriétaires
+discord-ext-menus==1.1     # menus paginés (blacklist, paginateurs)
+
+# ── HTTP / Web ──────────────────────────────────────────────────────
+aiohttp==3.14.3            # requêtes async (bot + webhooks)
+requests==2.34.2           # requêtes sync (extra, general)
+
+# ── API dashboard (FastAPI) ─────────────────────────────────────────
+fastapi==0.141.1           # backend REST du dashboard
+uvicorn==0.53.0            # serveur ASGI
+slowapi==0.1.10            # limitation de débit
+aiosqlite==0.22.1          # bases SQLite async (config + modules)
+
+# ── Config / utilitaires ────────────────────────────────────────────
+python-dotenv==1.2.3       # chargement du .env
+PyYAML==6.0.3              # config.yml
+colorama==0.4.6            # couleurs console
+psutil==7.2.2              # stats système (API admin)
+
+# ── Musique (Lavalink v4) ───────────────────────────────────────────
+wavelink==3.5.2            # client Lavalink v4 (API v3 : Playable, Pool)
+
+# ── Jeux & images ───────────────────────────────────────────────────
+Pillow==12.3.0             # rank cards, jeux d'images
+chess==1.11.2              # jeu d'échecs
+numpy==2.5.3               # calculs (owner)
+mcstatus==14.2.0           # statut serveurs Minecraft
+
+# ── IA / traduction / voix ──────────────────────────────────────────
+openai==3.18.0             # client OpenAI-compatible (Groq via API_BASE_URL)
+duckduckgo-search==6.3.7   # recherche web pour l'IA (6.x : dernière ligne avec AsyncDDGS, requis par utils/ai_utils.py — 7+/8 l'ont supprimé)
+langdetect==1.0.9          # détection de langue (TTS)
+gTTS==2.5.4                # synthèse vocale
+deep-translator==1.11.4    # commande de traduction
+
+# ── Tunnel HTTPS ────────────────────────────────────────────────────
+pycloudflared==0.3.0       # tunnel Cloudflare (binaire auto-téléchargé)

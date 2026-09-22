@@ -12,7 +12,7 @@
 <h3>Haunted Bot — Bot Discord Python + Backend FastAPI</h3>
 
 <p>
-  <a href="https://python.org"><img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white"/></a>
+  <a href="https://python.org"><img src="https://img.shields.io/badge/Python-3.13-3776AB?style=for-the-badge&logo=python&logoColor=white"/></a>
   <a href="https://fastapi.tiangolo.com"><img src="https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge&logo=fastapi&logoColor=white"/></a>
   <a href="https://discordpy.readthedocs.io"><img src="https://img.shields.io/badge/Discord.py-v2-5865F2?style=for-the-badge&logo=discord&logoColor=white"/></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/Licence-MIT-red?style=for-the-badge"/></a>
@@ -146,7 +146,7 @@ bot/
 
 | Prérequis | Notes |
 |---|---|
-| Python 3.10+ | — |
+| Python 3.13 | image Pterodactyl `ghcr.io/ptero-eggs/yolks:python_3.13` |
 | Nœud Lavalink v4 | pour la musique |
 | Token du bot Discord | depuis le portail développeur |
 | Compte Cloudflare (gratuit) | pour le tunnel HTTPS — config navigateur uniquement |
@@ -302,15 +302,41 @@ Quand `EMOJI_SYNC=true`, le bot synchronise les emojis d'application à chaque d
 
 ---
 
-## ✦ Déploiement
+## ✦ Déploiement (Pterodactyl)
 
-Uploadez tout le dossier `bot/` sur votre hébergeur et définissez la commande de démarrage :
+Le bot se déploie sur un serveur **Pterodactyl** avec l'egg générique **python generic** et l'image **Python 3.13** (`ghcr.io/ptero-eggs/yolks:python_3.13`). C'est la seule méthode documentée.
 
-```bash
-python CodeX.py
+**1 — Préparer l'egg (côté admin panel)**
+
+- Vérifiez que l'egg *python generic* est importé (Nests → Import Egg → URL `https://eggs.pterodactyl.io/egg/generic-python-generic`).
+- Créez un serveur avec cet egg et sélectionnez l'image Docker `Python 3.13`.
+
+**2 — Uploader les fichiers**
+
+- Dans l'onglet **Startup**, mettez `User Uploaded Files` (`USER_UPLOAD`) à `1`.
+- Via **Files** (ou SFTP), uploadez le **contenu de ce dossier `bot/`** à la racine du serveur (`CodeX.py`, `requirements.txt`, `cogs/`, `api/`, … à la racine, pas dans un sous-dossier — le bot utilise des chemins relatifs comme `db/`).
+
+**3 — Régler le démarrage**
+
+| Variable | Valeur |
+|---|---|
+| `App py file` (`PY_FILE`) | `CodeX.py` |
+| `Requirements file` (`REQUIREMENTS_FILE`) | `requirements.txt` |
+
+L'egg installe les dépendances automatiquement à chaque (re)démarrage (`pip install -U -r requirements.txt`).
+
+**4 — Détection du démarrage**
+
+Dans la **Start Configuration** de l'egg, la condition `done` doit contenir :
+
+```
+Loaded & Online!
 ```
 
-`pycloudflared` télécharge le binaire au premier lancement — rien d'autre à faire, sur aucun hébergeur.
+**5 — Configurer et lancer**
+
+- Créez le fichier `.env` (via **Files**) en copiant `.env.example`, puis renseignez au minimum `TOKEN`, `OWNER_IDS`, `DASHBOARD_API_KEY` et le tunnel Cloudflare.
+- Onglet **Console** → **Start**.
 
 ---
 
@@ -321,7 +347,7 @@ python CodeX.py
 | Le bot ne démarre pas | Vérifiez `TOKEN` et les intents dans le portail développeur |
 | Musique hors service | Vérifiez `LAVALINK_HOST`, `LAVALINK_SECURE`, `LAVALINK_PORT` |
 | Le dashboard n'atteint pas l'API | Vérifiez `API_ENABLED=true` et `NEXT_PUBLIC_API_URL` côté dashboard |
-| Erreurs CORS | Ajoutez votre URL Vercel dans `CORS_ORIGINS` (`.env`) |
+| Erreurs CORS | Ajoutez l'URL de votre dashboard dans `CORS_ORIGINS` (`.env`) |
 | Emojis affichés en texte brut | Lancez une fois avec `EMOJI_SYNC=true` |
 | Tunnel ne démarre pas | Vérifiez `CF_TUNNEL_TOKEN` et que `pycloudflared` est installé |
 | Ajouter un propriétaire | Ajoutez son ID dans `OWNER_IDS` (`.env`) — sans toucher au code |

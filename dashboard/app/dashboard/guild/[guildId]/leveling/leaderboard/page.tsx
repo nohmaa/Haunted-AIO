@@ -16,7 +16,7 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { 
   Trophy, 
   User, 
@@ -35,7 +35,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { LeaderboardEntry } from "@/types/api";
 
-export default function LeaderboardPage({ params }: { params: { guildId: string } }) {
+export default function LeaderboardPage({ params }: { params: Promise<{ guildId: string }> }) {
+  const { guildId } = use(params);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -43,7 +44,7 @@ export default function LeaderboardPage({ params }: { params: { guildId: string 
   useEffect(() => {
     async function fetchLeaderboard() {
       try {
-        const data = await api.getLeaderboard(params.guildId);
+        const data = await api.getLeaderboard(guildId);
         setLeaderboard(data);
       } catch (err) {
         console.error("Failed to fetch leaderboard:", err);
@@ -52,7 +53,7 @@ export default function LeaderboardPage({ params }: { params: { guildId: string 
       }
     }
     fetchLeaderboard();
-  }, [params.guildId]);
+  }, [guildId]);
 
   const filteredData = leaderboard.filter(entry => 
     entry.name.toLowerCase().includes(search.toLowerCase()) || 
