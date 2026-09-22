@@ -80,15 +80,11 @@ dashboard/
 
 ## ✦ Installation
 
-### 1 — Installer les dépendances
+> Version guidée (où trouver chaque valeur) : voir « Installation du dashboard » dans le `README.md` racine.
 
-```bash
-npm install
-```
+### 1 — Remplir le `.env.local` en premier
 
-### 2 — Configurer l'environnement
-
-Créez un fichier `.env.local` dans ce dossier :
+Créez un fichier `.env.local` dans ce dossier (copié depuis `.env.example`). À remplir **avant** `npm install`, avec l'URL d'API affichée par le bot et la **même** clé API que côté bot :
 
 ```env
 # ── API du bot ──────────────────────────────────────────────────────
@@ -110,13 +106,14 @@ NEXT_PUBLIC_BRAND_NAME        = "Haunted"
 NEXT_PUBLIC_BRAND_NAME_WORD   = "H"
 ```
 
-### 3 — Lancer en local
+### 2 — Installer puis lancer
 
 ```bash
+npm install
 npm run dev
 ```
 
-Ouvrez [http://localhost:3000](http://localhost:3000)
+Ouvrez [http://localhost:3000](http://localhost:3000) et connectez-vous avec Discord.
 
 ---
 

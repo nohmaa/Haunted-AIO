@@ -138,29 +138,78 @@ Haunted/
 
 ---
 
-## ✦ Prérequis
+## ✦ Avant de commencer
 
-| Prérequis | Version / Notes |
-|---|---|
-| Python | 3.13 (image Pterodactyl `ghcr.io/ptero-eggs/yolks:python_3.13`) |
-| Node.js | 22 LTS ou supérieur (dashboard) |
-| Nœud Lavalink | v4 |
-| Token du bot Discord | — |
-| Application Discord OAuth | pour la connexion au dashboard |
-| Compte Cloudflare (gratuit) | pour le tunnel HTTPS |
+Il vous faut 3 choses (gratuites), à préparer **avant** d'installer :
+
+| # | Quoi | Où l'obtenir |
+|---|---|---|
+| 1 | Une **application Discord** (donne le token du bot + les clés OAuth du dashboard) | [Portail développeur Discord](https://discord.com/developers/applications) → New Application → onglet **Bot** (bouton Reset Token pour voir le token) et onglet **OAuth2** (Client ID + Client Secret) |
+| 2 | Un **nœud Lavalink v4** (uniquement pour la musique) | Hébergez-le vous-même ou utilisez un nœud public gratuit |
+| 3 | Un **tunnel Cloudflare** (pour relier le bot au dashboard en HTTPS) | [one.dash.cloudflare.com](https://one.dash.cloudflare.com) → Networks → Tunnels → Create a tunnel (voir section Tunnel plus bas, 5 min) |
+
+Logiciels : **Python 3.13** (ou image Pterodactyl `ghcr.io/ptero-eggs/yolks:python_3.13`) et **Node.js 22 LTS** (dashboard uniquement).
+
+Ordre conseillé : **1)** remplir le `.env` du bot → **2)** lancer le bot → **3)** remplir le `.env.local` du dashboard (avec l'URL affichée par le bot) → **4)** lancer le dashboard.
 
 ---
 
 ## ✦ Installation du bot
 
-**1 — Cloner le dépôt**
+**Étape 0 — Récupérer le code**
 
 ```bash
 git clone https://github.com/nohmaa/Haunted-AIO
 cd Haunted-AIO/bot
 ```
 
-**2 — Installer les dépendances**
+**Étape 1 — Remplir le `.env` (à faire en premier)**
+
+Copiez le modèle, puis remplissez-le ligne par ligne :
+
+```bash
+cp .env.example .env
+```
+
+```env
+# ── Obligatoire ─────────────────────────────────────────────────────
+# Portail Discord → votre application → onglet Bot → Reset Token
+TOKEN              = collez_ici_le_token_du_bot
+
+# Votre ID Discord : paramètres Discord → Avancés → mode développeur,
+# puis clic droit sur votre pseudo → Copier l'identifiant.
+# Plusieurs IDs possibles, séparés par des virgules.
+OWNER_IDS          = 123456789012345678
+
+# Inventez un mot de passe long et unique : il devra être IDENTIQUE
+# dans le .env du dashboard (NEXT_PUBLIC_DASHBOARD_API_KEY).
+DASHBOARD_API_KEY  = changez_moi_par_un_secret_long_et_unique
+
+# ── Musique (Lavalink v4) ───────────────────────────────────────────
+# Sans nœud Lavalink, seul la musique est désactivée, le reste marche.
+LAVALINK_HOST      = "votre-hote-lavalink"
+LAVALINK_PASSWORD  = "votre_mot_de_passe"
+LAVALINK_SECURE    = "true"
+LAVALINK_PORT      = ""
+
+# ── Tunnel Cloudflare (relie le bot au dashboard) ───────────────────
+# one.dash.cloudflare.com → Networks → Tunnels → Create a tunnel
+# (voir section « Tunnel HTTPS » plus bas pour le pas-à-pas).
+TUNNEL_ENABLED     = "true"
+CF_TUNNEL_TOKEN    = "collez_ici_le_token_du_tunnel"
+CF_TUNNEL_URL      = "https://api.votredomaine.com"
+
+# ── Optionnel : laissez les valeurs par défaut ──────────────────────
+brand_name         = 'Haunted'
+EMOJI_SYNC         = "true"
+API_ENABLED        = "true"
+API_PORT           = "8000"
+CORS_ORIGINS       = ""
+WEBHOOK_URL        = "https://discord.com/api/webhooks/..."
+BOT_LANG           = "fr"
+```
+
+**Étape 2 — Installer les dépendances**
 
 ```bash
 python -m venv .venv
@@ -174,85 +223,66 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-**3 — Configurer l'environnement**
-
-Copiez `.env.example` vers `.env` et renseignez les valeurs :
-
-```env
-# ── Cœur ────────────────────────────────────────────────────────────
-TOKEN              = votre_token_discord
-brand_name         = 'Haunted'
-
-# ── IDs propriétaires (séparés par des virgules) ────────────────────
-OWNER_IDS          = 870179991462236170,767979794411028491
-
-# ── Lavalink ────────────────────────────────────────────────────────
-LAVALINK_HOST      = "votre-hote-lavalink"
-LAVALINK_PASSWORD  = "votre_mot_de_passe"
-LAVALINK_SECURE    = "true"
-LAVALINK_PORT      = ""
-
-# ── Sync des emojis ─────────────────────────────────────────────────
-EMOJI_SYNC         = "true"
-
-# ── API / Backend dashboard ─────────────────────────────────────────
-API_ENABLED        = "true"
-API_PORT           = "8000"
-DASHBOARD_API_KEY  = "changez_ce_secret_robuste"
-CORS_ORIGINS       = ""
-
-# ── Tunnel Cloudflare ───────────────────────────────────────────────
-TUNNEL_ENABLED     = "true"
-CF_TUNNEL_TOKEN    = "votre_token_tunnel"
-CF_TUNNEL_URL      = "https://api.votredomaine.com"
-
-# ── Webhooks ────────────────────────────────────────────────────────
-WEBHOOK_URL        = "https://discord.com/api/webhooks/..."
-```
-
-**4 — Lancer le bot**
+**Étape 3 — Lancer le bot**
 
 ```bash
 python haunted.py
 ```
 
+✅ **Ça marche si** la console affiche :
+```
+Loaded & Online!
+◈ Tunnel: API is live at  https://api.votredomaine.com
+  ↳ NEXT_PUBLIC_API_URL = https://api.votredomaine.com/api/v1
+```
+👉 **Copiez la ligne `NEXT_PUBLIC_API_URL`** : elle sert à remplir le `.env` du dashboard juste après.
+
 ---
 
 ## ✦ Installation du dashboard
 
-**1 — Installer les dépendances**
+À faire **après** le bot (il vous faut son URL d'API et sa clé, affichées dans sa console).
+
+**Étape 1 — Remplir le `.env.local` (à faire en premier)**
 
 ```bash
 cd dashboard
-npm install
+cp .env.example .env.local
 ```
 
-**2 — Configurer l'environnement**
-
-Copiez `.env.example` vers `.env.local` :
-
 ```env
+# URL affichée par le bot au démarrage (ligne NEXT_PUBLIC_API_URL)
 NEXT_PUBLIC_API_URL           = https://api.votredomaine.com/api/v1
-NEXT_PUBLIC_DASHBOARD_API_KEY = votre_cle_api_partagee
 
+# RECOPIEZ ici le DASHBOARD_API_KEY du .env du bot (identique !)
+NEXT_PUBLIC_DASHBOARD_API_KEY = le_meme_secret_que_cote_bot
+
+# En local, laissez tel quel. En production, mettez votre domaine.
 NEXTAUTH_URL                  = http://localhost:3000
-NEXTAUTH_SECRET               = une_chaine_aleatoire_longue
 
+# Générez-le, ne gardez pas l'exemple : openssl rand -base64 32
+NEXTAUTH_SECRET               = collez_ici_une_chaine_aleatoire_longue
+
+# Portail Discord → MÊME application que le bot → onglet OAuth2.
+# Puis ajoutez cette URI de redirection dans OAuth2 → Redirects :
+#   http://localhost:3000/api/auth/callback/discord
 DISCORD_CLIENT_ID             = votre_client_id_oauth_discord
 DISCORD_CLIENT_SECRET         = votre_client_secret_oauth_discord
 
-NEXT_PUBLIC_ADMIN_IDS         = votre_id_utilisateur_discord
+# Votre ID Discord (voir bot, étape 1). Laissez le reste par défaut.
+NEXT_PUBLIC_ADMIN_IDS         = 123456789012345678
 NEXT_PUBLIC_BRAND_NAME        = "Haunted"
 NEXT_PUBLIC_BRAND_NAME_WORD   = "H"
 ```
 
-**3 — Lancer en local**
+**Étape 2 — Installer puis lancer**
 
 ```bash
+npm install
 npm run dev
 ```
 
-Ouvrez [http://localhost:3000](http://localhost:3000)
+✅ **Ça marche si** [http://localhost:3000](http://localhost:3000) s'ouvre et que le bouton de connexion Discord vous connecte. Si les serveurs ne chargent pas : bot bien en ligne ? Clés API identiques des deux côtés ?
 
 ---
 

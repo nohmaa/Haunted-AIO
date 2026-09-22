@@ -155,23 +155,11 @@ bot/
 
 ## ✦ Installation
 
-### 1 — Installer les dépendances
+> Version guidée (où trouver chaque valeur) : voir « Installation du bot » dans le `README.md` racine. Ici la version courte.
 
-```bash
-python -m venv .venv
+### 1 — Remplir le `.env` en premier
 
-# Windows
-.venv\Scripts\activate
-
-# Linux / macOS
-source .venv/bin/activate
-
-pip install -r requirements.txt
-```
-
-### 2 — Configurer l'environnement
-
-Créez un fichier `.env` (copié depuis `.env.example`) :
+Créez un fichier `.env` (copié depuis `.env.example`) et remplissez **d'abord** les 4 valeurs obligatoires : `TOKEN` (onglet Bot du portail Discord), `OWNER_IDS` (votre ID Discord), `DASHBOARD_API_KEY` (secret inventé, à recopier côté dashboard), puis le tunnel Cloudflare (`CF_TUNNEL_TOKEN`, `CF_TUNNEL_URL`). Laissez le reste par défaut (voir le modèle annoté dans le README racine) :
 
 ```env
 # ── Cœur ────────────────────────────────────────────────────────────
@@ -208,11 +196,27 @@ WEBHOOK_URL        = "https://discord.com/api/webhooks/..."
 BOT_LANG           = "fr"
 ```
 
+### 2 — Installer les dépendances
+
+```bash
+python -m venv .venv
+
+# Windows
+.venv\Scripts\activate
+
+# Linux / macOS
+source .venv/bin/activate
+
+pip install -r requirements.txt
+```
+
 ### 3 — Lancer
 
 ```bash
 python haunted.py
 ```
+
+✅ Vérifiez `Loaded & Online!` dans la console et copiez la ligne `NEXT_PUBLIC_API_URL` pour le dashboard.
 
 ---
 

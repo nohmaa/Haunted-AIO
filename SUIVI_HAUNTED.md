@@ -4,6 +4,10 @@
 > Objectifs actuels : (1) traduction en français, (2) nouvelle identité **Haunted**, (3) activation/désactivation des modules depuis le dashboard.
 > Mettre à jour ce fichier à chaque changement (date + fichiers + comportement).
 
+## 2026-09-23 — Installation simplifiée (.env d'abord)
+- `README.md` : parcours réécrit — prérequis en checklist avec liens, `.env` **avant** l'install, modèle annoté (où trouver chaque valeur), ordre bot → dashboard, et ✅ « ça marche si » avec la ligne `NEXT_PUBLIC_API_URL` à copier.
+- `bot/README.md` et `dashboard/README.md` alignés sur le même ordre (`.env` en étape 1, renvoi vers la version guidée du README racine).
+
 ## 2026-09-23 — Repo renommé `Haunted-AIO`
 - Renommage GitHub `ZyroX-CV2-AIO-With-Dashboard` → `Haunted-AIO` (fait manuellement côté web).
 - Remote local mis à jour (`origin` → `https://github.com/nohmaa/Haunted-AIO.git`).
