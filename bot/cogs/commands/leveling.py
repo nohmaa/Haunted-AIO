@@ -36,6 +36,15 @@ import logging
 logger =logging .getLogger ('discord')
 
 
+def _leaderboard_bg (filename :str )->str :
+    """Chemin du fond du leaderboard : relatif au dossier du bot d'abord
+    (fonctionne en méthode git comme en upload), repli historique sinon."""
+    here =os .path .join (os .path .dirname (os .path .abspath (__file__ )),"..","..","assets",filename )
+    if os .path .exists (here ):
+        return os .path .normpath (here )
+    return f"/home/container/assets/{filename}"
+
+
 def utc_to_local (dt :datetime )->datetime :
     return dt .replace (tzinfo =timezone .utc )
 
@@ -2494,7 +2503,7 @@ class Leveling (commands .Cog ):
 
             for ext in background_extensions :
                 try :
-                    bg_path =f"/home/container/assets/leaderboardlevel{ext}"
+                    bg_path =_leaderboard_bg (f"leaderboardlevel{ext}")
                     if os .path .exists (bg_path ):
                         temp_bg =Image .open (bg_path )
                         bg_width ,bg_height =temp_bg .size 
@@ -2528,7 +2537,7 @@ class Leveling (commands .Cog ):
 
             for ext in background_extensions :
                 try :
-                    bg_path =f"/home/container/assets/leaderboardlevel{ext}"
+                    bg_path =_leaderboard_bg (f"leaderboardlevel{ext}")
                     if os .path .exists (bg_path ):
                         background_img =Image .open (bg_path )
 

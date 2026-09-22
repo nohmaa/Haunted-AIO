@@ -4,6 +4,11 @@
 > Objectifs actuels : (1) traduction en français, (2) nouvelle identité **Haunted**, (3) activation/désactivation des modules depuis le dashboard.
 > Mettre à jour ce fichier à chaque changement (date + fichiers + comportement).
 
+## 2026-09-23 — Assets : aucun ZyroX + fix fond leaderboard
+- Vérifié visuellement : `background.png` (texture sombre neutre), `leaderboardlevel.gif` (scène anime sans texte), `minecraft.ttf` → aucun nom/logo ZyroX. Grep binaire : rien.
+- Bug trouvé au passage : `leveling.py` cherchait le fond en absolu `/home/container/assets/…` (inexistant en méthode git → fond uni silencieux). Nouveau helper `_leaderboard_bg()` : chemin relatif au dossier du bot d'abord, repli historique sinon. Couverture git + upload.
+- Vérification : `compileall` + AST OK.
+
 ## 2026-09-23 — Licence Arsonist + serveur support
 - `LICENSE` (racine, `bot/`, `dashboard`) : `Copyright (c) 2026 Arsonist`.
 - Nouveau lien support `https://discord.gg/DvetGPq9q5` : défaut `SUPPORT_SERVER` (`config.py`), `.env.example`, tables des READMEs, `help_footer` (EN+FR), et ligne discord des 268 filigranes (cadres réalignés).
