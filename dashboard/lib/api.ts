@@ -57,32 +57,59 @@ async function request<T>(
     headers.set("Authorization", `Bearer ${API_KEY}`);
   }
   headers.set("Content-Type", "application/json");
-  try {
-    const response = await fetch(url, {
-      ...options,
-      headers,
-      // CRITICAL: Never cache mutation responses. For GETs, use revalidate: 0
-      // to always fetch fresh data from the bot API. Caching was causing
-      // saved data to "disappear" on reload because Next.js served stale cache.
-      next: options.next || { revalidate: 0 },
-    });
 
-    if (!response.ok) {
-      let errorData;
-      try {
-        errorData = await response.json();
-      } catch {
-        errorData = { detail: "An unknown error occurred" };
+  // The bot API sits behind a Cloudflare tunnel that can briefly drop
+  // connections (HTTP 530 / "fetch failed") between the Vercel function and
+  // the bot. Retry transient NETWORK failures only — HTTP errors (401, 404,
+  // 500...) are deterministic and must not be retried. PATCH/POST retries are
+  // safe here: configs are idempotent and a dropped tunnel means the request
+  // never reached the bot.
+  const MAX_ATTEMPTS = 3;
+  let lastNetworkError: unknown;
+
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    try {
+      const response = await fetch(url, {
+        ...options,
+        headers,
+        // Fail fast instead of hanging for the default timeout when the
+        // tunnel is down — the failure then hits the retry loop.
+        signal: options.signal ?? AbortSignal.timeout(15000),
+        // CRITICAL: Never cache mutation responses. For GETs, use revalidate: 0
+        // to always fetch fresh data from the bot API. Caching was causing
+        // saved data to "disappear" on reload because Next.js served stale cache.
+        next: options.next || { revalidate: 0 },
+      });
+
+      if (!response.ok) {
+        let errorData;
+        try {
+          errorData = await response.json();
+        } catch {
+          errorData = { detail: "An unknown error occurred" };
+        }
+        console.error(`[API HTTP Error] Status ${response.status} for ${url}:`, errorData);
+        throw new ApiError(response.status, errorData.detail || response.statusText);
       }
-      console.error(`[API HTTP Error] Status ${response.status} for ${url}:`, errorData);
-      throw new ApiError(response.status, errorData.detail || response.statusText);
-    }
 
-    return response.json();
-  } catch (error) {
-    console.error(`[API Network/Fetch Error] Failed to fetch ${url}:`, error);
-    throw error;
+      return (await response.json()) as T;
+    } catch (error) {
+      // ApiError = the API answered with an error status: bubble up as-is.
+      if (error instanceof ApiError) throw error;
+      lastNetworkError = error;
+      console.error(
+        `[API Network/Fetch Error] (attempt ${attempt}/${MAX_ATTEMPTS}) Failed to fetch ${url}:`,
+        error
+      );
+      if (attempt < MAX_ATTEMPTS) {
+        await new Promise((resolve) => setTimeout(resolve, 400 * attempt));
+        continue;
+      }
+      throw error;
+    }
   }
+
+  throw lastNetworkError;
 }
 
 export const api = {

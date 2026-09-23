@@ -249,6 +249,10 @@ def _run_tunnel(binary: str, token: str, port: int, public_url: str) -> None:
         binary,
         "tunnel",
         "--no-autoupdate",
+        # Prefer HTTP/2 over TCP instead of QUIC over UDP: many hosts
+        # (Pterodactyl/game hosts) throttle or drop outbound UDP, which makes
+        # the tunnel flap (intermittent HTTP 530 on the dashboard).
+        "--protocol", "http2",
         "--url", f"http://localhost:{port}",
         "run",
         "--token", token,
