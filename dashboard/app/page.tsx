@@ -254,7 +254,7 @@ export default function LandingPage() {
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-8">
                  {[
-                   { icon: Terminal, title: "DSL personnalisé", desc: "Écrivez des logiques avancées avec notre langage de script ZyroX intuitif." },
+                   { icon: Terminal, title: "DSL personnalisé", desc: "Écrivez des logiques avancées avec notre langage de script Haunted intuitif." },
                    { icon: Cpu, title: "Prêt pour FPGA", desc: "Reconnaissance de motifs accélérée par le matériel pour une réponse instantanée." },
                    { icon: Lock, title: "Zéro confiance", desc: "Chaque exécution de commande est isolée et vérifiée cryptographiquement." },
                    { icon: Radio, title: "Faible entropie", desc: "Optimisé pour une gigue CPU minimale et une fiabilité maximale." }

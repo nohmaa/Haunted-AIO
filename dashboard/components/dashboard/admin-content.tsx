@@ -111,7 +111,7 @@ export function AdminContent() {
             </div>
             <div>
               <h1 className="text-4xl font-black text-white tracking-tight font-outfit">Panneau de contrôle admin</h1>
-              <p className="text-slate-400 mt-2 font-medium">Accès restreint aux administrateurs ZyroX uniquement.</p>
+              <p className="text-slate-400 mt-2 font-medium">Accès restreint aux administrateurs Haunted uniquement.</p>
             </div>
           </div>
           <button 

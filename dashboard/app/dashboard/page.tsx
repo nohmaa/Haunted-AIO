@@ -130,7 +130,7 @@ export default async function DashboardPage() {
           
           <div className="relative z-10">
             <h2 className="text-2xl font-bold text-white mb-3 font-outfit">État des modules</h2>
-            <p className="text-slate-500 text-sm mb-10 font-medium">Santé opérationnelle globale du cœur ZyroX.</p>
+            <p className="text-slate-500 text-sm mb-10 font-medium">Santé opérationnelle globale du cœur Haunted.</p>
             
             <div className="space-y-4">
               {[

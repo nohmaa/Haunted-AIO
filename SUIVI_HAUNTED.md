@@ -12,6 +12,11 @@
 - Topologie retenue : API bot → `https://api.haunted-mind.site` (tunnel `haunted-api`) ; dashboard → URL Vercel (domaine custom `dashboard.haunted-mind.site` optionnel plus tard).
 - Guide détaillé donné en chat (domaine → tunnel → Vercel → OAuth → CORS).
 
+## 2026-09-23 — Derniers « ZyroX » visibles + traduction des commandes lancée
+- Corrigés : `admin-content` (administrateurs Haunted), landing (langage Haunted), dashboard home (cœur Haunted), `.env.example` (haunted-api).
+- Reste volontaire : identifiants de code (`zyrox`, `cogs/zyrox/`, `ZYROX_*`), noms d'emojis Discord, historique docs.
+- Traduction des ~150 fichiers de commandes lancée en 6 agents parallèles (commands A-M / N-Z, zyrox, events+moderation, antinuke+automod, games+utils) avec garde-fous (identifiants, URLs, emojis, placeholders, compileall par fichier).
+
 ## 2026-09-23 — Dashboard 100 % français
 - 4 agents parallèles (shell, formulaires A/B, pages publiques) + 18 pages serveurs en scripts vérifiés : titres, descriptions, labels, placeholders, boutons, toasts, sidebars, landing, docs, CGU/confidentialité.
 - Garde-fous : valeurs API intactes (`panel_type`, `button_style`, `punishments`, `verification_method`, `value="none"`…), comparaisons logiques traduites à l'identique, `process.env` et routes intacts.
