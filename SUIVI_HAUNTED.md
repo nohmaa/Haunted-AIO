@@ -274,3 +274,48 @@ Repo d'origine : https://github.com/nohmaa/ZyroX-CV2-AIO-With-Dashboard
 - Backend : script de test `test_modules2.py` → **ALL TESTS PASSED** (registre 19 modules, schémas pydantic, `get/set/is_module_enabled` + bulk + clé inconnue rejetée, `i18n.t` FR/EN/fallback). Nécessite `aiosqlite`, `pydantic`, `python-dotenv` (installés dans le Python système pour le test ; le bot utilise son `requirements.txt`).
 - Dashboard : `npx tsc --noEmit` **impossible dans cette session** — `node_modules/` absent du checkout (`Cannot find module 'react'` sur tout le projet, pré-existant, non lié à ces changements). À valider avec `npm install` puis `npm run dev` (`NEXT_PUBLIC_API_URL` → tunnel/serveur local).
 - Bot live non testé : à valider avec `python haunted.py` (commande d'un module désactivé doit répondre le message FR).
+
+---
+
+## Audit approfondi + correctifs (2026-09-23, session 8)
+
+### 1. API du bot — routes masquées et métriques fausses
+- `bot/api/routes/guilds.py` : **3 routes mortes supprimées** (`GET /{guild_id}/welcome`, `PATCH /{guild_id}/welcome`, `GET /{guild_id}/autoreact` étaient définies deux fois). FastAPI retient la **première** définition : la seconde était inatteignable et invisible dans `/docs`. Régression couverte par un test (`test_no_duplicate_method_and_path`).
+- `bot/api/routes/admin.py` :
+  - `total_users` renommé `total_members` (`schemas.py` + `dashboard/types/api.ts`) : c'était la **somme des membres de chaque serveur**, pas des utilisateurs uniques. Libellé dashboard : « Membres cumulés ».
+  - État des nœuds : plus aucun statut codé en dur (« Primary API Cluster »/« Auth Sockets » étaient toujours `Healthy`). Les 4 nœuds portent des noms réels (Processus API, Base de données, Modules du bot, Passerelle Discord) et un `status` stable en anglais (`healthy`/`warning`/`booting`) **dérivé de mesures réelles** (CPU, RAM, nombre de bases, cogs, latence passerelle). Le dashboard traduit.
+
+### 2. Dashboard — actions mortes, zéros inventés, droits d'accès
+- **Action morte** `logging` : le bouton « Historique d'audit » ne faisait rien (aucun endpoint n'existe) → supprimé ; le bouton « Enregistrer la configuration globale » de `logging-form.tsx` n'avait **aucun handler** → remplacé par deux actions réelles (« Activer toutes les catégories » / « Tout passer en silencieux ») qui écrivent via l'API avec toast et retour arrière en cas d'échec.
+- **Pages vides** : 8 pages de module faisaient `if (!config) return null;` → page blanche muette. Nouveau composant `dashboard/components/dashboard/module-unavailable.tsx` : état « Données indisponibles » explicite + bouton Réessayer (aucune valeur inventée).
+- `admin-content.tsx` : `stats?.x || "0"` affichait de **faux zéros** (0 membre, 0ms, 0 MB) quand l'API ne répondait pas → « — » + badge « Indisponible » au lieu du badge « En direct » ; section « État des nœuds » vide → message d'indisponibilité honnête.
+- `tickets/page.tsx` : badge « Système en direct » affiché en permanence avec une pastille animée (décoratif) → remplacé par l'état réel déduit de `panel_channel`.
+- **Droits d'accès** : `app/dashboard/guild/[guildId]/layout.tsx` **ne vérifiait aucune permission** — n'importe quel utilisateur connecté pouvait ouvrir la configuration de n'importe quel serveur du bot en changeant l'URL. Ajout de `dashboard/lib/discord.ts` (`getManageableGuildIds`, propriétaire / Administrateur / « Gérer le serveur », mémoïsé par requête) utilisé par le layout de guilde **et** par `dashboard/guilds/page.tsx` (logique de filtrage dédupliquée). Si Discord ne répond pas : « Vérification impossible », aucune donnée affichée.
+- Limite connue (non corrigée, voir « reste à faire ») : `NEXT_PUBLIC_DASHBOARD_API_KEY` est exposée au navigateur (les formulaires appellent l'API du bot en direct). La clé étant publique, les routes `/admin/*` et `/guilds/*` restent appelables hors dashboard par qui extrait la clé du bundle.
+
+### 3. Commandes du bot — recensement et cause racine du `play` cassé
+- Inventaire statique : **558 commandes déclarées** (dont 89 groupes, 260 de premier niveau), **aucune collision** de nom ni d'alias au premier niveau, **aucun nom non ASCII**, aucun groupe sans sous-commande (les signalements `__Xxx__`/`app_commands.Group` sont des faux positifs d'analyse).
+- Chargement réel (`bot/tests/` + harnais) : **141 cogs, 551 commandes, 89 commandes slash chargées sans un seul échec**.
+- `play` → `InvalidNodeException` : ce **n'est pas** un bug de traduction. `cogs/commands/music.py` visait un noeud par défaut codé en dur (`lava-v4.ajieblogs.eu.org`) **qui ne parle pas le protocole v4** attendu par wavelink 3.5.2 (`/v4/info` → 404 openresty, seul `/version` répond). Vérifié aussi `lavalink.jirayu.net` (`/v4/info` → 403 avec mot de passe, puis 500 « proxy error » : noeud v4 mais backend en panne à cet instant). Correctifs : plus **aucun hôte par défaut** (un noeud inutilisable valait moins qu'un refus explicite), `LAVALINK_HOST`/`LAVALINK_PASSWORD` obligatoires, message console actionnable au démarrage si absents, URI normalisée (`https://https://…` impossible), reconnexion toutes les 30 s (déjà en place), `.env.example` documenté « Lavalink v4 obligatoire ».
+- `bot/utils/Tools.py` : `asyncio.run(setup_db())` à l'import était un piège (crash si une boucle asyncio tourne déjà, et bot mort si `db/` manque) → création du dossier `db/` + repli synchrone `sqlite3` quand une boucle est active.
+
+### 4. Identité « maison hantée » (déjà poussée cette session)
+- Landing réécrite et raccourcie (une seule promesse par section, FAQ 3 questions, variables `{user}`/`{server_name}` documentées), CTA **console uniquement**.
+- Thème : `globals.css` (`haunted-fog`, `haunted-vignette`, `haunted-panel`, crypte/surface/brume) + `tailwind.config.ts` + passage sur les composants UI et les 23 pages.
+- Page **Network** : absente (route, liens et éléments dédiés supprimés) — vérifié par grep (`aucune` occurrence fonctionnelle, seuls des commentaires « network error » subsistent).
+- **Parcours d'invitation du bot retiré** partout (landing, dashboard, docs) ; l'authentification NextAuth (`guilds` scope) et l'accès au dashboard sont intacts.
+
+### 5. Tests exécutés
+- `bot/tests/test_haunted_audit.py` (stdlib `unittest`, **19 tests, tous verts**) :
+  `cd bot && python -m unittest discover -s tests -v`
+  Couvre le repli texte anti-50006 (`_text_of` sur embeds, `CV2`, `CV2Embed`, `TextDisplay`), la normalisation d'URI Lavalink (9 cas dont host/schéma/port/absence), l'unicité et la non-collision des routes FastAPI, la **couverture dashboard → bot** (chaque appel de `dashboard/lib/api.ts` doit exister côté bot) et le contrat `/admin/stats` (champs présents, statuts dérivés, jamais codés en dur).
+- `python -m compileall` sur tout `bot/` : OK.
+- Chargement réel de tous les cogs (`_async_setup_hook` + `setup_hook`, `wait_until_ready` neutralisé) : 141 cogs, 0 échec.
+- Dashboard : `npm run build` **OK**, toutes les routes en `ƒ` (dynamique). `npx eslint` : les erreurs restantes sont **préexistantes** (`no-explicit-any` sur les formulaires, apostrophes non échappées) et sans lien avec ces changements.
+
+### 6. Reste à faire (non bloquant, classé par valeur)
+1. **Sécurité (le plus important)** : passer les appels du dashboard par un proxy serveur (`app/api/bot/[...path]/route.ts`) avec une clé **non publique** (`DASHBOARD_API_KEY`), puis supprimer `NEXT_PUBLIC_DASHBOARD_API_KEY`. Aujourd'hui la clé est dans le bundle navigateur et `/admin/*` n'est pas vérifié côté bot.
+2. `maintenance_mode` : l'interrupteur admin enregistre un état que **personne ne lit** (aucun effet). À câbler (refus des commandes non-owner) ou à retirer de l'UI.
+3. Musique : le noeud doit être fourni par un vrai Lavalink v4 ; à valider en prod avec un noeud vivant (`Lavalink` public testé : `lava-v4.ajieblogs.eu.org` **incompatible v4**, `lavalink.jirayu.net` en panne ce jour).
+4. `DELETE /guilds/{id}/welcome` existe côté bot mais n'est appelé par aucune UI (pas de bouton « réinitialiser »).
+5. Les 19 URLs d'avatar de l'ancien bot, dernières chaînes EN côté UI, monitoring externe de `/health`, `README.md` à rafraîchir.
