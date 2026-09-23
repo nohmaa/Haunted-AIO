@@ -27,6 +27,8 @@ import { cn, isAdmin } from "@/lib/utils";
 import { api } from "@/lib/api";
 import { AdminConfig } from "@/types/api";
 
+export const dynamic = "force-dynamic";
+
 export default function DashboardLayout({
   children,
 }: {

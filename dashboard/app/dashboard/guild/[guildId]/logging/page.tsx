@@ -17,13 +17,15 @@ import {
   BellRing,
   ChevronRight
 } from "lucide-react";
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 
-const LoggingForm = dynamic(() => import("@/components/dashboard/logging-form").then(mod => mod.LoggingForm), {
+const LoggingForm = nextDynamic(() => import("@/components/dashboard/logging-form").then(mod => mod.LoggingForm), {
   loading: () => <div className="h-96 w-full animate-pulse bg-slate-800/20 rounded-[40px]" />
 });
+
+export const dynamic = "force-dynamic";
 
 export default async function LoggingPage({ params }: { params: Promise<{ guildId: string }> }) {
   const { guildId } = await params;

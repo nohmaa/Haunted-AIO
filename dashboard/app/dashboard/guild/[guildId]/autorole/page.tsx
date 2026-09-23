@@ -14,15 +14,17 @@
 
 import React from "react";
 import { UserPlus } from "lucide-react";
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
 import { api } from "@/lib/api";
 
 export const revalidate = 0; // Never cache this page
 
 
-const AutoRoleForm = dynamic(() => import("@/components/dashboard/autorole-form").then(mod => mod.AutoRoleForm), {
+const AutoRoleForm = nextDynamic(() => import("@/components/dashboard/autorole-form").then(mod => mod.AutoRoleForm), {
   loading: () => <div className="h-96 w-full animate-pulse bg-slate-800/20 rounded-3xl" />
 });
+
+export const dynamic = "force-dynamic";
 
 export default async function AutoRolePage({ params }: { params: Promise<{ guildId: string }> }) {
   const { guildId } = await params;

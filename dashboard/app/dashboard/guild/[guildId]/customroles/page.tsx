@@ -14,12 +14,14 @@
 
 import React from "react";
 import { Ghost } from "lucide-react";
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
 import { api } from "@/lib/api";
 
-const CustomRolesForm = dynamic(() => import("@/components/dashboard/customroles-form").then(mod => mod.CustomRolesForm), {
+const CustomRolesForm = nextDynamic(() => import("@/components/dashboard/customroles-form").then(mod => mod.CustomRolesForm), {
   loading: () => <div className="h-96 w-full animate-pulse bg-slate-800/20 rounded-3xl" />
 });
+
+export const dynamic = "force-dynamic";
 
 export default async function CustomRolesPage({ params }: { params: Promise<{ guildId: string }> }) {
   const { guildId } = await params;

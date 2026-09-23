@@ -23,6 +23,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 
+export const dynamic = "force-dynamic";
+
 export default function JoinDMPage({ params }: { params: Promise<{ guildId: string }> }) {
   const { guildId } = use(params);
   const [loading, setLoading] = useState(true);

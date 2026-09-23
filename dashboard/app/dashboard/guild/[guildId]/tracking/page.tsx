@@ -24,6 +24,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
+export const dynamic = "force-dynamic";
+
 export default function TrackingPage({ params }: { params: Promise<{ guildId: string }> }) {
   const { guildId } = use(params);
   const [loading, setLoading] = useState(true);

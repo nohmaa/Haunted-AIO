@@ -23,6 +23,8 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
 export default function VanityRolesPage({ params }: { params: Promise<{ guildId: string }> }) {
   const { guildId } = use(params);
   const [loading, setLoading] = useState(true);

@@ -17,6 +17,8 @@ import { Settings2 } from "lucide-react";
 import { api } from "@/lib/api";
 import { SettingsForm } from "@/components/dashboard/settings-form";
 
+export const dynamic = "force-dynamic";
+
 export default async function GuildSettingsPage({ params }: { params: Promise<{ guildId: string }> }) {
   const { guildId } = await params;
   const config = await api.getPrefix(guildId);

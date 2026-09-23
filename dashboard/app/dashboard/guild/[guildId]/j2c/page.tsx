@@ -14,15 +14,17 @@
 
 import React from "react";
 import { Mic } from "lucide-react";
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
 import { api } from "@/lib/api";
 
 export const revalidate = 0; // Never cache this page
 
 
-const J2CForm = dynamic(() => import("@/components/dashboard/j2c-form").then(mod => mod.J2CForm), {
+const J2CForm = nextDynamic(() => import("@/components/dashboard/j2c-form").then(mod => mod.J2CForm), {
   loading: () => <div className="h-96 w-full animate-pulse bg-slate-800/20 rounded-3xl" />
 });
+
+export const dynamic = "force-dynamic";
 
 export default async function J2CPage({ params }: { params: Promise<{ guildId: string }> }) {
   const { guildId } = await params;

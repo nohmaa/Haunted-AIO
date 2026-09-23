@@ -17,6 +17,8 @@ import { BarChart4 } from "lucide-react";
 import { api } from "@/lib/api";
 import { LevelingForm } from "@/components/dashboard/leveling-form";
 
+export const dynamic = "force-dynamic";
+
 export default async function LevelingPage({ params }: { params: Promise<{ guildId: string }> }) {
   const { guildId } = await params;
   const config = await api.getLeveling(guildId);

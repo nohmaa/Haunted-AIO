@@ -20,6 +20,8 @@ import { toast } from "sonner";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
 export default function InvitesPage({ params }: { params: Promise<{ guildId: string }> }) {
   const { guildId } = use(params);
   const [loading, setLoading] = useState(true);

@@ -33,6 +33,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { LeaderboardEntry } from "@/types/api";
 
+export const dynamic = "force-dynamic";
+
 export default function LeaderboardPage({ params }: { params: Promise<{ guildId: string }> }) {
   const { guildId } = use(params);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);

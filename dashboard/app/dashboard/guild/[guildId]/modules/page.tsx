@@ -3,6 +3,8 @@ import { LayoutGrid } from "lucide-react";
 import { api } from "@/lib/api";
 import { ModulesManager } from "@/components/dashboard/modules-manager";
 
+export const dynamic = "force-dynamic";
+
 export default async function GuildModulesPage({ params }: { params: Promise<{ guildId: string }> }) {
   const { guildId } = await params;
   const config = await api.getModules(guildId);

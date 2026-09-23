@@ -96,6 +96,17 @@ async function request<T>(
     } catch (error) {
       // ApiError = the API answered with an error status: bubble up as-is.
       if (error instanceof ApiError) throw error;
+      // Next.js control-flow signals during prerender (DYNAMIC_SERVER_USAGE,
+      // etc.) must bubble up untouched — retrying them is useless and can
+      // swallow the signal that switches a route to dynamic rendering.
+      const digest = (error as { digest?: string })?.digest;
+      if (
+        digest === "DYNAMIC_SERVER_USAGE" ||
+        digest === "NEXT_REDIRECT" ||
+        (typeof digest === "string" && digest.startsWith("NEXT_"))
+      ) {
+        throw error;
+      }
       lastNetworkError = error;
       console.error(
         `[API Network/Fetch Error] (attempt ${attempt}/${MAX_ATTEMPTS}) Failed to fetch ${url}:`,

@@ -14,12 +14,14 @@
 
 import React from "react";
 import { ShieldAlert } from "lucide-react";
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
 import { api } from "@/lib/api";
 
-const AntiNukeForm = dynamic(() => import("@/components/dashboard/antinuke-form").then(mod => mod.AntiNukeForm), {
+const AntiNukeForm = nextDynamic(() => import("@/components/dashboard/antinuke-form").then(mod => mod.AntiNukeForm), {
   loading: () => <div className="h-96 w-full animate-pulse bg-slate-800/20 rounded-3xl" />
 });
+
+export const dynamic = "force-dynamic";
 
 export default async function AntiNukePage({ params }: { params: Promise<{ guildId: string }> }) {
   const { guildId } = await params;

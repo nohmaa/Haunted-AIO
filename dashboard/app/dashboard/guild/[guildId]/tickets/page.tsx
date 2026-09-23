@@ -14,13 +14,15 @@
 
 import React from "react";
 import { Ticket, ExternalLink } from "lucide-react";
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 
-const TicketsForm = dynamic(() => import("@/components/dashboard/tickets-form").then(mod => mod.TicketsForm), {
+const TicketsForm = nextDynamic(() => import("@/components/dashboard/tickets-form").then(mod => mod.TicketsForm), {
   loading: () => <div className="h-96 w-full animate-pulse bg-slate-800/20 rounded-3xl" />
 });
+
+export const dynamic = "force-dynamic";
 
 export default async function TicketsPage({ params }: { params: Promise<{ guildId: string }> }) {
   const { guildId } = await params;
