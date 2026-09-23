@@ -54,9 +54,9 @@ export function ModulesManager({
         {modules.map((mod) => (
           <div
             key={mod.key}
-            className="bg-[#141B2D] border border-slate-800 p-5 rounded-2xl flex items-start gap-4"
+            className="bg-haunted-surface border border-white/[0.06] p-5 rounded-2xl flex items-start gap-4"
           >
-            <div className="h-10 w-10 shrink-0 bg-slate-800 rounded-xl flex items-center justify-center text-primary">
+            <div className="h-10 w-10 shrink-0 bg-white/[0.05] rounded-xl flex items-center justify-center text-primary">
               <Power className="h-5 w-5" />
             </div>
             <div className="flex-1 min-w-0">
@@ -74,7 +74,7 @@ export function ModulesManager({
                 <span
                   className={
                     mod.enabled
-                      ? "text-[10px] font-black uppercase text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20"
+                      ? "text-[10px] font-black uppercase text-teal-300 bg-teal-300/10 px-2 py-0.5 rounded-full border border-teal-300/20"
                       : "text-[10px] font-black uppercase text-slate-500 bg-slate-500/10 px-2 py-0.5 rounded-full border border-slate-500/20"
                   }
                 >

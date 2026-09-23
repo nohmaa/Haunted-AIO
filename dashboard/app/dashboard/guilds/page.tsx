@@ -15,13 +15,15 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Users, ShieldCheck, ChevronRight, Hash } from "lucide-react";
+import { Users, ShieldCheck, ChevronRight, Bot } from "lucide-react";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
+import { RetryButton } from "@/components/dashboard/retry-button";
 
 import { GuildSummary } from "@/types/api";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { getManageableGuildIds } from "@/lib/discord";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -35,7 +37,6 @@ export default async function GuildsPage() {
   }
 
   let botGuilds: GuildSummary[] = [];
-  let userGuilds: any[] = [];
   let userDiscordError: string | null = null;
   let botError: string | null = null;
 
@@ -46,57 +47,31 @@ export default async function GuildsPage() {
     botError = err.message || "Échec du chargement des serveurs du bot.";
   }
 
-  try {
-    const res = await fetch("https://discord.com/api/users/@me/guilds", {
-      headers: {
-        Authorization: `Bearer ${session.accessToken}`,
-      },
-      next: { revalidate: 300 } // Cache for 5 mins
-    });
-    
-    if (res.ok) {
-      userGuilds = await res.json();
-    } else {
-      userDiscordError = "Échec de récupération de vos serveurs Discord.";
-    }
-  } catch (err) {
-    console.error("Discord API Error:", err);
-    userDiscordError = "Erreur de connexion à Discord.";
+  // Droits vérifiés côté serveur à partir du jeton Discord de l'utilisateur :
+  // seuls les serveurs qu'il peut réellement gérer sont listés.
+  const manageableGuildIds = await getManageableGuildIds(session.accessToken as string);
+  if (manageableGuildIds === null) {
+    userDiscordError =
+      "Discord n'a pas répondu : vos droits de gestion n'ont pas pu être vérifiés.";
   }
 
-  // Filter out guilds that the user is an admin of (permission flag 0x8 or MANAGE_GUILD 0x20)
-  // Manage Server is 0x20, Admin is 0x8
-  const MANAGE_GUILD = BigInt(0x20);
-  const ADMINISTRATOR = BigInt(0x8);
-  const adminUserGuilds = userGuilds.filter(g => {
-    try {
-      const perms = BigInt(g.permissions);
-      return (perms & ADMINISTRATOR) === ADMINISTRATOR || 
-             (perms & MANAGE_GUILD) === MANAGE_GUILD || 
-             g.owner === true;
-    } catch {
-      return g.owner === true;
-    }
-  });
-
-  const adminGuildIds = new Set(adminUserGuilds.map(g => String(g.id)));
-  
-  // The intersecting guilds we can manage
-  const guilds = botGuilds.filter(g => adminGuildIds.has(String(g.id)));
+  const guilds = manageableGuildIds
+    ? botGuilds.filter((guild) => manageableGuildIds.has(String(guild.id)))
+    : [];
   const error = botError || userDiscordError;
 
 
   return (
     <div className="space-y-8">
-      <div className="flex justify-between items-end">
+      <div className="flex flex-wrap justify-between items-end gap-4">
         <div>
           <h1 className="text-3xl font-bold text-white">Vos serveurs</h1>
           <p className="text-slate-400 mt-2">
             Sélectionnez un serveur pour gérer sa configuration et ses modules.
           </p>
         </div>
-        <div className="text-sm font-medium px-4 py-2 bg-slate-800 rounded-xl border border-slate-700 text-slate-300">
-          Affichage de <span className="text-white">{guilds.length}</span> serveurs actifs
+        <div className="text-sm font-medium px-4 py-2 bg-white/[0.02] rounded-xl border border-white/[0.06] text-slate-300">
+          <span className="text-white">{guilds.length}</span> serveur(s) gérable(s)
         </div>
       </div>
 
@@ -105,41 +80,28 @@ export default async function GuildsPage() {
           <ShieldCheck className="h-12 w-12 text-red-500 mx-auto mb-4 opacity-50" />
           <h3 className="text-white font-bold text-lg">Erreur de connexion</h3>
           <p className="text-slate-400 mt-2">{error}</p>
-          <Button variant="outline" className="mt-6">Réessayer la connexion</Button>
+          <div className="mt-6 flex justify-center">
+            <RetryButton />
+          </div>
         </div>
       ) : guilds.length === 0 ? (
-        <div className="bg-slate-800/30 border border-slate-800 border-dashed p-16 rounded-3xl text-center">
-          <div className="h-16 w-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6">
+        <div className="bg-white/[0.01] border border-white/[0.06] border-dashed p-16 rounded-3xl text-center">
+          <div className="h-16 w-16 bg-white/[0.03] rounded-full flex items-center justify-center mx-auto mb-6">
             <Users className="h-8 w-8 text-slate-600" />
           </div>
-          <h3 className="text-white font-bold text-xl">Aucun serveur trouvé</h3>
-          <p className="text-slate-400 mt-2 max-w-sm mx-auto">
-            Le bot n&apos;a rejoint aucun serveur pour le moment, ou vous n&apos;avez pas la permission.
+          <h3 className="text-white font-bold text-xl">Aucun serveur gérable</h3>
+          <p className="text-slate-400 mt-2 max-w-md mx-auto">
+            Aucun des serveurs où {process.env.NEXT_PUBLIC_BRAND_NAME || "le bot"} est présent ne vous
+            donne la permission « Gérer le serveur ». Demandez à un administrateur de ces serveurs
+            de vous l&apos;accorder.
           </p>
-          <div className="mt-8 bg-slate-900/50 p-4 rounded-xl text-left font-mono text-sm text-slate-300 max-w-2xl mx-auto overflow-auto max-h-48 whitespace-pre">
-            <p className="font-bold text-red-400 mb-2">Données de diagnostic :</p>
-            <p>1. Total des serveurs en cache du bot : {botGuilds.length}</p>
-            <p>2. Total des serveurs de votre profil Discord : {userGuilds.length}</p>
-            <p>3. Serveurs administrés/gérés de votre profil Discord : {adminUserGuilds.length}</p>
-            {botGuilds.length > 0 && adminUserGuilds.length > 0 && (
-               <div className="mt-4 pt-4 border-t border-white/10">
-                 <p className="text-emerald-400 mb-1">ID du premier serveur du bot : {botGuilds[0].id} (Type : {typeof botGuilds[0].id})</p>
-                 <p className="text-blue-400">ID de votre premier serveur administré : {adminUserGuilds[0].id} (Type : {typeof adminUserGuilds[0].id})</p>
-               </div>
-            )}
-            <hr className="my-2 border-white/10" />
-            <p>Correspondances d'intersection trouvées : {guilds.length}</p>
-            {userDiscordError && <p className="text-red-400">Erreur utilisateur : {userDiscordError}</p>}
-            {botError && <p className="text-red-400">Erreur du bot : {botError}</p>}
-          </div>
-          <Button className="mt-8">Inviter sur Discord</Button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {guilds.map((guild) => (
             <div 
               key={guild.id} 
-              className="bg-[#141B2D] border border-slate-800 rounded-3xl group hover:border-primary/50 hover:bg-[#202c3f] transition-all duration-300 overflow-hidden shadow-sm hover:shadow-primary/5 shadow-black/20"
+              className="bg-haunted-surface border border-white/[0.06] rounded-3xl group hover:border-primary/50 hover:bg-white/[0.05] transition-all duration-300 overflow-hidden shadow-sm hover:shadow-primary/5 shadow-black/20"
             >
               <div className="p-6">
                 <div className="flex items-start justify-between mb-6">
@@ -150,14 +112,14 @@ export default async function GuildsPage() {
                         alt={guild.name}
                         width={64}
                         height={64}
-                        className="rounded-2xl border-2 border-slate-800 shadow-xl group-hover:scale-105 transition-transform"
+                        className="rounded-2xl border-2 border-white/[0.06] shadow-xl group-hover:scale-105 transition-transform"
                       />
                     ) : (
-                      <div className="h-16 w-16 bg-primary/20 rounded-2xl flex items-center justify-center border-2 border-slate-800 text-primary font-bold text-2xl shadow-xl group-hover:scale-105 transition-transform">
+                      <div className="h-16 w-16 bg-primary/20 rounded-2xl flex items-center justify-center border-2 border-white/[0.06] text-primary font-bold text-2xl shadow-xl group-hover:scale-105 transition-transform">
                         {guild.name.charAt(0)}
                       </div>
                     )}
-                    <div className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full bg-emerald-500 border-2 border-[#141B2D]" title="Bot en ligne" />
+                    <div className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full bg-teal-300 border-2 border-haunted-crypt" title="Bot présent sur ce serveur" />
                   </div>
                   
                   <div className="flex flex-col items-end text-right">
@@ -173,19 +135,19 @@ export default async function GuildsPage() {
                     {guild.name}
                   </h3>
                   <div className="flex items-center gap-4 mt-4 text-slate-400">
-                    <div className="flex items-center gap-1.5 bg-slate-800/50 px-3 py-1.5 rounded-xl border border-white/5">
+                    <div className="flex items-center gap-1.5 bg-white/[0.04] px-3 py-1.5 rounded-xl border border-white/5">
                       <Users className="h-4 w-4 text-slate-500" />
                       <span className="text-sm font-semibold text-slate-300">{guild.member_count.toLocaleString()}</span>
                     </div>
-                    <div className="flex items-center gap-1.5 bg-slate-800/50 px-3 py-1.5 rounded-xl border border-white/5">
-                      <Hash className="h-4 w-4 text-slate-500" />
-                      <span className="text-sm font-semibold text-slate-300">Actif</span>
+                    <div className="flex items-center gap-1.5 bg-white/[0.04] px-3 py-1.5 rounded-xl border border-white/5">
+                      <Bot className="h-4 w-4 text-slate-500" />
+                      <span className="text-sm font-semibold text-slate-300">Bot présent</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="px-6 py-4 bg-slate-800/20 border-t border-slate-800/80 group-hover:bg-primary/5 transition-colors">
+              <div className="px-6 py-4 bg-white/[0.02] border-t border-white/[0.06] group-hover:bg-primary/5 transition-colors">
                 <Button className="w-full justify-between group/btn py-6" variant="secondary" asChild>
                   <Link href={`/dashboard/guild/${guild.id}`}>
                     <span>Gérer le serveur</span>

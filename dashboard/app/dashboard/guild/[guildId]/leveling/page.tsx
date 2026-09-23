@@ -15,6 +15,7 @@
 import React from "react";
 import { BarChart4 } from "lucide-react";
 import { api } from "@/lib/api";
+import { ModuleUnavailable } from "@/components/dashboard/module-unavailable";
 import { LevelingForm } from "@/components/dashboard/leveling-form";
 
 export const dynamic = "force-dynamic";
@@ -23,7 +24,9 @@ export default async function LevelingPage({ params }: { params: Promise<{ guild
   const { guildId } = await params;
   const config = await api.getLeveling(guildId);
 
-  if (!config) return null;
+  if (!config) {
+    return <ModuleUnavailable module="Niveaux" />;
+  }
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">

@@ -16,12 +16,13 @@ import React from "react";
 import { Mic } from "lucide-react";
 import nextDynamic from "next/dynamic";
 import { api } from "@/lib/api";
+import { ModuleUnavailable } from "@/components/dashboard/module-unavailable";
 
 export const revalidate = 0; // Never cache this page
 
 
 const J2CForm = nextDynamic(() => import("@/components/dashboard/j2c-form").then(mod => mod.J2CForm), {
-  loading: () => <div className="h-96 w-full animate-pulse bg-slate-800/20 rounded-3xl" />
+  loading: () => <div className="h-96 w-full animate-pulse bg-white/[0.02] rounded-3xl" />
 });
 
 export const dynamic = "force-dynamic";
@@ -33,7 +34,9 @@ export default async function J2CPage({ params }: { params: Promise<{ guildId: s
     api.getChannels(guildId),
   ]);
 
-  if (!config) return null;
+  if (!config) {
+    return <ModuleUnavailable module="Join to Create" />;
+  }
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">

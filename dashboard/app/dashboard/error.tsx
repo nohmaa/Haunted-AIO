@@ -52,7 +52,7 @@ export default function DashboardError({
         <Link href="/dashboard" className="flex-1">
           <Button 
             variant="outline"
-            className="w-full gap-2 h-12 font-bold border-slate-800"
+            className="w-full gap-2 h-12 font-bold border-white/[0.06]"
           >
             <Home className="h-4 w-4" />
             Retour à l'accueil
@@ -61,7 +61,7 @@ export default function DashboardError({
       </div>
       
       {process.env.NODE_ENV === 'development' && (
-        <pre className="mt-8 p-4 bg-black/40 border border-slate-800 rounded-xl text-left text-xs text-red-400 overflow-auto max-w-full font-mono">
+        <pre className="mt-8 p-4 bg-black/40 border border-white/[0.06] rounded-xl text-left text-xs text-red-400 overflow-auto max-w-full font-mono">
           {error.message}
         </pre>
       )}

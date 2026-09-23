@@ -74,11 +74,11 @@ export function J2CForm({ initialConfig, channels, guildId }: J2CFormProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
       <div className="lg:col-span-3 space-y-6">
-        <div className="bg-[#141B2D] border border-slate-800 rounded-3xl shadow-xl p-8 space-y-8">
+        <div className="bg-haunted-surface border border-white/[0.06] rounded-3xl shadow-xl p-8 space-y-8">
           
-          <div className="flex items-center justify-between p-6 bg-slate-900/40 rounded-2xl border border-slate-800">
+          <div className="flex items-center justify-between p-6 bg-white/[0.02] rounded-2xl border border-white/[0.06]">
             <div className="flex items-center gap-4">
-              <div className={cn("p-3 rounded-xl transition-colors", isEnabled ? "bg-emerald-500/20 text-emerald-500" : "bg-red-500/20 text-red-500")}>
+              <div className={cn("p-3 rounded-xl transition-colors", isEnabled ? "bg-teal-300/20 text-teal-300" : "bg-red-500/20 text-red-500")}>
                 <Power className="w-5 h-5" />
               </div>
               <div>
@@ -87,8 +87,8 @@ export function J2CForm({ initialConfig, channels, guildId }: J2CFormProps) {
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <div className="px-4 py-2 rounded-full bg-slate-900 border border-slate-800 flex items-center gap-2">
-                <div className={cn("w-2 h-2 rounded-full", isEnabled ? 'bg-emerald-500 animate-pulse' : 'bg-red-500')} />
+              <div className="px-4 py-2 rounded-full bg-haunted-surface border border-white/[0.06] flex items-center gap-2">
+                <div className={cn("w-2 h-2 rounded-full", isEnabled ? 'bg-teal-400 animate-pulse' : 'bg-red-500')} />
                 <span className="text-xs font-bold uppercase track-wider text-slate-300">
                   {isEnabled ? 'Actif' : 'Inactif'}
                 </span>
@@ -96,13 +96,13 @@ export function J2CForm({ initialConfig, channels, guildId }: J2CFormProps) {
               <Switch 
                 checked={isEnabled} 
                 onCheckedChange={setIsEnabled}
-                className="scale-125 data-[state=checked]:bg-emerald-500"
+                className="scale-125 data-[state=checked]:bg-teal-400"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className={cn("p-6 bg-slate-900/40 border border-slate-800 rounded-2xl space-y-4 transition-all duration-300", !isEnabled && "opacity-50 pointer-events-none")}>
+            <div className={cn("p-6 bg-white/[0.02] border border-white/[0.06] rounded-2xl space-y-4 transition-all duration-300", !isEnabled && "opacity-50 pointer-events-none")}>
               <div className="flex items-center gap-3">
                 <div className="p-3 bg-primary/20 text-primary rounded-xl">
                   <Mic className="w-5 h-5" />
@@ -117,13 +117,13 @@ export function J2CForm({ initialConfig, channels, guildId }: J2CFormProps) {
                 value={config.join_channel_id ? config.join_channel_id : "none"}
                 onValueChange={(val) => setConfig({ ...config, join_channel_id: val === "none" ? null : val })}
               >
-                <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 font-medium">
+                <SelectTrigger className="w-full h-12 bg-haunted-surface border-white/[0.06] font-medium">
                   <SelectValue placeholder="Choisir un salon vocal..." />
                 </SelectTrigger>
-                <SelectContent className="bg-slate-900 border-slate-800 max-h-[300px]">
-                  <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Non défini</SelectItem>
+                <SelectContent className="bg-haunted-surface border-white/[0.06] max-h-[300px]">
+                  <SelectItem value="none" className="text-slate-400 focus:bg-white/[0.05]">Non défini</SelectItem>
                   {voiceChannels.map((c) => (
-                    <SelectItem key={c.id} value={c.id.toString()} className="focus:bg-slate-800">
+                    <SelectItem key={c.id} value={c.id.toString()} className="focus:bg-white/[0.05]">
                       {c.name}
                     </SelectItem>
                   ))}
@@ -131,7 +131,7 @@ export function J2CForm({ initialConfig, channels, guildId }: J2CFormProps) {
               </Select>
             </div>
 
-            <div className={cn("p-6 bg-slate-900/40 border border-slate-800 rounded-2xl space-y-4 transition-all duration-300", !isEnabled && "opacity-50 pointer-events-none")}>
+            <div className={cn("p-6 bg-white/[0.02] border border-white/[0.06] rounded-2xl space-y-4 transition-all duration-300", !isEnabled && "opacity-50 pointer-events-none")}>
               <div className="flex items-center gap-3">
                 <div className="p-3 bg-blue-500/20 text-blue-500 rounded-xl">
                   <Headset className="w-5 h-5" />
@@ -146,13 +146,13 @@ export function J2CForm({ initialConfig, channels, guildId }: J2CFormProps) {
                 value={config.control_channel_id ? config.control_channel_id : "none"}
                 onValueChange={(val) => setConfig({ ...config, control_channel_id: val === "none" ? null : val })}
               >
-                <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 font-medium">
+                <SelectTrigger className="w-full h-12 bg-haunted-surface border-white/[0.06] font-medium">
                   <SelectValue placeholder="Choisir un salon textuel..." />
                 </SelectTrigger>
-                <SelectContent className="bg-slate-900 border-slate-800 max-h-[300px]">
-                  <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Non défini</SelectItem>
+                <SelectContent className="bg-haunted-surface border-white/[0.06] max-h-[300px]">
+                  <SelectItem value="none" className="text-slate-400 focus:bg-white/[0.05]">Non défini</SelectItem>
                   {textChannels.map((c) => (
-                    <SelectItem key={c.id} value={c.id.toString()} className="focus:bg-slate-800">
+                    <SelectItem key={c.id} value={c.id.toString()} className="focus:bg-white/[0.05]">
                       {c.name}
                     </SelectItem>
                   ))}
@@ -160,7 +160,7 @@ export function J2CForm({ initialConfig, channels, guildId }: J2CFormProps) {
               </Select>
             </div>
 
-            <div className={cn("p-6 bg-slate-900/40 border border-slate-800 rounded-2xl space-y-4 transition-all duration-300", !isEnabled && "opacity-50 pointer-events-none")}>
+            <div className={cn("p-6 bg-white/[0.02] border border-white/[0.06] rounded-2xl space-y-4 transition-all duration-300", !isEnabled && "opacity-50 pointer-events-none")}>
               <div className="flex items-center gap-3">
                 <div className="p-3 bg-purple-500/20 text-purple-500 rounded-xl">
                   <Settings2 className="w-5 h-5" />
@@ -175,13 +175,13 @@ export function J2CForm({ initialConfig, channels, guildId }: J2CFormProps) {
                 value={config.category_id ? config.category_id : "none"}
                 onValueChange={(val) => setConfig({ ...config, category_id: val === "none" ? null : val })}
               >
-                <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 font-medium">
+                <SelectTrigger className="w-full h-12 bg-haunted-surface border-white/[0.06] font-medium">
                   <SelectValue placeholder="Automatique (Identique au salon d’arrivée)..." />
                 </SelectTrigger>
-                <SelectContent className="bg-slate-900 border-slate-800 max-h-[300px]">
-                  <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Automatique (Identique au salon d’arrivée)</SelectItem>
+                <SelectContent className="bg-haunted-surface border-white/[0.06] max-h-[300px]">
+                  <SelectItem value="none" className="text-slate-400 focus:bg-white/[0.05]">Automatique (Identique au salon d’arrivée)</SelectItem>
                   {categoryChannels.map((c) => (
-                    <SelectItem key={c.id} value={c.id.toString()} className="focus:bg-slate-800">
+                    <SelectItem key={c.id} value={c.id.toString()} className="focus:bg-white/[0.05]">
                       {c.name}
                     </SelectItem>
                   ))}

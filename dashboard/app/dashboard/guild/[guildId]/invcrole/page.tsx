@@ -94,12 +94,12 @@ export default function InvcRolePage({ params }: { params: Promise<{ guildId: st
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <div className="lg:col-span-3 space-y-6">
-          <div className="bg-[#141B2D] border border-slate-800 rounded-3xl overflow-hidden shadow-xl p-8 space-y-8">
+          <div className="bg-haunted-surface border border-white/[0.06] rounded-3xl overflow-hidden shadow-xl p-8 space-y-8">
             
             {/* Status & Toggle */}
-            <div className="flex items-center justify-between p-6 bg-slate-900/40 rounded-2xl border border-slate-800">
+            <div className="flex items-center justify-between p-6 bg-white/[0.02] rounded-2xl border border-white/[0.06]">
               <div className="flex items-center gap-4">
-                <div className={cn("p-3 rounded-xl transition-colors", config.enabled ? "bg-emerald-500/20 text-emerald-500" : "bg-red-500/20 text-red-500")}>
+                <div className={cn("p-3 rounded-xl transition-colors", config.enabled ? "bg-teal-300/20 text-teal-300" : "bg-red-500/20 text-red-500")}>
                   <Power className="w-5 h-5" />
                 </div>
                 <div>
@@ -108,8 +108,8 @@ export default function InvcRolePage({ params }: { params: Promise<{ guildId: st
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                <div className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 flex items-center gap-2">
-                  <div className={cn("w-2 h-2 rounded-full", config.enabled ? 'bg-emerald-500 animate-pulse' : 'bg-red-500')} />
+                <div className="px-3 py-1 rounded-full bg-haunted-surface border border-white/[0.06] flex items-center gap-2">
+                  <div className={cn("w-2 h-2 rounded-full", config.enabled ? 'bg-teal-400 animate-pulse' : 'bg-red-500')} />
                   <span className="text-[10px] font-bold uppercase text-slate-400">
                     {config.enabled ? 'En direct' : 'Coupé'}
                   </span>
@@ -117,14 +117,14 @@ export default function InvcRolePage({ params }: { params: Promise<{ guildId: st
                 <Switch 
                   checked={config.enabled} 
                   onCheckedChange={(checked) => setConfig({ ...config, enabled: checked })}
-                  className="data-[state=checked]:bg-emerald-500"
+                  className="data-[state=checked]:bg-teal-400"
                 />
               </div>
             </div>
 
             {/* Role Selector */}
             <div className={cn("p-6 border rounded-2xl space-y-4 transition-all duration-300", 
-              config.enabled ? "bg-slate-900/40 border-slate-800 opacity-100" : "bg-slate-900/10 border-slate-900 opacity-50 pointer-events-none grayscale")}>
+              config.enabled ? "bg-white/[0.02] border-white/[0.06] opacity-100" : "bg-white/[0.01] border-white/[0.04] opacity-50 pointer-events-none grayscale")}>
               <div className="flex items-center gap-3">
                 <div className="p-3 bg-primary/20 text-primary rounded-xl">
                   <ShieldCheck className="w-5 h-5" />
@@ -139,13 +139,13 @@ export default function InvcRolePage({ params }: { params: Promise<{ guildId: st
                 onValueChange={(val) => setConfig({ ...config, role_id: val === "none" ? null : val })}
                 disabled={!config.enabled}
               >
-                <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 font-medium">
+                <SelectTrigger className="w-full h-12 bg-haunted-surface border-white/[0.06] font-medium">
                   <SelectValue placeholder="Choisir un rôle…" />
                 </SelectTrigger>
-                <SelectContent className="bg-slate-900 border-slate-800 max-h-[300px]">
-                  <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Aucun rôle</SelectItem>
+                <SelectContent className="bg-haunted-surface border-white/[0.06] max-h-[300px]">
+                  <SelectItem value="none" className="text-slate-400 focus:bg-white/[0.05]">Aucun rôle</SelectItem>
                   {filteredRoles.map((r) => (
-                    <SelectItem key={r.id} value={r.id} className="focus:bg-slate-800">
+                    <SelectItem key={r.id} value={r.id} className="focus:bg-white/[0.05]">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full" style={{ backgroundColor: formatColor(r.color) }} />
                         {r.name}

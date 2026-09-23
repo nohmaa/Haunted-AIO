@@ -16,9 +16,10 @@ import React from "react";
 import { SmilePlus } from "lucide-react";
 import nextDynamic from "next/dynamic";
 import { api } from "@/lib/api";
+import { ModuleUnavailable } from "@/components/dashboard/module-unavailable";
 
 const WelcomeForm = nextDynamic(() => import("@/components/dashboard/welcome-form").then(mod => mod.WelcomeForm), {
-  loading: () => <div className="h-96 w-full animate-pulse bg-slate-800/20 rounded-3xl" />
+  loading: () => <div className="h-96 w-full animate-pulse bg-white/[0.02] rounded-3xl" />
 });
 
 export const dynamic = "force-dynamic";
@@ -30,7 +31,9 @@ export default async function WelcomePage({ params }: { params: Promise<{ guildI
     api.getChannels(guildId)
   ]);
 
-  if (!welcomeData) return null;
+  if (!welcomeData) {
+    return <ModuleUnavailable module="Bienvenue" />;
+  }
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">

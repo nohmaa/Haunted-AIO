@@ -40,6 +40,7 @@ export default function DashboardLayout({
   const { data: session, status } = useSession();
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [globalNotification, setGlobalNotification] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
   
   const bellRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -85,13 +86,13 @@ export default function DashboardLayout({
 
   if (status === "loading" || status === "unauthenticated") {
     return (
-      <div className="min-h-screen bg-[#0f172a] flex items-center justify-center">
+      <div className="min-h-screen bg-haunted-crypt flex items-center justify-center">
         <div className="animate-pulse flex flex-col items-center gap-4">
-          <div className="h-12 w-12 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
+          <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-red-600 to-red-900 border border-white/10 flex items-center justify-center shadow-lg shadow-red-900/30">
             <span className="font-black text-white italic text-xl">{process.env.NEXT_PUBLIC_BRAND_NAME_WORD || "H"}</span>
           </div>
           <p className="text-slate-400 font-bold tracking-widest uppercase text-xs">
-            Authentification...
+            Ouverture de la console...
           </p>
         </div>
       </div>
@@ -158,15 +159,37 @@ export default function DashboardLayout({
     backLinkItem = allSidebarItems.find((item) => item.name === "Retour aux serveurs");
   }
 
+  // La recherche filtre réellement les entrées de navigation affichées.
+  const normalizedQuery = query.trim().toLowerCase();
+  if (normalizedQuery) {
+    mainSidebarItems = mainSidebarItems
+      .map((item: any) =>
+        item.items
+          ? {
+              ...item,
+              items: item.items.filter((sub: any) =>
+                sub.name.toLowerCase().includes(normalizedQuery)
+              ),
+            }
+          : item
+      )
+      .filter((item: any) =>
+        item.items
+          ? item.items.length > 0
+          : item.name.toLowerCase().includes(normalizedQuery)
+      );
+  }
+
+  const supportServer =
+    process.env.NEXT_PUBLIC_SUPPORT_SERVER || "https://discord.gg/DvetGPq9q5";
+
   const BackLinkIcon = backLinkItem?.icon || Server;
 
   return (
-    <div className="min-h-screen bg-[#020617] text-slate-200">
-      {/* Liquid Background Elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-red-500/5 blur-[120px] rounded-full animate-pulse" />
-        <div className="absolute bottom-[10%] left-[-5%] w-[30%] h-[30%] bg-indigo-500/5 blur-[100px] rounded-full animate-pulse [animation-delay:2s]" />
-      </div>
+    <div className="min-h-screen bg-haunted-crypt text-slate-200">
+      {/* Brume de manoir (habillage, derrière le contenu) */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 haunted-fog" />
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 haunted-vignette" />
 
       {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
@@ -208,6 +231,11 @@ export default function DashboardLayout({
 
         {/* Scrollable Navigation */}
         <nav className="mt-8 px-4 space-y-6 overflow-y-auto flex-1 no-scrollbar relative z-10 pb-3">
+          {mainSidebarItems.length === 0 && (
+            <p className="px-4 text-[11px] font-bold text-slate-500 leading-relaxed">
+              Aucun module ne correspond à « {query} ».
+            </p>
+          )}
           {mainSidebarItems.map((item: any) => {
             if (item.items) {
               return (
@@ -350,7 +378,10 @@ export default function DashboardLayout({
             <Search className="absolute left-4 h-4 w-4 text-slate-500 group-focus-within:text-red-500 transition-colors" />
             <input
               type="text"
-              placeholder="Rechercher dans le réseau neuronal..."
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Filtrer les modules..."
+              aria-label="Filtrer les modules de la navigation"
               className="w-full bg-white/[0.03] border border-white/5 rounded-2xl py-2.5 pl-12 pr-4 text-xs font-bold text-slate-300 focus:outline-none focus:ring-1 focus:ring-red-500/30 focus:bg-white/[0.05] transition-all placeholder:text-slate-600"
             />
           </div>
@@ -368,7 +399,7 @@ export default function DashboardLayout({
               </button>
 
               {isNotificationsOpen && (
-                <div className="absolute right-0 mt-3 w-80 bg-[#0a0f1e]/90 backdrop-blur-3xl border border-white/5 rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-4 z-20 animate-in fade-in zoom-in-95 duration-300 origin-top-right">
+                <div className="absolute right-0 mt-3 w-80 bg-haunted-surface/95 backdrop-blur-3xl border border-white/5 rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-4 z-20 animate-in fade-in zoom-in-95 duration-300 origin-top-right">
                     <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-2">
                       <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Diffusions</p>
                       <button 
@@ -391,11 +422,13 @@ export default function DashboardLayout({
                       </div>
                     ) : (
                       <div className="py-8 flex flex-col items-center justify-center text-center">
-                        <div className="h-10 w-10 rounded-full bg-slate-800 flex items-center justify-center mb-3">
+                        <div className="h-10 w-10 rounded-full bg-white/[0.05] flex items-center justify-center mb-3">
                           <Bell className="h-5 w-5 text-slate-600" />
                         </div>
                         <p className="text-xs font-bold text-slate-500">Aucune annonce active</p>
-                        <p className="text-[10px] font-medium text-slate-600 mt-1 uppercase tracking-widest">Tout fonctionne normalement</p>
+                        <p className="text-[10px] font-medium text-slate-600 mt-1 uppercase tracking-widest">
+                          Aucune diffusion en cours
+                        </p>
                       </div>
                     )}
                   </div>
@@ -428,16 +461,21 @@ export default function DashboardLayout({
               </button>
 
               {isProfileOpen && (
-                <div className="absolute right-0 mt-3 w-56 bg-[#0a0f1e]/90 backdrop-blur-3xl border border-white/5 rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-2 z-20 animate-in fade-in zoom-in-95 duration-300 origin-top-right">
+                <div className="absolute right-0 mt-3 w-56 bg-haunted-surface/95 backdrop-blur-3xl border border-white/5 rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-2 z-20 animate-in fade-in zoom-in-95 duration-300 origin-top-right">
                     <div className="px-4 py-3 border-b border-white/5 mb-2">
                       <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Connecté en tant que</p>
                       <p className="text-sm font-bold text-white truncate">{session?.user?.name || "Administrateur"}</p>
                     </div>
 
-                    <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all group/item">
+                    <a
+                      href={supportServer}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all group/item"
+                    >
                       <LifeBuoy className="h-4 w-4 text-slate-600 group-hover/item:text-red-500 transition-colors" />
-                      Assistance
-                    </button>
+                      Serveur support
+                    </a>
 
                     <button
                       onClick={() => signOut({ callbackUrl: '/' })}

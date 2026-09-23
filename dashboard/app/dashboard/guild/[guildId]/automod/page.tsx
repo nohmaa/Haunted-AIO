@@ -16,9 +16,10 @@ import React from "react";
 import { ShieldCheck } from "lucide-react";
 import nextDynamic from "next/dynamic";
 import { api } from "@/lib/api";
+import { ModuleUnavailable } from "@/components/dashboard/module-unavailable";
 
 const AutomodForm = nextDynamic(() => import("@/components/dashboard/automod-form").then(mod => mod.AutomodForm), {
-  loading: () => <div className="h-96 w-full animate-pulse bg-slate-800/20 rounded-3xl" />
+  loading: () => <div className="h-96 w-full animate-pulse bg-white/[0.02] rounded-3xl" />
 });
 
 export const dynamic = "force-dynamic";
@@ -27,7 +28,9 @@ export default async function AutomodPage({ params }: { params: Promise<{ guildI
   const { guildId } = await params;
   const config = await api.getAutomod(guildId);
 
-  if (!config) return null;
+  if (!config) {
+    return <ModuleUnavailable module="Auto-modération" />;
+  }
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">

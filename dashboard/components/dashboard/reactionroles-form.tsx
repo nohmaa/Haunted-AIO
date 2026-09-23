@@ -103,9 +103,9 @@ export function ReactionRolesForm({ initialConfig, roles, guildId }: ReactionRol
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
       <div className="lg:col-span-3 space-y-6">
-        <div className="bg-[#141B2D] border border-slate-800 rounded-3xl shadow-xl p-8 space-y-8">
+        <div className="bg-haunted-surface border border-white/[0.06] rounded-3xl shadow-xl p-8 space-y-8">
           
-          <div className="flex items-center justify-between p-6 bg-slate-900/40 rounded-2xl border border-slate-800">
+          <div className="flex items-center justify-between p-6 bg-white/[0.02] rounded-2xl border border-white/[0.06]">
             <div className="flex items-center gap-4">
               <div className="p-3 bg-primary/20 text-primary rounded-xl">
                 <BellRing className="w-5 h-5" />
@@ -122,7 +122,7 @@ export function ReactionRolesForm({ initialConfig, roles, guildId }: ReactionRol
             />
           </div>
 
-          <div className="pt-6 border-t border-slate-800">
+          <div className="pt-6 border-t border-white/[0.06]">
             <h4 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
               <Plus className="h-5 w-5 text-primary" />
               Créer un nouveau rôle à réaction
@@ -135,7 +135,7 @@ export function ReactionRolesForm({ initialConfig, roles, guildId }: ReactionRol
                   placeholder="ex. 1234567890" 
                   value={newRR.message_id}
                   onChange={(e) => setNewRR({ ...newRR, message_id: e.target.value })}
-                  className="bg-slate-900/50 h-10"
+                  className="bg-white/[0.02] h-10"
                 />
               </div>
               <div className="space-y-2">
@@ -144,7 +144,7 @@ export function ReactionRolesForm({ initialConfig, roles, guildId }: ReactionRol
                   placeholder="ex. ✅" 
                   value={newRR.emoji}
                   onChange={(e) => setNewRR({ ...newRR, emoji: e.target.value })}
-                  className="bg-slate-900/50 h-10"
+                  className="bg-white/[0.02] h-10"
                 />
               </div>
               <div className="space-y-2">
@@ -153,12 +153,12 @@ export function ReactionRolesForm({ initialConfig, roles, guildId }: ReactionRol
                   value={newRR.role_id ? newRR.role_id.toString() : ""}
                   onValueChange={(val) => setNewRR({ ...newRR, role_id: val })}
                 >
-                  <SelectTrigger className="w-full h-10 bg-slate-900/50 border-slate-800">
+                  <SelectTrigger className="w-full h-10 bg-white/[0.02] border-white/[0.06]">
                     <SelectValue placeholder="Choisir un rôle..." />
                   </SelectTrigger>
-                  <SelectContent className="bg-slate-900 border-slate-800 max-h-[250px]">
+                  <SelectContent className="bg-haunted-surface border-white/[0.06] max-h-[250px]">
                     {filteredRoles.map((role) => (
-                      <SelectItem key={role.id} value={role.id.toString()} className="focus:bg-slate-800">
+                      <SelectItem key={role.id} value={role.id.toString()} className="focus:bg-white/[0.05]">
                         {role.name}
                       </SelectItem>
                     ))}
@@ -177,7 +177,7 @@ export function ReactionRolesForm({ initialConfig, roles, guildId }: ReactionRol
             </Button>
           </div>
 
-          <div className="pt-6 border-t border-slate-800">
+          <div className="pt-6 border-t border-white/[0.06]">
             <h4 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
               <MousePointer2 className="h-5 w-5 text-primary" />
               Rôles à réaction actifs
@@ -185,7 +185,7 @@ export function ReactionRolesForm({ initialConfig, roles, guildId }: ReactionRol
 
             <div className="space-y-3">
               {config.roles.length === 0 ? (
-                <div className="text-center p-8 bg-slate-900/20 rounded-2xl border border-dashed border-slate-700">
+                <div className="text-center p-8 bg-white/[0.01] rounded-2xl border border-dashed border-white/[0.08]">
                   <p className="text-sm text-slate-500 italic">Aucun rôle à réaction configuré pour le moment.</p>
                 </div>
               ) : (
@@ -193,7 +193,7 @@ export function ReactionRolesForm({ initialConfig, roles, guildId }: ReactionRol
                   const roleName = roles.find(r => r.id === rr.role_id.toString())?.name || "Rôle inconnu";
                   
                   return (
-                    <div key={idx} className="flex items-center justify-between p-4 bg-slate-900/40 rounded-xl border border-slate-800">
+                    <div key={idx} className="flex items-center justify-between p-4 bg-white/[0.02] rounded-xl border border-white/[0.06]">
                       <div className="flex items-center gap-6">
                         <div className="flex flex-col">
                           <span className="text-[10px] uppercase font-bold text-slate-500">ID du message</span>

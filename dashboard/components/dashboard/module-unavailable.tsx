@@ -13,38 +13,27 @@
  */
 
 import React from "react";
-import { ShieldAlert } from "lucide-react";
-import nextDynamic from "next/dynamic";
-import { api } from "@/lib/api";
-import { ModuleUnavailable } from "@/components/dashboard/module-unavailable";
+import { Ghost } from "lucide-react";
+import { RetryButton } from "@/components/dashboard/retry-button";
 
-const AntiNukeForm = nextDynamic(() => import("@/components/dashboard/antinuke-form").then(mod => mod.AntiNukeForm), {
-  loading: () => <div className="h-96 w-full animate-pulse bg-white/[0.02] rounded-3xl" />
-});
-
-export const dynamic = "force-dynamic";
-
-export default async function AntiNukePage({ params }: { params: Promise<{ guildId: string }> }) {
-  const { guildId } = await params;
-  const config = await api.getAntiNuke(guildId);
-
-  if (!config) {
-    return <ModuleUnavailable module="Anti-Nuke" />;
-  }
-
+/**
+ * État affiché quand l'API du bot ne renvoie pas la configuration d'un module.
+ * On n'invente aucune valeur et on ne rend pas une page vide : on explique.
+ */
+export function ModuleUnavailable({ module }: { module: string }) {
   return (
-    <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div>
-          <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-            <ShieldAlert className="h-6 w-6 text-red-500" />
-            Protection Anti-Nuke
-          </h2>
-          <p className="text-slate-400 mt-1">Protégez votre serveur contre les suppressions et bannissements massifs malveillants.</p>
-        </div>
+    <div className="max-w-2xl mx-auto text-center border border-white/[0.06] border-dashed rounded-3xl bg-white/[0.01] p-12">
+      <div className="h-16 w-16 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto mb-6">
+        <Ghost className="h-8 w-8 text-red-500/70" />
       </div>
-
-      <AntiNukeForm initialConfig={config} guildId={guildId} />
+      <h3 className="text-xl font-bold text-white">Données indisponibles</h3>
+      <p className="text-slate-400 mt-3 text-sm">
+        Le module « {module} » n&apos;a renvoyé aucune configuration. L&apos;API du bot est peut-être
+        momentanément injoignable, ou ce serveur n&apos;a pas encore de configuration enregistrée.
+      </p>
+      <div className="mt-8 flex justify-center">
+        <RetryButton />
+      </div>
     </div>
   );
 }

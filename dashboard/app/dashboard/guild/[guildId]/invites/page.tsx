@@ -68,7 +68,7 @@ export default function InvitesPage({ params }: { params: Promise<{ guildId: str
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <div className="lg:col-span-3 space-y-6">
-          <div className="bg-[#141B2D] border border-slate-800 rounded-3xl overflow-hidden shadow-xl p-8 space-y-8">
+          <div className="bg-haunted-surface border border-white/[0.06] rounded-3xl overflow-hidden shadow-xl p-8 space-y-8">
             
             {/* Stats Cards */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -77,39 +77,39 @@ export default function InvitesPage({ params }: { params: Promise<{ guildId: str
                 <span className="text-2xl font-black text-white">{data.reduce((acc, curr) => acc + (curr.total || 0), 0)}</span>
               </div>
               <div className="p-5 bg-red-500/5 border border-red-500/20 rounded-2xl flex flex-col gap-1">
-                <div className="text-xs font-bold uppercase text-red-500 flex items-center gap-2"><LogOut className="w-3.5 h-3.5" /> Left</div>
+                <div className="text-xs font-bold uppercase text-red-500 flex items-center gap-2"><LogOut className="w-3.5 h-3.5" /> Départs</div>
                 <span className="text-2xl font-black text-white">{data.reduce((acc, curr) => acc + (curr.left || 0), 0)}</span>
               </div>
-              <div className="p-5 bg-yellow-500/5 border border-yellow-500/20 rounded-2xl flex flex-col gap-1">
-                <div className="text-xs font-bold uppercase text-yellow-500 flex items-center gap-2"><UserMinus className="w-3.5 h-3.5" /> Fake</div>
+              <div className="p-5 bg-amber-500/5 border border-amber-500/20 rounded-2xl flex flex-col gap-1">
+                <div className="text-xs font-bold uppercase text-amber-500 flex items-center gap-2"><UserMinus className="w-3.5 h-3.5" /> Faux</div>
                 <span className="text-2xl font-black text-white">{data.reduce((acc, curr) => acc + (curr.fake || 0), 0)}</span>
               </div>
-              <div className="p-5 bg-emerald-500/5 border border-emerald-500/20 rounded-2xl flex flex-col gap-1">
-                <div className="text-xs font-bold uppercase text-emerald-500 flex items-center gap-2"><TrendingUp className="w-3.5 h-3.5" /> Top</div>
+              <div className="p-5 bg-teal-300/5 border border-teal-300/20 rounded-2xl flex flex-col gap-1">
+                <div className="text-xs font-bold uppercase text-teal-300 flex items-center gap-2"><TrendingUp className="w-3.5 h-3.5" /> Meilleur</div>
                 <span className="text-2xl font-black text-white">{data.length > 0 ? data[0].total : 0}</span>
               </div>
             </div>
 
             {/* Leaderboard */}
-            <div className="pt-6 border-t border-slate-800 space-y-3">
+            <div className="pt-6 border-t border-white/[0.06] space-y-3">
               <h4 className="text-sm font-bold text-white flex items-center gap-2 mb-4">
                 <Medal className="h-5 w-5 text-yellow-500" /> Classement
               </h4>
 
               {data.length === 0 ? (
-                <div className="text-center p-12 bg-slate-900/20 rounded-2xl border border-dashed border-slate-700">
+                <div className="text-center p-12 bg-white/[0.01] rounded-2xl border border-dashed border-white/[0.08]">
                   <TrendingUp className="w-10 h-10 text-slate-600 mx-auto mb-3" />
                   <p className="text-sm text-slate-500">Aucune donnée d’invitation pour l’instant.</p>
                 </div>
               ) : (
                 data.map((row, index) => (
-                  <div key={index} className="flex items-center justify-between p-4 bg-slate-900/40 rounded-xl border border-slate-800 hover:bg-slate-800/50 transition-colors">
+                  <div key={index} className="flex items-center justify-between p-4 bg-white/[0.02] rounded-xl border border-white/[0.06] hover:bg-white/[0.04] transition-colors">
                     <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-sm font-black border border-slate-700">
+                      <div className="w-10 h-10 rounded-full bg-white/[0.05] flex items-center justify-center text-sm font-black border border-white/[0.08]">
                         {index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : <span className="text-slate-500">#{index + 1}</span>}
                       </div>
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 border border-slate-700">
+                        <div className="w-8 h-8 rounded-full bg-white/[0.05] flex items-center justify-center text-slate-400 border border-white/[0.08]">
                           <User className="w-4 h-4" />
                         </div>
                         <span className="text-sm text-slate-300 font-mono">{row.user_id}</span>
@@ -122,7 +122,7 @@ export default function InvitesPage({ params }: { params: Promise<{ guildId: str
                       </div>
                       <div className="text-right">
                         <div className="text-[10px] uppercase font-bold text-slate-500">Réels</div>
-                        <div className="font-medium text-emerald-400">{row.total - row.left - row.fake - row.rejoin}</div>
+                        <div className="font-medium text-teal-300">{row.total - row.left - row.fake - row.rejoin}</div>
                       </div>
                       <div className="text-right">
                         <div className="text-[10px] uppercase font-bold text-slate-500">Départs</div>
@@ -155,10 +155,10 @@ export default function InvitesPage({ params }: { params: Promise<{ guildId: str
               <h3 className="text-sm font-bold text-white">À propos du suivi</h3>
             </div>
             <ul className="text-xs text-slate-500 space-y-2">
-              <li>• Le suivi des invitations est automatique pour tous les membres.</li>
-              <li>• « Réel » = Total moins Départs, Faux et Retours.</li>
+              <li>• Le suivi des invitations est automatique pour toutes les arrivées.</li>
+              <li>• « Réels » = Total moins Départs, Faux et Retours.</li>
               <li>• Utilisez <span className="text-primary">,invitelogging #salon</span> pour activer les logs en direct.</li>
-              <li>• Les admins peuvent ajuster les compteurs manuellement.</li>
+              <li>• Cette page est en lecture seule : les compteurs proviennent du suivi du bot.</li>
             </ul>
           </div>
         </div>

@@ -15,137 +15,222 @@
 import React from "react";
 import Link from "next/link";
 import {
-  Settings2,
-  Terminal, 
-  Database,
-  Search,
-  Zap,
+  LayoutGrid,
+  Hash,
+  Users,
   ShieldCheck,
-  Ticket,
-  BarChart4,
-  FileText,
-  Activity
+  ShieldOff,
+  Activity,
+  AlertTriangle,
 } from "lucide-react";
+import { api } from "@/lib/api";
+import { GuildDetails, ModulesConfig, AntiNukeConfig } from "@/types/api";
 
-export default async function GuildOverviewPage({ params }: { params: Promise<{ guildId: string }> }) {
+export const dynamic = "force-dynamic";
+
+const UNKNOWN = "—";
+
+export default async function GuildOverviewPage({
+  params,
+}: {
+  params: Promise<{ guildId: string }>;
+}) {
   const { guildId } = await params;
-  const modules = [
-    { title: "Auto-modération", desc: "Anti-spam, insultes et protection contre les liens.", icon: ShieldCheck, status: "Actif" },
-    { title: "Tickets", desc: "Assistance pour le support et les demandes.", icon: Ticket, status: "Configuré" },
-    { title: "Niveaux", desc: "Animez votre communauté avec les XP et les rangs.", icon: BarChart4, status: "Actif" },
-    { title: "Journaux d'événements", desc: "Journaux détaillés de chaque événement du serveur.", icon: FileText, status: "Actif" },
+
+  let details: GuildDetails | null = null;
+  let modules: ModulesConfig | null = null;
+  let antinuke: AntiNukeConfig | null = null;
+  let latency: number | null = null;
+  let error: string | null = null;
+
+  try {
+    details = await api.getGuildDetails(guildId);
+  } catch (err: any) {
+    console.error("Échec du chargement des détails du serveur :", err);
+    error = err.message || "Impossible de charger les informations de ce serveur.";
+  }
+
+  try {
+    modules = await api.getModules(guildId);
+  } catch (err) {
+    console.error("Échec du chargement des modules :", err);
+  }
+
+  try {
+    antinuke = await api.getAntiNuke(guildId);
+  } catch (err) {
+    console.error("Échec du chargement de l'anti-nuke :", err);
+  }
+
+  try {
+    latency = (await api.getBotStatus()).latency;
+  } catch (err) {
+    console.error("Échec du chargement du statut du bot :", err);
+  }
+
+  const enabledModules = (modules?.modules || []).filter((mod) => mod.enabled);
+  const totalModules = modules?.modules.length ?? 0;
+
+  const serverStats = [
+    { label: "Membres", value: details ? details.member_count.toLocaleString("fr-FR") : UNKNOWN, icon: Users },
+    { label: "Salons", value: details ? String(details.channel_count) : UNKNOWN, icon: Hash },
+    { label: "Rôles", value: details ? String(details.role_count) : UNKNOWN, icon: ShieldCheck },
+    {
+      label: "Latence passerelle",
+      value: latency != null ? `${Math.round(latency)} ms` : UNKNOWN,
+      icon: Activity,
+    },
   ];
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      {/* Quick Config Column */}
-      <div className="space-y-8">
-        <section>
-          <div className="flex items-center gap-2 mb-6">
-            <h2 className="text-xl font-bold text-white tracking-tight">Modules actifs</h2>
-            <div className="h-[2px] flex-1 bg-slate-800" />
-            <Link href={`/dashboard/guild/${guildId}/modules`} className="text-[11px] font-bold text-primary hover:underline whitespace-nowrap">Gérer les modules →</Link>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {modules.map((mod) => (
-              <div key={mod.title} className="bg-[#141B2D] border border-slate-800 p-5 rounded-2xl group hover:border-slate-600 transition-all shadow-sm">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="h-10 w-10 bg-slate-800 rounded-xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                    <mod.icon className="h-5 w-5" />
-                  </div>
-                  <span className="text-[10px] font-black uppercase text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
-                    {mod.status}
-                  </span>
-                </div>
-                <h3 className="font-bold text-white mb-1">{mod.title}</h3>
-                <p className="text-xs text-slate-500 leading-relaxed">{mod.desc}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+    <div className="space-y-8">
+      {error && (
+        <div className="flex items-center gap-3 px-6 py-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-bold">
+          <AlertTriangle className="h-5 w-5 shrink-0" />
+          {error}
+        </div>
+      )}
 
-        <section>
-          <div className="flex items-center gap-2 mb-6">
-            <h2 className="text-xl font-bold text-white tracking-tight">Console système</h2>
-            <div className="h-[2px] flex-1 bg-slate-800" />
-          </div>
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 font-mono text-xs overflow-hidden shadow-2xl">
-            <div className="flex items-center gap-2 mb-3 border-b border-slate-800 pb-2">
-              <Terminal className="h-4 w-4 text-primary" />
-              <span className="text-slate-400">guild_event_stream_{guildId}</span>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Colonne modules */}
+        <div className="space-y-8">
+          <section>
+            <div className="flex items-center gap-2 mb-6">
+              <h2 className="text-xl font-bold text-white tracking-tight">Modules actifs</h2>
+              <div className="h-[2px] flex-1 bg-white/[0.05]" />
+              <Link
+                href={`/dashboard/guild/${guildId}/modules`}
+                className="text-[11px] font-bold text-primary hover:underline whitespace-nowrap"
+              >
+                Gérer les modules →
+              </Link>
             </div>
-            <div className="space-y-1.5 opacity-80">
-              <p className="text-slate-500">[{new Date().toLocaleTimeString()}] <span className="text-emerald-500">INIT</span> Dashboard connecté au pool WebSocket...</p>
-              <p className="text-slate-500">[{new Date().toLocaleTimeString()}] <span className="text-primary">INFO</span> Récupération de guild_config depuis la base principale...</p>
-              <p className="text-slate-500">[{new Date().toLocaleTimeString()}] <span className="text-emerald-500">OK</span> Cache synchronisé avec succès.</p>
-              <p className="text-slate-400 animate-pulse">_</p>
-            </div>
-          </div>
-        </section>
-      </div>
 
-      {/* Integration Status Column */}
-      <div className="space-y-8">
-        <section className="bg-gradient-to-br from-primary/10 to-transparent border border-primary/20 rounded-3xl p-8 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-125 transition-transform">
-            <Database className="h-48 w-48 text-white" />
-          </div>
-          <h2 className="text-2xl font-black text-white mb-2 italic tracking-tighter">État de la base de données</h2>
-          <p className="text-slate-400 text-sm mb-8 max-w-[280px]">Toutes les données du serveur sont chiffrées et répliquées sur notre réseau haute performance.</p>
-          
-          <div className="space-y-4 relative z-10">
-            {[
-              { label: 'Disponibilité', value: '99,98 %', icon: Zap },
-              { label: 'Latence sync', value: '12 ms', icon: Activity },
-              { label: 'Région', value: 'Europe', icon: GlobalizationIcon }
-            ].map((stat) => (stat.icon && 
-              <div key={stat.label} className="flex items-center justify-between p-4 bg-black/20 backdrop-blur-md rounded-2xl border border-white/5">
-                <div className="flex items-center gap-3">
-                  <div className="h-8 w-8 bg-black/40 rounded-lg flex items-center justify-center text-primary">
-                    <stat.icon className="h-4 w-4" />
+            {modules === null ? (
+              <div className="haunted-panel p-8 text-center">
+                <p className="text-sm text-slate-400">
+                  L'état des modules est indisponible : l'API du bot n'a pas répondu.
+                </p>
+              </div>
+            ) : enabledModules.length === 0 ? (
+              <div className="haunted-panel p-8 text-center">
+                <LayoutGrid className="h-8 w-8 text-slate-600 mx-auto mb-4" />
+                <p className="text-sm text-slate-400">
+                  Aucun module n'est activé sur ce serveur
+                  {totalModules > 0 ? ` (0 / ${totalModules})` : ""}.
+                </p>
+                <Link
+                  href={`/dashboard/guild/${guildId}/modules`}
+                  className="inline-block mt-4 text-[11px] font-black uppercase tracking-widest text-primary hover:underline"
+                >
+                  Activer un module
+                </Link>
+              </div>
+            ) : (
+              <>
+                <p className="text-xs text-slate-500 mb-4 font-bold uppercase tracking-widest">
+                  {enabledModules.length} / {totalModules} activés
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {enabledModules.map((mod) => {
+                    const card = (
+                      <div className="haunted-panel p-5 h-full group hover:border-red-500/25 transition-all">
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="h-10 w-10 bg-white/[0.03] rounded-xl flex items-center justify-center text-red-500 border border-white/[0.04]">
+                            <LayoutGrid className="h-5 w-5" />
+                          </div>
+                          <span className="text-[10px] font-black uppercase text-teal-300 bg-teal-300/10 px-2 py-0.5 rounded-full border border-teal-300/20">
+                            Actif
+                          </span>
+                        </div>
+                        <h3 className="font-bold text-white mb-1">{mod.label}</h3>
+                        <p className="text-xs text-slate-500 leading-relaxed">{mod.description}</p>
+                      </div>
+                    );
+                    return mod.route ? (
+                      <Link key={mod.key} href={`/dashboard/guild/${guildId}/${mod.route}`}>
+                        {card}
+                      </Link>
+                    ) : (
+                      <div key={mod.key}>{card}</div>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+          </section>
+        </div>
+
+        {/* Colonne mesures réelles */}
+        <div className="space-y-8">
+          <section className="haunted-panel p-8">
+            <h2 className="text-xl font-bold text-white mb-6">Informations du serveur</h2>
+            <div className="space-y-4">
+              {serverStats.map((stat) => (
+                <div
+                  key={stat.label}
+                  className="flex items-center justify-between p-4 bg-white/[0.02] rounded-2xl border border-white/[0.05]"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="h-8 w-8 bg-white/[0.03] rounded-lg flex items-center justify-center text-red-500">
+                      <stat.icon className="h-4 w-4" />
+                    </div>
+                    <span className="text-sm font-medium text-slate-300">{stat.label}</span>
                   </div>
-                  <span className="text-sm font-medium text-slate-300">{stat.label}</span>
+                  <span className="text-sm font-bold text-white tracking-widest">{stat.value}</span>
                 </div>
-                <span className="text-sm font-bold text-white tracking-widest">{stat.value}</span>
-              </div>
-            ))}
-          </div>
-        </section>
+              ))}
+            </div>
+            {details === null && (
+              <p className="mt-6 text-[11px] text-slate-500 leading-relaxed">
+                Ces mesures proviennent de l'API du bot ; elles sont indisponibles tant qu'elle ne
+                répond pas.
+              </p>
+            )}
+          </section>
 
-        <section className="bg-[#141B2D] border border-slate-800 rounded-3xl p-8">
-           <h2 className="text-xl font-bold text-white mb-6">Contexte de sécurité</h2>
-           <div className="flex items-center gap-6">
-              <div className="h-20 w-20 rounded-full border-4 border-emerald-500/20 flex items-center justify-center relative shadow-[0_0_20px_rgba(16,185,129,0.1)]">
-                <div className="h-16 w-16 rounded-full border-4 border-emerald-500 flex items-center justify-center text-emerald-500 font-black text-xl italic">
-                  100%
+          <section className="haunted-panel p-8">
+            <h2 className="text-xl font-bold text-white mb-6">Protection du serveur</h2>
+            {antinuke === null ? (
+              <p className="text-sm text-slate-400">
+                État anti-nuke indisponible (API injoignable).
+              </p>
+            ) : (
+              <div className="flex items-center gap-6">
+                <div
+                  className={
+                    antinuke.status
+                      ? "h-16 w-16 rounded-full border-2 border-teal-300/40 flex items-center justify-center text-teal-300 ectoplasm-glow"
+                      : "h-16 w-16 rounded-full border-2 border-slate-600 flex items-center justify-center text-slate-500"
+                  }
+                >
+                  {antinuke.status ? (
+                    <ShieldCheck className="h-7 w-7" />
+                  ) : (
+                    <ShieldOff className="h-7 w-7" />
+                  )}
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white">
+                    Anti-nuke {antinuke.status ? "activé" : "désactivé"}
+                  </h3>
+                  <p className="text-slate-400 text-sm mt-1">
+                    {antinuke.status
+                      ? `${antinuke.whitelisted_users?.length ?? 0} utilisateur(s) en liste blanche.`
+                      : "Aucune protection anti-raid n'est appliquée actuellement."}
+                  </p>
+                  <Link
+                    href={`/dashboard/guild/${guildId}/antinuke`}
+                    className="inline-block mt-3 text-[11px] font-black uppercase tracking-widest text-primary hover:underline"
+                  >
+                    Configurer l'anti-nuke →
+                  </Link>
                 </div>
               </div>
-              <div>
-                <h3 className="text-lg font-bold text-white">Indice de confiance</h3>
-                <p className="text-slate-400 text-sm">Le bot est entièrement authentifié avec les permissions administrateur.</p>
-              </div>
-           </div>
-        </section>
+            )}
+          </section>
+        </div>
       </div>
     </div>
-  );
-}
-
-function GlobalizationIcon({ className }: { className?: string }) {
-  return (
-    <svg 
-      className={className} 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      strokeWidth="2" 
-      strokeLinecap="round" 
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="10" />
-      <line x1="2" y1="12" x2="22" y2="12" />
-      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-    </svg>
   );
 }

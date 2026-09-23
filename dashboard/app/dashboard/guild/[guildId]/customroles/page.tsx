@@ -16,9 +16,10 @@ import React from "react";
 import { Ghost } from "lucide-react";
 import nextDynamic from "next/dynamic";
 import { api } from "@/lib/api";
+import { ModuleUnavailable } from "@/components/dashboard/module-unavailable";
 
 const CustomRolesForm = nextDynamic(() => import("@/components/dashboard/customroles-form").then(mod => mod.CustomRolesForm), {
-  loading: () => <div className="h-96 w-full animate-pulse bg-slate-800/20 rounded-3xl" />
+  loading: () => <div className="h-96 w-full animate-pulse bg-white/[0.02] rounded-3xl" />
 });
 
 export const dynamic = "force-dynamic";
@@ -30,7 +31,9 @@ export default async function CustomRolesPage({ params }: { params: Promise<{ gu
     api.getRoles(guildId),
   ]);
 
-  if (!config) return null;
+  if (!config) {
+    return <ModuleUnavailable module="Rôles personnalisés" />;
+  }
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">

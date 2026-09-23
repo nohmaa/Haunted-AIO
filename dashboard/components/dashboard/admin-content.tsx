@@ -92,19 +92,22 @@ export function AdminContent() {
     );
   }
 
+  /** Une mesure absente s'affiche « — » : on n'invente jamais un zéro. */
+  const UNKNOWN = "—";
+
   const statItems = [
-    { name: "Utilisateurs totaux", value: stats?.total_users || "0", icon: Users, color: "text-blue-500" },
-    { name: "Serveurs actifs", value: stats?.active_servers || "0", icon: Server, color: "text-emerald-500" },
-    { name: "Latence API", value: stats?.api_latency || "0ms", icon: Activity, color: "text-amber-500" },
-    { name: "Taille de la base de données", value: stats?.db_size || "0 MB", icon: Database, color: "text-purple-500" },
+    { name: "Membres cumulés", value: stats?.total_members ?? UNKNOWN, icon: Users, color: "text-blue-500" },
+    { name: "Serveurs actifs", value: stats?.active_servers ?? UNKNOWN, icon: Server, color: "text-teal-300" },
+    { name: "Latence API", value: stats?.api_latency ?? UNKNOWN, icon: Activity, color: "text-amber-500" },
+    { name: "Taille de la base de données", value: stats?.db_size ?? UNKNOWN, icon: Database, color: "text-purple-500" },
   ];
 
   return (
     <div className="space-y-10 animate-in fade-in duration-500">
       {/* Header */}
       <div className="relative group">
-        <div className="absolute -inset-1 bg-gradient-to-r from-red-500 to-indigo-500 rounded-3xl blur opacity-10 group-hover:opacity-20 transition duration-1000"></div>
-        <div className="relative bg-[#0f172a] border border-white/10 rounded-3xl p-8 lg:p-12 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+        <div className="absolute -inset-1 bg-gradient-to-r from-red-500 to-teal-400 rounded-3xl blur opacity-10 group-hover:opacity-20 transition duration-1000"></div>
+        <div className="relative bg-haunted-crypt border border-white/10 rounded-3xl p-8 lg:p-12 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
           <div className="flex items-center gap-6">
             <div className="h-16 w-16 rounded-2xl bg-red-500/20 flex items-center justify-center border border-red-500/30 shadow-2xl shadow-red-500/20">
               <Shield className="h-8 w-8 text-red-500" />
@@ -134,9 +137,15 @@ export function AdminContent() {
               <div className={cn("p-3 rounded-xl bg-white/[0.03] group-hover:scale-110 transition-transform", stat.color)}>
                 <stat.icon className="h-6 w-6" />
               </div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded-lg">
-                En direct
-              </span>
+              {stats ? (
+                <span className="text-[10px] font-black uppercase tracking-widest text-teal-300 bg-teal-300/10 px-2 py-1 rounded-lg">
+                  En direct
+                </span>
+              ) : (
+                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 bg-white/[0.03] px-2 py-1 rounded-lg">
+                  Indisponible
+                </span>
+              )}
             </div>
             <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">{stat.name}</p>
             <h3 className="text-2xl font-black text-white mt-1 font-outfit">{stat.value}</h3>
@@ -156,13 +165,24 @@ export function AdminContent() {
             <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Sondage auto actif</span>
           </div>
           <div className="p-8 space-y-6">
+            {(!stats || stats.nodes.length === 0) && (
+              <p className="text-sm text-slate-500 italic">
+                Aucune mesure disponible : l&apos;API du bot n&apos;a pas renvoyé l&apos;état des nœuds.
+              </p>
+            )}
             {stats?.nodes.map((node) => {
               const Icon = node.icon === "Globe" ? Globe : node.icon === "Database" ? Database : node.icon === "Cpu" ? Cpu : Lock;
-              const isHealthy = node.status === "Healthy";
+              const isHealthy = node.status === "healthy";
+              const statusLabel =
+                {
+                  healthy: "Nominal",
+                  warning: "Attention",
+                  booting: "Démarrage",
+                }[node.status] || node.status;
               return (
                 <div key={node.name} className="flex items-center justify-between p-4 bg-white/[0.02] rounded-2xl border border-white/5 group hover:bg-white/[0.04] transition-all">
                   <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 rounded-xl bg-slate-800 flex items-center justify-center group-hover:bg-slate-700 transition-colors">
+                    <div className="h-10 w-10 rounded-xl bg-white/[0.05] flex items-center justify-center group-hover:bg-white/[0.08] transition-colors">
                       <Icon className="h-5 w-5 text-slate-400" />
                     </div>
                     <div>
@@ -172,11 +192,11 @@ export function AdminContent() {
                   </div>
                   <div className={cn(
                     "flex items-center gap-2 px-3 py-1.5 rounded-full border",
-                    isHealthy ? "bg-emerald-500/10 border-emerald-500/20" : "bg-amber-500/10 border-amber-500/20"
+                    isHealthy ? "bg-teal-300/10 border-teal-300/20" : "bg-amber-500/10 border-amber-500/20"
                   )}>
-                    <div className={cn("h-1.5 w-1.5 rounded-full", isHealthy ? "bg-emerald-500" : "bg-amber-500")} />
-                    <span className={cn("text-[10px] font-bold uppercase", isHealthy ? "text-emerald-500" : "text-amber-500")}>
-                      {node.status}
+                    <div className={cn("h-1.5 w-1.5 rounded-full", isHealthy ? "bg-teal-400" : "bg-amber-500")} />
+                    <span className={cn("text-[10px] font-bold uppercase", isHealthy ? "text-teal-300" : "text-amber-500")}>
+                      {statusLabel}
                     </span>
                   </div>
                 </div>
@@ -188,7 +208,7 @@ export function AdminContent() {
         {/* Global Config */}
         <div className="glass border border-white/5 rounded-[2.5rem] overflow-hidden flex flex-col">
           <div className="p-8 border-b border-white/5 flex items-center gap-4 bg-white/[0.01]">
-            <Settings className="h-5 w-5 text-indigo-500" />
+            <Settings className="h-5 w-5 text-teal-300" />
             <h3 className="text-lg font-bold text-white">Paramètres globaux</h3>
           </div>
           <div className="p-8 flex-1 space-y-6">

@@ -272,7 +272,8 @@ export interface AdminNodeStatus {
 }
 
 export interface AdminStats {
-  total_users: string;
+  /** Somme des membres de chaque serveur (pas des utilisateurs uniques). */
+  total_members: string;
   active_servers: string;
   api_latency: string;
   db_size: string;

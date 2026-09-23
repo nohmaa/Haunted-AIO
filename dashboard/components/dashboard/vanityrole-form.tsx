@@ -82,12 +82,12 @@ export function VanityRoleForm({ initialSetups, channels, roles, guildId }: Vani
     <div className="space-y-8">
       
       {/* List Existing Ones */}
-      <div className="bg-[#141B2D] border border-slate-800 rounded-3xl shadow-xl p-8">
+      <div className="bg-haunted-surface border border-white/[0.06] rounded-3xl shadow-xl p-8">
         <h3 className="text-xl font-bold text-white mb-6">Rôles vanity actifs</h3>
         
         {setups.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-10 text-slate-500">
-            <Link2 className="h-12 w-12 mb-4 opacity-50 bg-slate-800 p-2 rounded-xl" />
+            <Link2 className="h-12 w-12 mb-4 opacity-50 bg-white/[0.05] p-2 rounded-xl" />
             <p>Aucun rôle vanity configuré pour le moment.</p>
           </div>
         ) : (
@@ -96,7 +96,7 @@ export function VanityRoleForm({ initialSetups, channels, roles, guildId }: Vani
               const r = roles.find(ro => ro.id.toString() === setup.role_id?.toString());
               const c = channels.find(ch => ch.id.toString() === setup.log_channel_id?.toString());
               return (
-                <div key={idx} className="bg-slate-900/50 p-6 rounded-2xl border border-slate-800 relative group">
+                <div key={idx} className="bg-white/[0.02] p-6 rounded-2xl border border-white/[0.06] relative group">
                   <div className="flex items-center justify-between mb-4">
                     <h4 className="font-bold text-lg text-primary">{setup.vanity}</h4>
                     <Button 
@@ -131,7 +131,7 @@ export function VanityRoleForm({ initialSetups, channels, roles, guildId }: Vani
       </div>
 
       {/* Add New Setup */}
-      <div className="bg-[#141B2D] border border-slate-800 rounded-3xl shadow-xl p-8">
+      <div className="bg-haunted-surface border border-white/[0.06] rounded-3xl shadow-xl p-8">
         <h3 className="text-xl font-bold text-white mb-6">Ajouter un nouveau rôle vanity</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="space-y-3">
@@ -140,7 +140,7 @@ export function VanityRoleForm({ initialSetups, channels, roles, guildId }: Vani
               value={newVanity}
               onChange={(e) => setNewVanity(e.target.value)}
               placeholder="ex. zyx"
-              className="h-12 bg-slate-900 border-slate-800"
+              className="h-12 bg-haunted-surface border-white/[0.06]"
             />
           </div>
           
@@ -150,12 +150,12 @@ export function VanityRoleForm({ initialSetups, channels, roles, guildId }: Vani
               value={newRole || ""}
               onValueChange={(val) => setNewRole(val)}
             >
-              <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 text-left">
+              <SelectTrigger className="w-full h-12 bg-haunted-surface border-white/[0.06] text-left">
                 <SelectValue placeholder="Sélectionner un rôle..." />
               </SelectTrigger>
-              <SelectContent className="bg-slate-900 border-slate-800">
+              <SelectContent className="bg-haunted-surface border-white/[0.06]">
                 {roles.map((r) => (
-                  <SelectItem key={r.id} value={r.id.toString()} className="focus:bg-slate-800">
+                  <SelectItem key={r.id} value={r.id.toString()} className="focus:bg-white/[0.05]">
                     {r.name}
                   </SelectItem>
                 ))}
@@ -169,12 +169,12 @@ export function VanityRoleForm({ initialSetups, channels, roles, guildId }: Vani
               value={newChannel || ""}
               onValueChange={(val) => setNewChannel(val)}
             >
-              <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 text-left">
+              <SelectTrigger className="w-full h-12 bg-haunted-surface border-white/[0.06] text-left">
                 <SelectValue placeholder="Sélectionner un salon de logs..." />
               </SelectTrigger>
-              <SelectContent className="bg-slate-900 border-slate-800">
+              <SelectContent className="bg-haunted-surface border-white/[0.06]">
                 {textChannels.map((c) => (
-                  <SelectItem key={c.id} value={c.id.toString()} className="focus:bg-slate-800">
+                  <SelectItem key={c.id} value={c.id.toString()} className="focus:bg-white/[0.05]">
                     # {c.name}
                   </SelectItem>
                 ))}

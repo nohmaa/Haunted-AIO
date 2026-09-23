@@ -70,7 +70,7 @@ export function WelcomeForm({ initialConfig, channels, guildId }: WelcomeFormPro
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div className="lg:col-span-2 space-y-6">
-        <div className="bg-[#141B2D] border border-slate-800 rounded-3xl shadow-xl p-8 space-y-6">
+        <div className="bg-haunted-surface border border-white/[0.06] rounded-3xl shadow-xl p-8 space-y-6">
           <div className="space-y-4">
             <div>
               <label className="text-xs font-black uppercase text-slate-500 tracking-widest pl-1">Type de réponse</label>
@@ -100,13 +100,13 @@ export function WelcomeForm({ initialConfig, channels, guildId }: WelcomeFormPro
                   value={config.welcome_message || ""}
                   onChange={(e) => setConfig({ ...config, welcome_message: e.target.value })}
                   placeholder="Bienvenue {user} sur {server_name} !"
-                  className="w-full mt-2 bg-[#0f172a] border border-slate-800 rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-white min-h-[120px]"
+                  className="w-full mt-2 bg-haunted-crypt border border-white/[0.06] rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-white min-h-[120px]"
                 />
               </div>
             )}
 
             {config.welcome_type === "embed" && (
-              <div className="space-y-4 pt-4 border-t border-slate-800/50">
+              <div className="space-y-4 pt-4 border-t border-white/[0.05]">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="text-xs font-black uppercase text-slate-500 tracking-widest pl-1">Titre de l'embed</label>
@@ -114,7 +114,7 @@ export function WelcomeForm({ initialConfig, channels, guildId }: WelcomeFormPro
                       type="text"
                       value={config.embed_data?.title || ""}
                       onChange={(e) => setConfig({ ...config, embed_data: { ...config.embed_data, title: e.target.value }})}
-                      className="w-full mt-2 bg-[#0f172a] border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-white"
+                      className="w-full mt-2 bg-haunted-crypt border border-white/[0.06] rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-white"
                       placeholder="Bienvenue sur le serveur !"
                     />
                   </div>
@@ -124,7 +124,7 @@ export function WelcomeForm({ initialConfig, channels, guildId }: WelcomeFormPro
                       type="text"
                       value={config.embed_data?.color || ""}
                       onChange={(e) => setConfig({ ...config, embed_data: { ...config.embed_data, color: e.target.value }})}
-                      className="w-full mt-2 bg-[#0f172a] border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-white"
+                      className="w-full mt-2 bg-haunted-crypt border border-white/[0.06] rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-white"
                       placeholder="#3498db"
                     />
                   </div>
@@ -136,7 +136,7 @@ export function WelcomeForm({ initialConfig, channels, guildId }: WelcomeFormPro
                     value={config.embed_data?.description || ""}
                     onChange={(e) => setConfig({ ...config, embed_data: { ...config.embed_data, description: e.target.value }})}
                     placeholder="Nous sommes ravis de t'accueillir ici, {user} !"
-                    className="w-full mt-2 bg-[#0f172a] border border-slate-800 rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-white min-h-[100px]"
+                    className="w-full mt-2 bg-haunted-crypt border border-white/[0.06] rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-white min-h-[100px]"
                   />
                 </div>
 
@@ -147,7 +147,7 @@ export function WelcomeForm({ initialConfig, channels, guildId }: WelcomeFormPro
                       type="text"
                       value={config.embed_data?.thumbnail || ""}
                       onChange={(e) => setConfig({ ...config, embed_data: { ...config.embed_data, thumbnail: e.target.value }})}
-                      className="w-full mt-2 bg-[#0f172a] border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-white"
+                      className="w-full mt-2 bg-haunted-crypt border border-white/[0.06] rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-white"
                       placeholder="{user_avatar} ou https://..."
                     />
                   </div>
@@ -157,7 +157,7 @@ export function WelcomeForm({ initialConfig, channels, guildId }: WelcomeFormPro
                       type="text"
                       value={config.embed_data?.image || ""}
                       onChange={(e) => setConfig({ ...config, embed_data: { ...config.embed_data, image: e.target.value }})}
-                      className="w-full mt-2 bg-[#0f172a] border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-white"
+                      className="w-full mt-2 bg-haunted-crypt border border-white/[0.06] rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-white"
                       placeholder="https://..."
                     />
                   </div>
@@ -178,20 +178,20 @@ export function WelcomeForm({ initialConfig, channels, guildId }: WelcomeFormPro
       </div>
 
       <div className="space-y-6">
-         <div className="bg-[#141B2D] border border-slate-800 rounded-3xl p-6 shadow-xl">
+         <div className="bg-haunted-surface border border-white/[0.06] rounded-3xl p-6 shadow-xl">
             <h3 className="text-sm font-black uppercase text-slate-500 tracking-widest mb-4">Variables</h3>
-            <div className="space-y-2 text-xs text-slate-400 font-mono bg-slate-900/50 p-4 rounded-2xl border border-white/5">
+            <div className="space-y-2 text-xs text-slate-400 font-mono bg-white/[0.02] p-4 rounded-2xl border border-white/5">
                <p className="flex justify-between hover:text-white transition-colors"><span>{'{user}'}</span> <span>@Pseudo</span></p>
                <p className="flex justify-between hover:text-white transition-colors"><span>{'{user_name}'}</span> <span>Pseudo</span></p>
                <p className="flex justify-between hover:text-white transition-colors"><span>{'{server_name}'}</span> <span>Nom du serveur</span></p>
                <p className="flex justify-between hover:text-white transition-colors"><span>{'{server_membercount}'}</span> <span>Total des membres</span></p>
-               <p className="border-t border-slate-800 my-2 pt-2 flex justify-between hover:text-white transition-colors"><span>{'{user_avatar}'}</span> <span>Image d'avatar</span></p>
+               <p className="border-t border-white/[0.06] my-2 pt-2 flex justify-between hover:text-white transition-colors"><span>{'{user_avatar}'}</span> <span>Image d'avatar</span></p>
                <p className="flex justify-between hover:text-white transition-colors"><span>{'{server_icon}'}</span> <span>Logo du serveur</span></p>
             </div>
             <p className="text-[10px] text-slate-500 italic text-center mt-4">Vous pouvez utiliser ces variables dans le contenu du message et les embeds pour personnaliser les bienvenues.</p>
          </div>
          
-         <div className="bg-[#141B2D] border border-slate-800 rounded-3xl p-6 shadow-xl">
+         <div className="bg-haunted-surface border border-white/[0.06] rounded-3xl p-6 shadow-xl">
             <h3 className="text-sm font-black uppercase text-slate-500 tracking-widest mb-4">Configuration auto</h3>
             <Button onClick={() => setConfig({
                 ...config,

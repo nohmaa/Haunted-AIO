@@ -58,10 +58,10 @@ export function VerificationForm({ initialConfig, channels, roles, guildId }: Ve
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
       <div className="lg:col-span-3 space-y-6">
-        <div className="bg-[#141B2D] border border-slate-800 rounded-3xl shadow-xl p-8 space-y-8">
+        <div className="bg-haunted-surface border border-white/[0.06] rounded-3xl shadow-xl p-8 space-y-8">
           
           {/* Main Toggle */}
-          <div className="flex items-center justify-between p-6 bg-slate-900/40 rounded-2xl border border-slate-800">
+          <div className="flex items-center justify-between p-6 bg-white/[0.02] rounded-2xl border border-white/[0.06]">
             <div>
               <h3 className="text-lg font-black text-white">Système de vérification</h3>
               <p className="text-sm text-slate-400 mt-1">Activer ou désactiver la vérification du serveur.</p>
@@ -86,13 +86,13 @@ export function VerificationForm({ initialConfig, channels, roles, guildId }: Ve
                   value={config.verification_channel_id || "none"}
                   onValueChange={(val) => setConfig({ ...config, verification_channel_id: val === "none" ? null : val })}
                 >
-                  <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 font-medium">
+                  <SelectTrigger className="w-full h-12 bg-haunted-surface border-white/[0.06] font-medium">
                     <SelectValue placeholder="Choisir un salon..." />
                   </SelectTrigger>
-                  <SelectContent className="bg-slate-900 border-slate-800">
-                    <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Non défini</SelectItem>
+                  <SelectContent className="bg-haunted-surface border-white/[0.06]">
+                    <SelectItem value="none" className="text-slate-400 focus:bg-white/[0.05]">Non défini</SelectItem>
                     {textChannels.map((c) => (
-                      <SelectItem key={c.id} value={c.id.toString()} className="focus:bg-slate-800">
+                      <SelectItem key={c.id} value={c.id.toString()} className="focus:bg-white/[0.05]">
                         # {c.name}
                       </SelectItem>
                     ))}
@@ -110,13 +110,13 @@ export function VerificationForm({ initialConfig, channels, roles, guildId }: Ve
                   value={config.log_channel_id || "none"}
                   onValueChange={(val) => setConfig({ ...config, log_channel_id: val === "none" ? null : val })}
                 >
-                  <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 font-medium">
+                  <SelectTrigger className="w-full h-12 bg-haunted-surface border-white/[0.06] font-medium">
                     <SelectValue placeholder="Choisir le salon de logs..." />
                   </SelectTrigger>
-                  <SelectContent className="bg-slate-900 border-slate-800">
-                    <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Non défini</SelectItem>
+                  <SelectContent className="bg-haunted-surface border-white/[0.06]">
+                    <SelectItem value="none" className="text-slate-400 focus:bg-white/[0.05]">Non défini</SelectItem>
                     {textChannels.map((c) => (
-                      <SelectItem key={c.id} value={c.id.toString()} className="focus:bg-slate-800">
+                      <SelectItem key={c.id} value={c.id.toString()} className="focus:bg-white/[0.05]">
                         # {c.name}
                       </SelectItem>
                     ))}
@@ -139,13 +139,13 @@ export function VerificationForm({ initialConfig, channels, roles, guildId }: Ve
                   value={config.verified_role_id || "none"}
                   onValueChange={(val) => setConfig({ ...config, verified_role_id: val === "none" ? null : val })}
                 >
-                  <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 font-medium">
+                  <SelectTrigger className="w-full h-12 bg-haunted-surface border-white/[0.06] font-medium">
                     <SelectValue placeholder="Choisir le rôle vérifié..." />
                   </SelectTrigger>
-                  <SelectContent className="bg-slate-900 border-slate-800">
-                    <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Non défini</SelectItem>
+                  <SelectContent className="bg-haunted-surface border-white/[0.06]">
+                    <SelectItem value="none" className="text-slate-400 focus:bg-white/[0.05]">Non défini</SelectItem>
                     {roles.map((r) => (
-                      <SelectItem key={r.id} value={r.id.toString()} className="focus:bg-slate-800">
+                      <SelectItem key={r.id} value={r.id.toString()} className="focus:bg-white/[0.05]">
                         <div className="flex items-center gap-2">
                           <div className="w-3 h-3 rounded-full" style={{ backgroundColor: `#${r.color.toString(16).padStart(6, '0')}` }} />
                           {r.name}
@@ -166,13 +166,13 @@ export function VerificationForm({ initialConfig, channels, roles, guildId }: Ve
                   value={config.verification_method || "both"}
                   onValueChange={(val) => setConfig({ ...config, verification_method: val })}
                 >
-                  <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 font-medium">
+                  <SelectTrigger className="w-full h-12 bg-haunted-surface border-white/[0.06] font-medium">
                     <SelectValue placeholder="Choisir une méthode..." />
                   </SelectTrigger>
-                  <SelectContent className="bg-slate-900 border-slate-800">
-                    <SelectItem value="captcha" className="focus:bg-slate-800">CAPTCHA uniquement</SelectItem>
-                    <SelectItem value="button" className="focus:bg-slate-800">Bouton uniquement</SelectItem>
-                    <SelectItem value="both" className="focus:bg-slate-800">Les deux choix</SelectItem>
+                  <SelectContent className="bg-haunted-surface border-white/[0.06]">
+                    <SelectItem value="captcha" className="focus:bg-white/[0.05]">CAPTCHA uniquement</SelectItem>
+                    <SelectItem value="button" className="focus:bg-white/[0.05]">Bouton uniquement</SelectItem>
+                    <SelectItem value="both" className="focus:bg-white/[0.05]">Les deux choix</SelectItem>
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-slate-500">Choisissez comment les utilisateurs seront vérifiés.</p>

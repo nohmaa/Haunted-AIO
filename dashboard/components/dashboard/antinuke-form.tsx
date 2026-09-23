@@ -113,7 +113,7 @@ export function AntiNukeForm({ initialConfig, guildId }: AntiNukeFormProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
       <div className="lg:col-span-3 space-y-6">
-        <div className="bg-[#141B2D] border border-slate-800 rounded-3xl overflow-hidden shadow-xl">
+        <div className="bg-haunted-surface border border-white/[0.06] rounded-3xl overflow-hidden shadow-xl">
           <div className="p-8 space-y-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-black uppercase text-slate-500 tracking-widest">Contrôle principal</h3>
@@ -129,14 +129,14 @@ export function AntiNukeForm({ initialConfig, guildId }: AntiNukeFormProps) {
                   key={feature.id}
                   className={cn(
                     "p-6 rounded-2xl border transition-all duration-300",
-                    config.status ? "bg-slate-900/40 border-slate-800" : "bg-slate-900/10 border-slate-900 opacity-40 grayscale"
+                    config.status ? "bg-white/[0.02] border-white/[0.06]" : "bg-white/[0.01] border-white/[0.04] opacity-40 grayscale"
                   )}
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                     <div className="flex items-center gap-4">
                       <div className={cn(
                         "h-12 w-12 rounded-xl flex items-center justify-center transition-colors",
-                        config.status ? "bg-primary/20 text-primary" : "bg-slate-800 text-slate-500"
+                        config.status ? "bg-primary/20 text-primary" : "bg-white/[0.05] text-slate-500"
                       )}>
                         <feature.icon className="h-6 w-6" />
                       </div>
@@ -149,8 +149,8 @@ export function AntiNukeForm({ initialConfig, guildId }: AntiNukeFormProps) {
                     <div className="flex items-center gap-4">
                        {config.status && (
                          <div className="flex items-center gap-2 animate-in fade-in slide-in-from-right-2 duration-300">
-                           <ShieldAlert className="h-4 w-4 text-emerald-500" />
-                           <span className="text-xs font-bold text-emerald-500 uppercase">Protégé</span>
+                           <ShieldAlert className="h-4 w-4 text-teal-300" />
+                           <span className="text-xs font-bold text-teal-300 uppercase">Protégé</span>
                          </div>
                        )}
                     </div>
@@ -159,9 +159,9 @@ export function AntiNukeForm({ initialConfig, guildId }: AntiNukeFormProps) {
               ))}
             </div>
 
-            <div className="pt-6 border-t border-slate-800">
+            <div className="pt-6 border-t border-white/[0.06]">
               <h4 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
-                <ShieldCheck className="h-5 w-5 text-emerald-500" />
+                <ShieldCheck className="h-5 w-5 text-teal-300" />
                 Utilisateurs whitelistés
               </h4>
               
@@ -170,7 +170,7 @@ export function AntiNukeForm({ initialConfig, guildId }: AntiNukeFormProps) {
                   placeholder="ID d’utilisateur..." 
                   value={wlInput}
                   onChange={(e) => setWlInput(e.target.value)}
-                  className="bg-slate-900/50"
+                  className="bg-white/[0.02]"
                 />
                 <Button onClick={handleAddWhitelist} disabled={saving} variant="secondary">
                   <Plus className="h-5 w-5" />
@@ -182,9 +182,9 @@ export function AntiNukeForm({ initialConfig, guildId }: AntiNukeFormProps) {
                   <p className="text-xs text-slate-500 italic text-center py-4">Aucun utilisateur whitelisté.</p>
                 ) : (
                   whitelistedUsers.map(userId => (
-                    <div key={userId} className="flex items-center justify-between p-3 rounded-xl bg-slate-900/30 border border-slate-800/50">
+                    <div key={userId} className="flex items-center justify-between p-3 rounded-xl bg-white/[0.015] border border-white/[0.05]">
                       <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-full bg-slate-800 flex items-center justify-center">
+                        <div className="h-8 w-8 rounded-full bg-white/[0.05] flex items-center justify-center">
                           <User className="h-4 w-4 text-slate-400" />
                         </div>
                         <span className="text-sm font-mono text-slate-300">{userId}</span>

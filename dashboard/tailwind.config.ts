@@ -37,6 +37,18 @@ const config: Config = {
         accent: {
           red: "rgba(239, 68, 68, 0.1)",
           glass: "rgba(255, 255, 255, 0.03)",
+        },
+        // Palette « manoir hanté » : obsidienne, sang, ectoplasme, chandelle.
+        haunted: {
+          crypt: "#06060b",
+          surface: "#0c0b12",
+          raised: "#12101a",
+          blood: "#ef4444",
+          deep: "#7f1d1d",
+          ectoplasm: "#5eead4",
+          candle: "#f59e0b",
+          bone: "#e7e5e4",
+          ash: "#94a3b8",
         }
       },
       backgroundImage: {

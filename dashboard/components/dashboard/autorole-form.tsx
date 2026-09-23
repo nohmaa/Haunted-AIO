@@ -94,15 +94,15 @@ export function AutoRoleForm({ initialConfig, roles, guildId }: AutoRoleFormProp
         </div>
         
         <Select value="" onValueChange={(val) => addRole(type, val)}>
-          <SelectTrigger className="w-full h-12 bg-slate-900/50 border-slate-800 hover:border-slate-700 transition-all">
+          <SelectTrigger className="w-full h-12 bg-white/[0.02] border-white/[0.06] hover:border-white/[0.08] transition-all">
             <SelectValue placeholder={`Ajouter un rôle ${type === "humans" ? "membre" : "bot"}...`} />
           </SelectTrigger>
-          <SelectContent className="bg-slate-900 border-slate-800 max-h-[300px]">
+          <SelectContent className="bg-haunted-surface border-white/[0.06] max-h-[300px]">
             {roles
               .filter(r => !config[type].includes(r.id))
               .sort((a, b) => (b.position || 0) - (a.position || 0))
               .map((r) => (
-                <SelectItem key={r.id} value={r.id} className="focus:bg-slate-800 group">
+                <SelectItem key={r.id} value={r.id} className="focus:bg-white/[0.05] group">
                   <div className="flex items-center gap-2">
                     <div 
                       className="w-2 h-2 rounded-full" 
@@ -115,7 +115,7 @@ export function AutoRoleForm({ initialConfig, roles, guildId }: AutoRoleFormProp
           </SelectContent>
         </Select>
 
-        <div className="grid grid-cols-1 gap-2 min-h-[100px] p-4 bg-slate-900/40 rounded-2xl border border-slate-800/50 relative overflow-hidden">
+        <div className="grid grid-cols-1 gap-2 min-h-[100px] p-4 bg-white/[0.02] rounded-2xl border border-white/[0.05] relative overflow-hidden">
           {config[type].length === 0 ? (
             <div className="absolute inset-0 flex flex-col items-center justify-center opacity-20">
               <ShieldCheck className="h-8 w-8 mb-2" />
@@ -129,7 +129,7 @@ export function AutoRoleForm({ initialConfig, roles, guildId }: AutoRoleFormProp
                 return (
                   <div 
                     key={roleId} 
-                    className="flex items-center gap-2 bg-slate-800/80 border border-slate-700/50 px-3 py-1.5 rounded-lg text-sm group animate-in zoom-in-95 duration-200"
+                    className="flex items-center gap-2 bg-white/[0.05]/80 border border-white/[0.08] px-3 py-1.5 rounded-lg text-sm group animate-in zoom-in-95 duration-200"
                   >
                     <div 
                       className="w-2 h-2 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)]" 
@@ -155,14 +155,14 @@ export function AutoRoleForm({ initialConfig, roles, guildId }: AutoRoleFormProp
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
       <div className="lg:col-span-3 space-y-6">
-        <div className="bg-[#141B2D] border border-slate-800 rounded-[32px] shadow-2xl p-8 space-y-10 relative">
+        <div className="bg-haunted-surface border border-white/[0.06] rounded-[32px] shadow-2xl p-8 space-y-10 relative">
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             {renderRoleList("humans")}
             {renderRoleList("bots")}
           </div>
 
-          <div className="pt-6 border-t border-slate-800">
+          <div className="pt-6 border-t border-white/[0.06]">
             <Button 
               onClick={handleSave}
               disabled={saving}
@@ -177,7 +177,7 @@ export function AutoRoleForm({ initialConfig, roles, guildId }: AutoRoleFormProp
       </div>
 
       <div className="space-y-6">
-        <div className="bg-gradient-to-br from-[#141B2D] to-slate-900 border border-slate-800 rounded-3xl p-6 relative overflow-hidden group">
+        <div className="bg-gradient-to-br from-haunted-surface to-haunted-surface border border-white/[0.06] rounded-3xl p-6 relative overflow-hidden group">
           <div className="absolute -right-6 -top-6 opacity-[0.05] group-hover:scale-110 transition-transform duration-500">
             <UserPlus className="h-40 w-40 text-primary" />
           </div>

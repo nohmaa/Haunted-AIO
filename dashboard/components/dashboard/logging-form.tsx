@@ -94,6 +94,31 @@ export function LoggingForm({ initialConfig, channels, guildId }: LoggingFormPro
     }
   };
 
+  /** Active ou coupe toutes les catégories d'un coup (écriture réelle côté bot). */
+  const handleBulkToggle = async (enabled: boolean) => {
+    const previous = config;
+    const allEnabled = Object.fromEntries(
+      LOG_CATEGORIES.map((cat) => [cat.id, enabled])
+    ) as Record<string, boolean>;
+    setConfig({ ...config, log_enabled: allEnabled });
+
+    setSaving(true);
+    const promise = api.updateLogging(guildId, { log_enabled: allEnabled });
+    toast.promise(promise, {
+      loading: enabled ? 'Activation de toutes les catégories...' : 'Coupure de toutes les catégories...',
+      success: enabled ? 'Toutes les catégories sont actives' : 'Toutes les catégories sont silencieuses',
+      error: 'Échec de la mise à jour groupée de la journalisation',
+    });
+
+    try {
+      await promise;
+    } catch {
+      setConfig(previous);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const channelOptions = channels.map(c => ({
     value: c.id.toString(),
     label: `#${c.name}`
@@ -103,10 +128,10 @@ export function LoggingForm({ initialConfig, channels, guildId }: LoggingFormPro
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
       <div className="lg:col-span-3 space-y-4">
          {LOG_CATEGORIES.map((cat) => (
-            <div key={cat.id} className="bg-[#141B2D] border border-slate-800 p-8 rounded-[40px] shadow-xl hover:border-primary/20 transition-all group">
+            <div key={cat.id} className="bg-haunted-surface border border-white/[0.06] p-8 rounded-[40px] shadow-xl hover:border-primary/20 transition-all group">
                <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
                   <div className="flex items-start gap-5">
-                     <div className="h-14 w-14 rounded-2xl bg-slate-800/50 flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors border border-white/5 shrink-0">
+                     <div className="h-14 w-14 rounded-2xl bg-white/[0.04] flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors border border-white/5 shrink-0">
                         <cat.icon className="h-7 w-7" />
                      </div>
                      <div className="flex flex-col">
@@ -125,15 +150,15 @@ export function LoggingForm({ initialConfig, channels, guildId }: LoggingFormPro
                           onValueChange={(val) => handleChannelChange(cat.id, val)}
                           options={channelOptions}
                           placeholder="Sélectionner un salon..."
-                          className="bg-black/20 border-slate-800 rounded-xl"
+                          className="bg-black/20 border-white/[0.06] rounded-xl"
                         />
                      </div>
 
-                     <div className="flex items-center gap-4 border-l border-slate-800/50 pl-4 md:pl-8">
+                     <div className="flex items-center gap-4 border-l border-white/[0.05] pl-4 md:pl-8">
                         <div className="flex-col items-end hidden sm:flex">
                            <span className={cn(
                              "text-[10px] font-black uppercase tracking-widest",
-                             config.log_enabled[cat.id] ? "text-emerald-500" : "text-slate-600"
+                             config.log_enabled[cat.id] ? "text-teal-300" : "text-slate-600"
                            )}>
                              {config.log_enabled[cat.id] ? "Actif" : "Silencieux"}
                            </span>
@@ -168,24 +193,39 @@ export function LoggingForm({ initialConfig, channels, guildId }: LoggingFormPro
                   <p className="text-xs text-slate-300 leading-relaxed font-medium">Bientôt disponible : exportez les logs d'audit vers des webhooks externes.</p>
                </div>
             </div>
-            <Button variant="secondary" className="w-full mt-8 py-6 rounded-[24px] font-black uppercase tracking-tighter text-xs">
-               Enregistrer la configuration globale
-            </Button>
+            <div className="grid grid-cols-1 gap-3 mt-8">
+               <Button
+                 onClick={() => handleBulkToggle(true)}
+                 disabled={saving}
+                 variant="secondary"
+                 className="w-full py-6 rounded-[24px] font-black uppercase tracking-tighter text-xs"
+               >
+                  Activer toutes les catégories
+               </Button>
+               <Button
+                 onClick={() => handleBulkToggle(false)}
+                 disabled={saving}
+                 variant="outline"
+                 className="w-full py-6 rounded-[24px] font-black uppercase tracking-tighter text-xs border-white/[0.08]"
+               >
+                  Tout passer en silencieux
+               </Button>
+            </div>
          </section>
 
-         <div className="bg-[#141B2D] border border-slate-800 rounded-[40px] p-8 shadow-xl">
+         <div className="bg-haunted-surface border border-white/[0.06] rounded-[40px] p-8 shadow-xl">
            <h3 className="text-xs font-black uppercase text-slate-500 tracking-[0.15em] mb-6 flex items-center gap-2">
              <ShieldAlert className="h-4 w-4 text-amber-500" />
              Protection d'audit
            </h3>
            <div className="space-y-4">
-              <div className="flex items-center justify-between p-3 bg-slate-900/40 rounded-xl border border-slate-800 hover:border-slate-700 transition-colors">
+              <div className="flex items-center justify-between p-3 bg-white/[0.02] rounded-xl border border-white/[0.06] hover:border-white/[0.08] transition-colors">
                  <span className="text-xs font-bold text-slate-400">Rôles protégés</span>
-                 <span className="bg-slate-800 text-slate-300 px-2 py-1 rounded-md text-[10px] font-black">{config.ignore_roles.length}</span>
+                 <span className="bg-white/[0.05] text-slate-300 px-2 py-1 rounded-md text-[10px] font-black">{config.ignore_roles.length}</span>
               </div>
-              <div className="flex items-center justify-between p-3 bg-slate-900/40 rounded-xl border border-slate-800 hover:border-slate-700 transition-colors">
+              <div className="flex items-center justify-between p-3 bg-white/[0.02] rounded-xl border border-white/[0.06] hover:border-white/[0.08] transition-colors">
                  <span className="text-xs font-bold text-slate-400">Salons sécurisés</span>
-                 <span className="bg-slate-800 text-slate-300 px-2 py-1 rounded-md text-[10px] font-black">{config.ignore_channels.length}</span>
+                 <span className="bg-white/[0.05] text-slate-300 px-2 py-1 rounded-md text-[10px] font-black">{config.ignore_channels.length}</span>
               </div>
            </div>
            <p className="text-[10px] text-slate-600 mt-6 leading-relaxed italic text-center">

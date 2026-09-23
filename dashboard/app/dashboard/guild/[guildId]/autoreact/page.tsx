@@ -101,10 +101,10 @@ export default function AutoReactPage({ params }: { params: Promise<{ guildId: s
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <div className="lg:col-span-3 space-y-6">
-          <div className="bg-[#141B2D] border border-slate-800 rounded-3xl overflow-hidden shadow-xl p-8 space-y-6">
+          <div className="bg-haunted-surface border border-white/[0.06] rounded-3xl overflow-hidden shadow-xl p-8 space-y-6">
             
             {config.triggers.length === 0 ? (
-              <div className="text-center p-12 bg-slate-900/20 rounded-2xl border border-dashed border-slate-700">
+              <div className="text-center p-12 bg-white/[0.01] rounded-2xl border border-dashed border-white/[0.08]">
                 <Smile className="w-14 h-14 text-slate-600 mx-auto mb-4" />
                 <p className="text-lg font-medium text-slate-400">Aucun déclencheur configuré</p>
                 <p className="text-sm text-slate-500 mb-6">Commencez par ajouter votre premier déclencheur.</p>
@@ -115,7 +115,7 @@ export default function AutoReactPage({ params }: { params: Promise<{ guildId: s
             ) : (
               <>
                 {config.triggers.map((item: any, index: number) => (
-                  <div key={index} className="p-6 bg-slate-900/40 border border-slate-800 rounded-2xl space-y-4 animate-in zoom-in-95 duration-200">
+                  <div key={index} className="p-6 bg-white/[0.02] border border-white/[0.06] rounded-2xl space-y-4 animate-in zoom-in-95 duration-200">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className="p-2.5 rounded-xl bg-yellow-500/10 text-yellow-500">
@@ -134,7 +134,7 @@ export default function AutoReactPage({ params }: { params: Promise<{ guildId: s
                           placeholder="ex. bonjour"
                           value={item.trigger}
                           onChange={(e) => updateTrigger(index, "trigger", e.target.value)}
-                          className="bg-slate-900/50 border-slate-800 h-12"
+                          className="bg-white/[0.02] border-white/[0.06] h-12"
                         />
                       </div>
                       <div className="space-y-2">
@@ -143,7 +143,7 @@ export default function AutoReactPage({ params }: { params: Promise<{ guildId: s
                           placeholder="e.g. 👋 ✨ ❤️"
                           value={item.emojis}
                           onChange={(e) => updateTrigger(index, "emojis", e.target.value)}
-                          className="bg-slate-900/50 border-slate-800 h-12"
+                          className="bg-white/[0.02] border-white/[0.06] h-12"
                         />
                       </div>
                     </div>

@@ -86,7 +86,7 @@ export default function LeaderboardPage({ params }: { params: Promise<{ guildId:
               placeholder="Rechercher un membre…" 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-12 bg-slate-900/50 border-slate-800 rounded-2xl h-12 focus:ring-primary/20 transition-all"
+              className="pl-12 bg-white/[0.02] border-white/[0.06] rounded-2xl h-12 focus:ring-primary/20 transition-all"
            />
         </div>
       </div>
@@ -106,10 +106,10 @@ export default function LeaderboardPage({ params }: { params: Promise<{ guildId:
                     <Medal className="h-8 w-8 text-amber-800 fill-amber-800/10" />}
                </div>
                
-               <div className="h-20 w-20 rounded-full bg-slate-800 border-4 border-slate-700 mb-4 flex items-center justify-center relative shadow-2xl">
+               <div className="h-20 w-20 rounded-full bg-white/[0.05] border-4 border-white/[0.08] mb-4 flex items-center justify-center relative shadow-2xl">
                   <User className="h-10 w-10 text-slate-500" />
                   <div className={cn(
-                    "absolute -bottom-1 -right-1 h-8 w-8 rounded-full border-4 border-[#141B2D] flex items-center justify-center text-[10px] font-black",
+                    "absolute -bottom-1 -right-1 h-8 w-8 rounded-full border-4 border-haunted-crypt flex items-center justify-center text-[10px] font-black",
                     i === 0 ? "bg-amber-500 text-black" : i === 1 ? "bg-slate-300 text-black" : "bg-amber-800 text-white"
                   )}>
                     #{i + 1}
@@ -130,11 +130,11 @@ export default function LeaderboardPage({ params }: { params: Promise<{ guildId:
       </div>
 
       {/* Main Leaderboard Table */}
-      <div className="bg-[#141B2D] border border-slate-800 rounded-[40px] overflow-hidden shadow-2xl">
+      <div className="bg-haunted-surface border border-white/[0.06] rounded-[40px] overflow-hidden shadow-2xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="border-b border-slate-800 bg-slate-900/30">
+              <tr className="border-b border-white/[0.06] bg-white/[0.015]">
                 <th className="px-8 py-6 text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Rang</th>
                 <th className="px-8 py-6 text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Membre</th>
                 <th className="px-8 py-6 text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Niveau</th>
@@ -151,7 +151,7 @@ export default function LeaderboardPage({ params }: { params: Promise<{ guildId:
                   </td>
                   <td className="px-8 py-6">
                     <div className="flex items-center gap-4">
-                       <div className="h-10 w-10 rounded-xl bg-slate-800/50 border border-slate-700/50 flex items-center justify-center">
+                       <div className="h-10 w-10 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center">
                           <User className="h-5 w-5 text-slate-600" />
                        </div>
                        <div className="flex flex-col">
@@ -169,7 +169,7 @@ export default function LeaderboardPage({ params }: { params: Promise<{ guildId:
                   </td>
                   <td className="px-8 py-6 text-right">
                     <div className="flex items-center justify-end gap-2">
-                       <TrendingUp className="h-3 w-3 text-emerald-500 opacity-50" />
+                       <TrendingUp className="h-3 w-3 text-teal-300 opacity-50" />
                        <span className="text-sm font-black text-slate-200 tabular-nums">{entry.xp.toLocaleString()}</span>
                     </div>
                   </td>
@@ -188,15 +188,15 @@ export default function LeaderboardPage({ params }: { params: Promise<{ guildId:
         </div>
         
         {/* Pagination Overlay (Simulation) */}
-        <div className="p-6 border-t border-slate-800 bg-slate-900/20 flex items-center justify-between">
+        <div className="p-6 border-t border-white/[0.06] bg-white/[0.01] flex items-center justify-between">
            <p className="text-xs text-slate-500 font-medium">
              Showing <span className="text-white">{filteredData.length}</span> concurrents actifs
            </p>
            <div className="flex items-center gap-2">
-              <Button size="icon" variant="outline" className="h-8 w-8 rounded-lg border-slate-800" disabled>
+              <Button size="icon" variant="outline" className="h-8 w-8 rounded-lg border-white/[0.06]" disabled>
                  <ChevronLeft className="h-4 w-4" />
               </Button>
-              <Button size="icon" variant="outline" className="h-8 w-8 rounded-lg border-slate-800" disabled>
+              <Button size="icon" variant="outline" className="h-8 w-8 rounded-lg border-white/[0.06]" disabled>
                  <ChevronRight className="h-4 w-4" />
               </Button>
            </div>

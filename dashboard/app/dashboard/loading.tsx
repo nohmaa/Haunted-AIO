@@ -19,7 +19,7 @@ export default function DashboardLoading() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4 animate-in fade-in duration-500">
       <div className="relative">
-        <div className="h-16 w-16 border-4 border-slate-800 rounded-full" />
+        <div className="h-16 w-16 border-4 border-white/[0.06] rounded-full" />
         <RefreshCcw className="h-16 w-16 text-primary animate-spin absolute top-0 left-0" />
       </div>
       <div className="space-y-2 text-center">

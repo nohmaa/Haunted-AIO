@@ -259,12 +259,8 @@ export const api = {
       method: "PATCH",
       body: JSON.stringify(data),
     }),
+  // Lecture seule : le bot ne propose pas de route d'écriture pour les compteurs.
   getInvites: (guildId: string) => request<any>(`/guilds/${guildId}/invites`),
-  updateInvites: (guildId: string, data: any) =>
-    request<{ status: string }>(`/guilds/${guildId}/invites`, {
-      method: "PATCH",
-      body: JSON.stringify(data),
-    }),
 
   // Modules on/off
   getModules: (guildId: string) => request<{ guild_id: number; modules: any[] }>(`/guilds/${guildId}/modules`),

@@ -117,7 +117,7 @@ export default function VanityRolesPage({ params }: { params: Promise<{ guildId:
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <div className="lg:col-span-3 space-y-6">
-          <div className="bg-[#141B2D] border border-slate-800 rounded-3xl overflow-hidden shadow-xl p-8 space-y-8">
+          <div className="bg-haunted-surface border border-white/[0.06] rounded-3xl overflow-hidden shadow-xl p-8 space-y-8">
             
             {/* Add New Setup */}
             <div className="space-y-4">
@@ -133,18 +133,18 @@ export default function VanityRolesPage({ params }: { params: Promise<{ guildId:
                     placeholder="ex. .gg/mon-serveur"
                     value={newSetup.vanity}
                     onChange={(e) => setNewSetup({ ...newSetup, vanity: e.target.value })}
-                    className="bg-slate-900/50 border-slate-800 h-12"
+                    className="bg-white/[0.02] border-white/[0.06] h-12"
                   />
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-slate-400">Rôle à offrir</label>
                   <Select value={newSetup.role_id} onValueChange={(val) => setNewSetup({ ...newSetup, role_id: val })}>
-                    <SelectTrigger className="w-full h-12 bg-slate-900/50 border-slate-800">
+                    <SelectTrigger className="w-full h-12 bg-white/[0.02] border-white/[0.06]">
                       <SelectValue placeholder="Choisir un rôle…" />
                     </SelectTrigger>
-                    <SelectContent className="bg-slate-900 border-slate-800 max-h-[300px]">
+                    <SelectContent className="bg-haunted-surface border-white/[0.06] max-h-[300px]">
                       {filteredRoles.map((r) => (
-                        <SelectItem key={r.id} value={r.id} className="focus:bg-slate-800">
+                        <SelectItem key={r.id} value={r.id} className="focus:bg-white/[0.05]">
                           <div className="flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full" style={{ backgroundColor: formatColor(r.color) }} />
                             {r.name}
@@ -157,12 +157,12 @@ export default function VanityRolesPage({ params }: { params: Promise<{ guildId:
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-slate-400">Salon de logs</label>
                   <Select value={newSetup.log_channel_id} onValueChange={(val) => setNewSetup({ ...newSetup, log_channel_id: val })}>
-                    <SelectTrigger className="w-full h-12 bg-slate-900/50 border-slate-800">
+                    <SelectTrigger className="w-full h-12 bg-white/[0.02] border-white/[0.06]">
                       <SelectValue placeholder="Choisir un salon…" />
                     </SelectTrigger>
-                    <SelectContent className="bg-slate-900 border-slate-800 max-h-[300px]">
+                    <SelectContent className="bg-haunted-surface border-white/[0.06] max-h-[300px]">
                       {textChannels.map((c) => (
-                        <SelectItem key={c.id} value={c.id} className="focus:bg-slate-800">#{c.name}</SelectItem>
+                        <SelectItem key={c.id} value={c.id} className="focus:bg-white/[0.05]">#{c.name}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -176,12 +176,12 @@ export default function VanityRolesPage({ params }: { params: Promise<{ guildId:
             </div>
 
             {/* Configurations actives */}
-            <div className="pt-6 border-t border-slate-800 space-y-4">
+            <div className="pt-6 border-t border-white/[0.06] space-y-4">
               <h4 className="text-sm font-bold text-white flex items-center gap-2">
                 <Link2 className="h-5 w-5 text-primary" /> Configurations actives
               </h4>
               {setups.length === 0 ? (
-                <div className="text-center p-8 bg-slate-900/20 rounded-2xl border border-dashed border-slate-700">
+                <div className="text-center p-8 bg-white/[0.01] rounded-2xl border border-dashed border-white/[0.08]">
                   <Link2 className="w-10 h-10 text-slate-600 mx-auto mb-3" />
                   <p className="text-sm text-slate-500">Aucune configuration vanity pour l’instant.</p>
                 </div>
@@ -190,7 +190,7 @@ export default function VanityRolesPage({ params }: { params: Promise<{ guildId:
                   const role = filteredRoles.find(r => r.id === String(setup.role_id));
                   const channel = channels.find(c => c.id === String(setup.log_channel_id));
                   return (
-                    <div key={index} className="flex items-center justify-between p-4 bg-slate-900/40 rounded-xl border border-slate-800 animate-in zoom-in-95 duration-200">
+                    <div key={index} className="flex items-center justify-between p-4 bg-white/[0.02] rounded-xl border border-white/[0.06] animate-in zoom-in-95 duration-200">
                       <div className="flex items-center gap-8">
                         <div className="flex flex-col">
                           <span className="text-[10px] uppercase font-bold text-slate-500">Texte vanity</span>

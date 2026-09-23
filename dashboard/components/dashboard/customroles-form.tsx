@@ -64,9 +64,9 @@ export function CustomRolesForm({ initialConfig, roles, guildId }: CustomRolesFo
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
       <div className="lg:col-span-3 space-y-6">
-        <div className="bg-[#141B2D] border border-slate-800 rounded-3xl shadow-xl p-8 space-y-8">
+        <div className="bg-haunted-surface border border-white/[0.06] rounded-3xl shadow-xl p-8 space-y-8">
           
-          <div className="flex items-center justify-between p-6 bg-slate-900/40 rounded-2xl border border-slate-800">
+          <div className="flex items-center justify-between p-6 bg-white/[0.02] rounded-2xl border border-white/[0.06]">
             <div className="flex items-center gap-4">
               <div className="p-3 bg-primary/20 text-primary rounded-xl">
                 <Settings className="w-5 h-5" />
@@ -82,13 +82,13 @@ export function CustomRolesForm({ initialConfig, roles, guildId }: CustomRolesFo
                 value={config.reqrole?.toString() || "none"}
                 onValueChange={(val) => setConfig({ ...config, reqrole: val === "none" ? null : parseInt(val) })}
               >
-                <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 font-medium">
+                <SelectTrigger className="w-full h-12 bg-haunted-surface border-white/[0.06] font-medium">
                   <SelectValue placeholder="Sélectionner le rôle requis..." />
                 </SelectTrigger>
-                <SelectContent className="bg-slate-900 border-slate-800 max-h-[300px]">
-                  <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Aucun / Admins uniquement</SelectItem>
+                <SelectContent className="bg-haunted-surface border-white/[0.06] max-h-[300px]">
+                  <SelectItem value="none" className="text-slate-400 focus:bg-white/[0.05]">Aucun / Admins uniquement</SelectItem>
                   {filteredRoles.map((role) => (
-                    <SelectItem key={role.id} value={role.id.toString()} className="focus:bg-slate-800">
+                    <SelectItem key={role.id} value={role.id.toString()} className="focus:bg-white/[0.05]">
                       {role.name}
                     </SelectItem>
                   ))}
@@ -99,7 +99,7 @@ export function CustomRolesForm({ initialConfig, roles, guildId }: CustomRolesFo
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {ROLE_INPUTS.map((input) => (
-              <div key={input.key} className="p-6 bg-slate-900/40 border border-slate-800 rounded-2xl space-y-4 hover:border-slate-700 transition-all duration-300">
+              <div key={input.key} className="p-6 bg-white/[0.02] border border-white/[0.06] rounded-2xl space-y-4 hover:border-white/[0.08] transition-all duration-300">
                 <div className="flex items-center gap-3">
                   <div className={cn("p-3 rounded-xl", input.bg, input.color)}>
                     <input.icon className="w-5 h-5" />
@@ -114,13 +114,13 @@ export function CustomRolesForm({ initialConfig, roles, guildId }: CustomRolesFo
                   value={config[input.key]?.toString() || "none"}
                   onValueChange={(val) => setConfig({ ...config, [input.key]: val === "none" ? null : parseInt(val) })}
                 >
-                  <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 font-medium">
+                  <SelectTrigger className="w-full h-12 bg-haunted-surface border-white/[0.06] font-medium">
                     <SelectValue placeholder="Sélectionner un rôle..." />
                   </SelectTrigger>
-                  <SelectContent className="bg-slate-900 border-slate-800 max-h-[300px]">
-                    <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Non défini</SelectItem>
+                  <SelectContent className="bg-haunted-surface border-white/[0.06] max-h-[300px]">
+                    <SelectItem value="none" className="text-slate-400 focus:bg-white/[0.05]">Non défini</SelectItem>
                     {filteredRoles.map((role) => (
-                      <SelectItem key={role.id} value={role.id.toString()} className="focus:bg-slate-800">
+                      <SelectItem key={role.id} value={role.id.toString()} className="focus:bg-white/[0.05]">
                         {role.name}
                       </SelectItem>
                     ))}
