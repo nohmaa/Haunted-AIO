@@ -7,7 +7,8 @@
 ## 2026-09-23 — Infra prod (domaine haunted-mind.com)
 - Domaine : `haunted-mind.com` abandonné au profit de **`haunted-mind.site`** (acheté chez Hostinger). Délégation NS vers Cloudflare **active** (`adi`/`arch.ns.cloudflare.com`, vérifié).
 - Dashboard : **domaine custom = apex `haunted-mind.site`** (pas `dashboard.`). Reste à faire côté Cloudflare : A `@` → `76.76.21.21` (actuellement IP de parking `216.198.79.1`).
-- Topologie retenue : API bot → `https://api.haunted-mind.site` (tunnel `haunted-api` à créer) ; OAuth/CORS alignés sur l'apex.
+- Tunnel `api.haunted-mind.site` **live** (vérifié : `/api/v1/bot/info` répond `{"detail":"Not authenticated"}` = FastAPI atteint, auth par clé exigée comme prévu).
+- Reste : variables Vercel finales + redeploy + redirect OAuth + `CORS_ORIGINS`.
 - Topologie retenue : API bot → `https://api.haunted-mind.site` (tunnel `haunted-api`) ; dashboard → URL Vercel (domaine custom `dashboard.haunted-mind.site` optionnel plus tard).
 - Guide détaillé donné en chat (domaine → tunnel → Vercel → OAuth → CORS).
 
