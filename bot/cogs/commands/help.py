@@ -284,14 +284,15 @@ class HelpCommand(commands.HelpCommand):
 
         count = len(group.commands)
 
-        embeds = FieldPagePaginator(
-            entries=entries,
-            title=f"{group.qualified_name.title()} [{count}]",
-            description="< > Obligatoire | [ ] Optionnel\n",
-            per_page=4,
-        ).get_pages()
-
-        paginator = Paginator(ctx, embeds)
+        paginator = Paginator(
+            source=FieldPagePaginator(
+                entries=entries,
+                title=f"{group.qualified_name.title()} [{count}]",
+                description="< > Obligatoire | [ ] Optionnel\n",
+                per_page=4,
+            ),
+            ctx=self.context,
+        )
         await paginator.paginate()
 
     async def send_cog_help(self, cog):

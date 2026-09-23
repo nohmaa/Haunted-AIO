@@ -391,19 +391,64 @@ class Music(commands.Cog):
                 except:
                     pass
 
+    def _lavalink_uri(self) -> str:
+        """Construit l'URI du noeud Lavalink en tolérant les .env imprécis.
+
+        Accepte `lava.exemple.fr`, `lava.exemple.fr:2333` ou
+        `https://lava.exemple.fr`. L'ancien code produisait une URI invalide
+        (`https://https://...`) quand LAVALINK_HOST contenait déjà le schéma,
+        ce qui faisait échouer la connexion en silence.
+        """
+        raw_host = (os.getenv("LAVALINK_HOST") or "lava-v4.ajieblogs.eu.org").strip()
+        port = (os.getenv("LAVALINK_PORT") or "").strip()
+        secure = (os.getenv("LAVALINK_SECURE") or "true").strip().lower() != "false"
+
+        scheme = ""
+        if "://" in raw_host:
+            scheme, raw_host = raw_host.split("://", 1)
+            scheme = scheme.strip().lower()
+        host = raw_host.strip().strip("/")
+        scheme = scheme or ("https" if secure else "http")
+        if scheme == "ws":
+            scheme = "http"
+        elif scheme == "wss":
+            scheme = "https"
+        if port and ":" not in host:
+            host = f"{host}:{port}"
+        return f"{scheme}://{host}"
+
     async def connect_nodes(self) -> None:
-        host = os.getenv("LAVALINK_HOST", "lava-v4.ajieblogs.eu.org")
-        password = os.getenv("LAVALINK_PASSWORD", "https://dsc.gg/ajidevserver")
-        secure = os.getenv("LAVALINK_SECURE", "true").strip().lower() == "true"
-        port = os.getenv("LAVALINK_PORT", "").strip()
+        """Connecte le noeud Lavalink et retente indéfiniment si nécessaire.
 
-        if secure:
-            uri = f"https://{host}"
-        else:
-            uri = f"http://{host}:{port}" if port else f"http://{host}"
-
-        nodes = [wavelink.Node(uri=uri, password=password)]
-        await wavelink.Pool.connect(nodes=nodes, client=self.client, cache_capacity=None)
+        Avant, la tâche mourait en silence à la première erreur et toutes les
+        commandes musique échouaient en `InvalidNodeException` sans explication.
+        """
+        password = os.getenv("LAVALINK_PASSWORD") or "https://dsc.gg/ajidevserver"
+        while True:
+            uri = self._lavalink_uri()
+            try:
+                nodes = [wavelink.Node(uri=uri, password=password)]
+                # wavelink ne lève pas d'exception ici : il journalise l'erreur
+                # (mot de passe refusé, mauvaise version, port fermé…) et
+                # n'enregistre le noeud dans le Pool qu'en cas de succès.
+                result = await wavelink.Pool.connect(
+                    nodes=nodes, client=self.client, cache_capacity=None
+                )
+                if result:
+                    states = ", ".join(str(node.status) for node in result.values())
+                    print(f"[MUSIC] Noeud Lavalink enregistré : {uri} ({states})")
+                    return
+                print(
+                    f"[MUSIC] Lavalink ({uri}) : connexion refusée (voir les lignes "
+                    "wavelink ci-dessus : hôte, port ou mot de passe) — nouvelle "
+                    "tentative dans 30 s"
+                )
+            except Exception as exc:
+                print(
+                    f"[MUSIC] Lavalink ({uri}) : échec de connexion "
+                    f"({type(exc).__name__}: {exc}) — nouvelle tentative dans 30 s"
+                )
+            await asyncio.sleep(30)
 
 
     async def display_player_embed(self, player, track, ctx, autoplay=False):

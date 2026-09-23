@@ -12,11 +12,13 @@
 
 import discord
 import json
+import traceback
 import aiosqlite
 from discord.ext import commands
 from utils.config import serverLink
 from core import zyrox, Cog, Context
 from utils.Tools import get_ignore_data
+from utils.emoji import WARNING
 
 
 class Errors(Cog):
@@ -186,6 +188,31 @@ class Errors(Cog):
             return
 
         if isinstance(error, commands.CommandInvokeError):
+            original = error.original
+            # Musique : aucun noeud Lavalink connecté → message clair pour
+            # l'utilisateur au lieu d'une InvalidNodeException brute.
+            if type(original).__name__ in (
+                "InvalidNodeException",
+                "NodeException",
+                "PoolException",
+                "LavalinkException",
+            ):
+                print(
+                    f"[MUSIC] {ctx.command} : aucun noeud Lavalink connecté ({original})"
+                )
+                try:
+                    await ctx.reply(
+                        f"{WARNING} **Aucun serveur musical (Lavalink) n’est connecté pour le moment.**\n"
+                        "Réessaie dans une minute : le bot retente la connexion automatiquement.",
+                        mention_author=False,
+                    )
+                except Exception:
+                    pass
+                return
+
             print(f"[ERROR] CommandInvokeError in {ctx.command}: {error}")
-            print(f"  Original: {error.original}")
+            print(f"  Original: {original}")
+            # Traceback complet : indispensable pour diagnostiquer les commandes
+            # cassées (l'ancien log ne montrait que le message d'erreur).
+            traceback.print_exception(type(original), original, original.__traceback__)
             return
