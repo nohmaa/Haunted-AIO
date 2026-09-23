@@ -11,6 +11,7 @@
 # ╚══════════════════════════════════════════════════════════════════╝
 
 import os
+import shutil
 import subprocess
 # os.system("")
 import asyncio
@@ -35,11 +36,19 @@ try:
     import discord  # noqa: F401
     import fastapi  # noqa: F401
 except ModuleNotFoundError as _e:
+    try:
+        _free_mb = shutil.disk_usage(".").free // (1024 * 1024)
+        _disk = (
+            f"\n  → Espace disque libre : {_free_mb} Mo."
+            + (" Videz .cache/pip via Files ou demandez plus de disque à l'admin." if _free_mb < 300 else "")
+        )
+    except Exception:
+        _disk = ""
     raise SystemExit(
-        "[Haunted] Dépendance manquante : {}.\n"
-        "  → En local : pip install -r requirements.txt\n"
-        "  → Sur Pterodactyl : vérifiez REQUIREMENTS_FILE=bot/requirements.txt "
-        "dans l'onglet Startup (sans ça, l'installation pip est sautée en silence).".format(_e.name)
+        "[Haunted] Dépendance manquante : {}.{}".format(_e.name, _disk)
+        + "\n  → En local : pip install -r requirements.txt"
+        + "\n  → Sur Pterodactyl : vérifiez REQUIREMENTS_FILE=bot/requirements.txt "
+        "dans l'onglet Startup (sans ça, l'installation pip est sautée en silence)."
     ) from None
 
 import aiohttp

@@ -36,8 +36,12 @@ numpy==2.5.3               # calculs (owner)
 mcstatus==14.2.0           # statut serveurs Minecraft
 
 # ── IA / traduction / voix ──────────────────────────────────────────
+# google-generativeai RETIRÉ volontairement : paquet déprécié qui tirait
+# ~100 Mo de dépendances Google (grpcio, protobuf, google-api-client…)
+# et faisait échouer `pip install` sur les petits disques Pterodactyl.
+# Le code gère son absence (GEMINI_AVAILABLE=False dans ai.py).
+# Migration future éventuelle : `google.genai`.
 openai==3.18.0             # client OpenAI-compatible (Groq via API_BASE_URL)
-google-generativeai==0.8.6 # Gemini (optionnel : import gardé en try/except dans ai.py ; package DÉPRÉCIÉ par Google → migrer vers `google.genai` un jour)
 duckduckgo-search==6.3.7   # recherche web pour l'IA (6.x : dernière ligne avec AsyncDDGS, requis par utils/ai_utils.py — 7+/8 l'ont supprimé)
 langdetect==1.0.9          # détection de langue (TTS)
 gTTS==2.5.4                # synthèse vocale

@@ -65,6 +65,12 @@ Inventaire par script AST (hors filigranes) + corrections :
 - URLs mises à jour : badge GitHub + `git clone` + `GIT_ADDRESS` (`README.md`, `bot/README.md`).
 - Ligne « Repo d'origine » ci-dessous conservée pour l'historique.
 
+## 2026-09-23 — Disque plein sur Pterodactyl (Errno 28)
+- Log : `pip install` avorte pendant le téléchargement (`google_api_python_client`, 16 Mo) → rien n'est installé → le garde signale `aiohttp` manquant. Le backtracking pip sur la chaîne Google rallongeait déjà chaque boot.
+- `google-generativeai` **retiré** de `bot/requirements.txt` : déprécié, ~100 Mo de dépendances (grpcio, protobuf, google-api-client…), code déjà protégé (`GEMINI_AVAILABLE=False` dans `ai.py`). Gain : downloads ≈ 60 Mo au lieu de plusieurs centaines.
+- Garde `haunted.py` enrichi : affiche l'espace disque libre + consigne (< 300 Mo : vider `.cache/pip` via Files ou demander plus de disque).
+- Actions côté serveur : Files → supprimer `.cache/pip` (cache du run avorté), vérifier le quota disque du serveur, Restart (requirements allégé récupéré via `AUTO_UPDATE`).
+
 ## 2026-09-23 — Dépendances manquantes (audit AST complet)
 Crash Pterodactyl `No module named 'pytz'` : l'audit manuel avait raté des imports. Nouvel audit exhaustif par AST de tous les `.py` (`audit_imports.py`, hors stdlib et paquets locaux).
 - Ajoutés à `bot/requirements.txt` (dernières versions PyPI vérifiées) : `pytz==2026.3.post1` (giveaways), `aiofiles==25.1.0` (logging), `pydantic==2.13.5` (explicite), `google-generativeai==0.8.6` (Gemini, import gardé en try/except — package déprécié par Google, migrer vers `google.genai` plus tard).
