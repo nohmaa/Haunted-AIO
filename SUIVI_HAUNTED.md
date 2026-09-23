@@ -4,6 +4,13 @@
 > Objectifs actuels : (1) traduction en français, (2) nouvelle identité **Haunted**, (3) activation/désactivation des modules depuis le dashboard.
 > Mettre à jour ce fichier à chaque changement (date + fichiers + comportement).
 
+## 2026-09-23 — Emojis Unicode + backend conservé en anglais
+- Règle actée : le **backend reste en anglais** (identifiants, comparaisons logiques, codes d'erreur) — seule l'UI/UX est traduite. Vérifié : aucune comparaison logique (`== "active"`, etc.) n'a été traduite dans le diff de traduction.
+- **Problème emojis résolu** : toutes les constantes de `bot/utils/emoji.py` étaient des emojis custom `<:name:ID>` pointant vers l'application de l'ancien bot → invisibles, et l'EmojiSync ne pouvait ni les retélécharger (404 CDN) ni les uploader. Remplacés par des **emojis Unicode classiques** (✅ ⚠️ 🔨 🎵 …) qui s'affichent partout sans upload : 193 constantes, mêmes noms, mêmes dictionnaires/helpers/aliases → aucun import cassé (diff des constantes vs HEAD : aucune perte).
+- `EMOJI_SYNC` : doc mise à jour (défaut désormais `false`, utile uniquement si vous ajoutez vos propres emojis custom dans `emoji.py`). `haunted.py` garde l'appel `run_sync` (il s'auto-désactive via la variable d'env).
+- En prod : passer `EMOJI_SYNC=false` dans le `.env` du serveur (ou redémarrer — le défaut du code s'applique si la variable est absente) ; plus aucune erreur EmojiSync attendue.
+- Vérifications : `compileall` OK, import `emoji.py` OK avec 0 emoji custom restant.
+
 ## 2026-09-23 — Traduction des commandes : consolidation, nettoyage et push
 - Reprise des 126 fichiers modifiés par les agents de traduction (commands A-M/N-Z, zyrox, events+moderation, antinuke+automod, games+utils) : tout était appliqué mais **non commité**.
 - Supprimés : `bot/extract2.py` et `bot/extract_v.py` (scripts temporaires des agents, pointaient vers un dossier Temp hors repo).

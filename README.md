@@ -201,7 +201,7 @@ CF_TUNNEL_URL      = "https://api.votredomaine.com"
 
 # ── Optionnel : laissez les valeurs par défaut ──────────────────────
 brand_name         = 'Haunted'
-EMOJI_SYNC         = "true"
+EMOJI_SYNC         = "false"
 API_ENABLED        = "true"
 API_PORT           = "8000"
 CORS_ORIGINS       = ""
@@ -300,7 +300,7 @@ npm run dev
 | `LAVALINK_PASSWORD` | — | Mot de passe Lavalink |
 | `LAVALINK_SECURE` | `true` | `true` = HTTPS, `false` = HTTP |
 | `LAVALINK_PORT` | _(vide)_ | Port — uniquement si `LAVALINK_SECURE=false` |
-| `EMOJI_SYNC` | `true` | Synchroniser les emojis d'application au démarrage |
+| `EMOJI_SYNC` | `false` | Synchroniser les emojis custom d'application (inutile : les emojis du bot sont Unicode) |
 | `API_ENABLED` | `true` | Démarrer le backend FastAPI du dashboard |
 | `API_PORT` | `8000` | Port d'écoute du backend |
 | `DASHBOARD_API_KEY` | — | Secret partagé entre l'API du bot et le dashboard |
@@ -518,25 +518,11 @@ npm start   # http://localhost:3000, derrière un reverse proxy en prod
 
 ---
 
-## ✦ Sync des emojis
+## ✦ Emojis
 
-Tourne automatiquement au démarrage quand `EMOJI_SYNC=true` :
+Tous les emojis du bot sont des **emojis Unicode classiques** (✅ ⚠️ 🔨 🎵 …) : ils s'affichent partout sans upload ni synchronisation. Aucune action nécessaire.
 
-```
-★ Starting Application Emoji Sync — 144 unique emojis found in emoji.py
-◈ Found 144 templates | Application hosts 202 emojis
-↑ Uploading: ztick  (not in application emojis)
-✔ Uploaded: ztick  [saved as ID: 1234567890]
-✔ emoji.py patched in-place to reflect current API state.
-★ Restarting bot to load updated emoji IDs...
-```
-
-| Événement | Action |
-|---|---|
-| Nouvel emoji trouvé | Uploadé dans l'application, ID écrit dans `emoji.py` |
-| ID obsolète détecté | `emoji.py` corrigé automatiquement |
-| Aucun changement | Sync instantanée, pas de redémarrage |
-| Après toute correction | Le bot redémarre pour charger les nouveaux IDs |
+L'utilitaire `EMOJI_SYNC` reste disponible si vous ajoutez vos propres emojis custom dans `bot/utils/emoji.py` : il les upload dans l'application Discord au démarrage et corrige les IDs.
 
 ---
 
@@ -549,7 +535,7 @@ Tourne automatiquement au démarrage quand `EMOJI_SYNC=true` :
 | Erreur d'auth du dashboard | Vérifiez l'ID/secret OAuth Discord et l'URI de redirection |
 | Le dashboard ne charge pas les données | Vérifiez `API_ENABLED=true`, bot en ligne, `NEXT_PUBLIC_API_URL` correct |
 | Un module ne répond pas | Vérifiez qu'il est **activé** sur la page Modules du serveur |
-| Emojis affichés en texte brut | Lancez une fois avec `EMOJI_SYNC=true` |
+| Emojis affichés en texte brut | Les emojis sont désormais des emojis Unicode standards — vérifiez la version de Discord ou ajoutez vos emojis custom avec `EMOJI_SYNC=true` |
 | Erreurs CORS depuis le dashboard | Ajoutez l'URL de votre dashboard dans `CORS_ORIGINS` (`bot/.env`) |
 | Tunnel ne démarre pas | Vérifiez `CF_TUNNEL_TOKEN` et que `pycloudflared` est installé |
 | URL du tunnel a changé | Renseignez `CF_TUNNEL_URL` — les tunnels nommés gardent la même URL |

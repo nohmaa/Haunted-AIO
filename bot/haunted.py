@@ -130,7 +130,8 @@ async def on_ready():
     print(f"Connected to: {len(client.guilds)} guilds")
     print(f"Connected to: {len(client.users)} users")
 
-    # Sync application emojis on startup
+    # Sync application emojis on startup (skipped unless EMOJI_SYNC=true,
+    # which is only needed for custom emojis — the bot uses Unicode emojis)
     await run_sync(TOKEN)
 
     async def sync_commands():

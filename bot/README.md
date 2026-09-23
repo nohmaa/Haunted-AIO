@@ -176,7 +176,7 @@ LAVALINK_SECURE    = "true"
 LAVALINK_PORT      = ""
 
 # ── Sync des emojis ─────────────────────────────────────────────────
-EMOJI_SYNC         = "true"
+EMOJI_SYNC         = "false"
 
 # ── API / Backend dashboard ─────────────────────────────────────────
 API_ENABLED        = "true"
@@ -232,7 +232,7 @@ python haunted.py
 | `LAVALINK_PASSWORD` | — | Mot de passe Lavalink |
 | `LAVALINK_SECURE` | `true` | `true` = HTTPS, `false` = HTTP |
 | `LAVALINK_PORT` | _(vide)_ | Port — uniquement si `LAVALINK_SECURE=false` |
-| `EMOJI_SYNC` | `true` | Synchroniser les emojis d'application au démarrage |
+| `EMOJI_SYNC` | `false` | Synchroniser les emojis custom d'application (inutile : les emojis du bot sont Unicode) |
 | `API_ENABLED` | `true` | Démarrer le backend FastAPI du dashboard |
 | `API_PORT` | `8000` | Port d'écoute du backend |
 | `DASHBOARD_API_KEY` | — | Secret partagé entre l'API du bot et le dashboard |
@@ -294,16 +294,11 @@ Utilise **pycloudflared** — télécharge le binaire `cloudflared` automatiquem
 
 ---
 
-## ✦ Sync des emojis
+## ✦ Emojis
 
-Quand `EMOJI_SYNC=true`, le bot synchronise les emojis d'application à chaque démarrage :
+Tous les emojis du bot sont des **emojis Unicode classiques** : ils s'affichent partout sans upload ni synchronisation. Aucune action nécessaire.
 
-| Événement | Action |
-|---|---|
-| Nouvel emoji trouvé | Uploadé dans l'application, ID écrit dans `emoji.py` |
-| ID obsolète détecté | `emoji.py` corrigé automatiquement |
-| Aucun changement | Sync instantanée, pas de redémarrage |
-| Après toute correction | Le bot redémarre pour charger les nouveaux IDs |
+L'utilitaire `EMOJI_SYNC` reste disponible si vous ajoutez vos propres emojis custom dans `bot/utils/emoji.py` : il les upload dans l'application Discord au démarrage et corrige les IDs.
 
 ---
 
@@ -360,7 +355,7 @@ Loaded & Online!
 | Musique hors service | Vérifiez `LAVALINK_HOST`, `LAVALINK_SECURE`, `LAVALINK_PORT` |
 | Le dashboard n'atteint pas l'API | Vérifiez `API_ENABLED=true` et `NEXT_PUBLIC_API_URL` côté dashboard |
 | Erreurs CORS | Ajoutez l'URL de votre dashboard dans `CORS_ORIGINS` (`.env`) |
-| Emojis affichés en texte brut | Lancez une fois avec `EMOJI_SYNC=true` |
+| Emojis affichés en texte brut | Les emojis sont désormais des emojis Unicode standards — vérifiez la version de Discord ou ajoutez vos emojis custom avec `EMOJI_SYNC=true` |
 | Tunnel ne démarre pas | Vérifiez `CF_TUNNEL_TOKEN` et que `pycloudflared` est installé |
 | Ajouter un propriétaire | Ajoutez son ID dans `OWNER_IDS` (`.env`) — sans toucher au code |
 | Un module ne répond pas | Vérifiez qu'il est activé sur la page Modules du serveur |
