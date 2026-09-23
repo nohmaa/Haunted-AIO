@@ -44,8 +44,8 @@ export default function VanityRolesPage({ params }: { params: Promise<{ guildId:
       setRoles(rolesData);
       setChannels(channelsData);
     } catch (error) {
-      console.error("Failed to fetch vanity roles data:", error);
-      toast.error("Failed to load vanity roles configuration");
+      console.error("Échec de récupération des rôles vanity :", error);
+      toast.error("Échec du chargement des rôles vanity");
     } finally {
       setLoading(false);
     }
@@ -58,7 +58,7 @@ export default function VanityRolesPage({ params }: { params: Promise<{ guildId:
 
   const handleAdd = async () => {
     if (!newSetup.vanity || !newSetup.role_id || !newSetup.log_channel_id) {
-      toast.error("Please fill in all fields");
+      toast.error("Veuillez remplir tous les champs");
       return;
     }
     setSaving(true);
@@ -68,11 +68,11 @@ export default function VanityRolesPage({ params }: { params: Promise<{ guildId:
         role_id: newSetup.role_id,
         log_channel_id: newSetup.log_channel_id,
       });
-      toast.success("Vanity role setup added!");
+      toast.success("Configuration vanity ajoutée !");
       setNewSetup({ vanity: "", role_id: "", log_channel_id: "" });
       fetchData();
     } catch (error) {
-      toast.error("Failed to add vanity role setup");
+      toast.error("Échec de l’ajout de la configuration vanity");
     } finally {
       setSaving(false);
     }
@@ -81,10 +81,10 @@ export default function VanityRolesPage({ params }: { params: Promise<{ guildId:
   const handleDelete = async (vanity: string) => {
     try {
       await api.deleteVanityRole(guildId, vanity);
-      toast.success("Vanity role setup deleted");
+      toast.success("Configuration vanity supprimée");
       fetchData();
     } catch (error) {
-      toast.error("Failed to delete vanity role setup");
+      toast.error("Échec de la suppression de la configuration vanity");
     }
   };
 
@@ -107,9 +107,9 @@ export default function VanityRolesPage({ params }: { params: Promise<{ guildId:
         <div>
           <h2 className="text-2xl font-bold text-white flex items-center gap-2">
             <Link2 className="h-6 w-6 text-primary" />
-            Vanity Roles
+            Rôles vanity
           </h2>
-          <p className="text-slate-400 mt-1">Give special roles to members with your vanity/invite link in their status.</p>
+          <p className="text-slate-400 mt-1">Offrez des rôles aux membres avec votre lien vanity/invitation en statut.</p>
         </div>
       </div>
 
@@ -121,24 +121,24 @@ export default function VanityRolesPage({ params }: { params: Promise<{ guildId:
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <div className="p-2.5 rounded-xl bg-primary/10 text-primary"><Plus className="h-5 w-5" /></div>
-                <h4 className="font-bold text-white text-base">Add New Vanity Setup</h4>
+                <h4 className="font-bold text-white text-base">Ajouter une configuration vanity</h4>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-400">Vanity Text / URL</label>
+                  <label className="text-xs font-bold text-slate-400">Texte / URL vanity</label>
                   <Input
-                    placeholder="e.g. .gg/my-server"
+                    placeholder="ex. .gg/mon-serveur"
                     value={newSetup.vanity}
                     onChange={(e) => setNewSetup({ ...newSetup, vanity: e.target.value })}
                     className="bg-slate-900/50 border-slate-800 h-12"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-400">Role to Give</label>
+                  <label className="text-xs font-bold text-slate-400">Rôle à offrir</label>
                   <Select value={newSetup.role_id} onValueChange={(val) => setNewSetup({ ...newSetup, role_id: val })}>
                     <SelectTrigger className="w-full h-12 bg-slate-900/50 border-slate-800">
-                      <SelectValue placeholder="Select a role..." />
+                      <SelectValue placeholder="Choisir un rôle…" />
                     </SelectTrigger>
                     <SelectContent className="bg-slate-900 border-slate-800 max-h-[300px]">
                       {filteredRoles.map((r) => (
@@ -153,10 +153,10 @@ export default function VanityRolesPage({ params }: { params: Promise<{ guildId:
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-400">Log Channel</label>
+                  <label className="text-xs font-bold text-slate-400">Salon de logs</label>
                   <Select value={newSetup.log_channel_id} onValueChange={(val) => setNewSetup({ ...newSetup, log_channel_id: val })}>
                     <SelectTrigger className="w-full h-12 bg-slate-900/50 border-slate-800">
-                      <SelectValue placeholder="Select a channel..." />
+                      <SelectValue placeholder="Choisir un salon…" />
                     </SelectTrigger>
                     <SelectContent className="bg-slate-900 border-slate-800 max-h-[300px]">
                       {textChannels.map((c) => (
@@ -169,19 +169,19 @@ export default function VanityRolesPage({ params }: { params: Promise<{ guildId:
 
               <Button onClick={handleAdd} disabled={saving} className="w-full gap-2" variant="secondary">
                 {saving ? <RefreshCcw className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-                Add Vanity Setup
+                Ajouter la configuration
               </Button>
             </div>
 
-            {/* Active Setups */}
+            {/* Configurations actives */}
             <div className="pt-6 border-t border-slate-800 space-y-4">
               <h4 className="text-sm font-bold text-white flex items-center gap-2">
-                <Link2 className="h-5 w-5 text-primary" /> Active Setups
+                <Link2 className="h-5 w-5 text-primary" /> Configurations actives
               </h4>
               {setups.length === 0 ? (
                 <div className="text-center p-8 bg-slate-900/20 rounded-2xl border border-dashed border-slate-700">
                   <Link2 className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-                  <p className="text-sm text-slate-500">No vanity role setups configured yet.</p>
+                  <p className="text-sm text-slate-500">Aucune configuration vanity pour l’instant.</p>
                 </div>
               ) : (
                 setups.map((setup, index) => {
@@ -191,15 +191,15 @@ export default function VanityRolesPage({ params }: { params: Promise<{ guildId:
                     <div key={index} className="flex items-center justify-between p-4 bg-slate-900/40 rounded-xl border border-slate-800 animate-in zoom-in-95 duration-200">
                       <div className="flex items-center gap-8">
                         <div className="flex flex-col">
-                          <span className="text-[10px] uppercase font-bold text-slate-500">Vanity Text</span>
+                          <span className="text-[10px] uppercase font-bold text-slate-500">Texte vanity</span>
                           <span className="font-medium text-primary">{setup.vanity}</span>
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-[10px] uppercase font-bold text-slate-500">Role</span>
+                          <span className="text-[10px] uppercase font-bold text-slate-500">Rôle</span>
                           <span className="font-medium text-slate-200">{role?.name || "Unknown"}</span>
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-[10px] uppercase font-bold text-slate-500">Log Channel</span>
+                          <span className="text-[10px] uppercase font-bold text-slate-500">Salon de logs</span>
                           <span className="font-medium text-slate-200">#{channel?.name || "Unknown"}</span>
                         </div>
                       </div>
@@ -222,13 +222,13 @@ export default function VanityRolesPage({ params }: { params: Promise<{ guildId:
             </div>
             <div className="flex items-center gap-2 mb-4">
               <Info className="h-4 w-4 text-primary" />
-              <h3 className="text-sm font-bold text-white">How It Works</h3>
+              <h3 className="text-sm font-bold text-white">Comment ça marche</h3>
             </div>
             <ul className="text-xs text-slate-500 space-y-2">
-              <li>• The bot monitors member custom statuses.</li>
-              <li>• If a member adds the vanity text, the role is auto-assigned.</li>
-              <li>• Removing the text will remove the role.</li>
-              <li>• Logs are sent to the configured channel.</li>
+              <li>• Le bot surveille les statuts personnalisés des membres.</li>
+              <li>• Si un membre ajoute le texte vanity, le rôle est attribué.</li>
+              <li>• Retirer le texte retire le rôle.</li>
+              <li>• Les logs sont envoyés dans le salon configuré.</li>
             </ul>
           </div>
         </div>

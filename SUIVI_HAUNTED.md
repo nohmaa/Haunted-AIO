@@ -12,6 +12,12 @@
 - Topologie retenue : API bot → `https://api.haunted-mind.site` (tunnel `haunted-api`) ; dashboard → URL Vercel (domaine custom `dashboard.haunted-mind.site` optionnel plus tard).
 - Guide détaillé donné en chat (domaine → tunnel → Vercel → OAuth → CORS).
 
+## 2026-09-23 — Dashboard 100 % français
+- 4 agents parallèles (shell, formulaires A/B, pages publiques) + 18 pages serveurs en scripts vérifiés : titres, descriptions, labels, placeholders, boutons, toasts, sidebars, landing, docs, CGU/confidentialité.
+- Garde-fous : valeurs API intactes (`panel_type`, `button_style`, `punishments`, `verification_method`, `value="none"`…), comparaisons logiques traduites à l'identique, `process.env` et routes intacts.
+- Corrections : message d'accès refusé + tooltip Actif (layout), console simulée, `Documentation ZyroX` → Haunted.
+- Vérification : `npm run build` OK (30 routes). Commandes du bot : reportées (choix utilisateur « dashboard d'abord »).
+
 ## 2026-09-23 — CORS : origine www bloquée + variantes auto
 - Log prod : dashboard sur `https://www.haunted-mind.site` bloqué car seul l'apex était en `CORS_ORIGINS`. Action côté serveur : `CORS_ORIGINS="https://haunted-mind.site,https://www.haunted-mind.site"` + Restart.
 - Code : `_expand_cors_origins()` dans `api/server.py` ajoute auto. la variante www/apex (+ ports préservés, `localhost` exclu). Test logique OK.

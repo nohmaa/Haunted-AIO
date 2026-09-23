@@ -36,9 +36,9 @@ export default async function CustomRolesPage({ params }: { params: Promise<{ gu
         <div>
           <h2 className="text-2xl font-bold text-white flex items-center gap-2">
             <Ghost className="h-6 w-6 text-primary" />
-            Custom Roles
+            Rôles personnalisés
           </h2>
-          <p className="text-slate-400 mt-1">Configure predefined roles that can be easily assigned using commands.</p>
+          <p className="text-slate-400 mt-1">Configurez des rôles prédéfinis attribuables facilement par commandes.</p>
         </div>
       </div>
 

@@ -429,19 +429,19 @@ export default function LandingPage() {
                <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white opacity-40">Identité</h4>
                <ul className="space-y-5 text-[11px] font-black uppercase tracking-widest text-slate-500">
                   <li><Link href="/privacy" className="hover:text-red-500 transition-colors">Bouclier confidentialité</Link></li>
-                  <li><Link href="/terms" className="hover:text-red-500 transition-colors">Terms of Service</Link></li>
-                  <li><Link href="#" className="hover:text-red-500 transition-colors">Discord Server</Link></li>
+                  <li><Link href="/terms" className="hover:text-red-500 transition-colors">Conditions d&apos;utilisation</Link></li>
+                  <li><Link href="#" className="hover:text-red-500 transition-colors">Serveur Discord</Link></li>
                </ul>
             </div>
           </div>
           <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6 opacity-40">
             <p className="text-slate-700 text-[10px] font-black uppercase tracking-[0.4em]">
-              © 2026 {process.env.NEXT_PUBLIC_BRAND_NAME || "Haunted"} Development // Advanced Neural Infrastructure.
+              © 2026 {process.env.NEXT_PUBLIC_BRAND_NAME || "Haunted"} Développement // Infrastructure neurale avancée.
             </p>
             <div className="flex items-center gap-8">
                <div className="flex items-center gap-3 text-[10px] font-black text-red-500 uppercase tracking-[0.3em]">
                   <div className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
-                  All Nodes Operational
+                  Tous les nœuds opérationnels
                </div>
             </div>
           </div>

@@ -35,27 +35,27 @@ import { cn } from "@/lib/utils";
 
 const DOCS_NAV = [
   {
-    title: "Getting Started",
+    title: "Pour commencer",
     items: [
-      { name: "Introduction", description: "Learn about the Neural Core." },
-      { name: "Quick Start", description: "Deploy in 30 seconds." },
-      { name: "Architecture", description: "Deep dive into our engine." }
+      { name: "Introduction", description: "Découvrez le Neural Core." },
+      { name: "Démarrage rapide", description: "Déployé en 30 secondes." },
+      { name: "Architecture", description: "Plongée dans notre moteur." }
     ]
   },
   {
-    title: "Security Modules",
+    title: "Modules de sécurité",
     items: [
-      { name: "Anti-Nuke", description: "Absolute lockdown protocols." },
-      { name: "Verification", description: "Captcha & Neural checks." },
-      { name: "Automod", description: "Context-aware AI filtering." }
+      { name: "Anti-Nuke", description: "Protocoles de verrouillage absolu." },
+      { name: "Vérification", description: "Captchas et contrôles neuronaux." },
+      { name: "Automod", description: "Filtrage IA contextuel." }
     ]
   },
   {
-    title: "Management",
+    title: "Gestion",
     items: [
-      { name: "Join to Create", description: "Dynamic voice channels." },
-      { name: "Leveling", description: "Cinematic rank generation." },
-      { name: "Tickets", description: "Enterprise helpdesk." }
+      { name: "Salons temporaires", description: "Salons vocaux dynamiques." },
+      { name: "Niveaux", description: "Génération de rangs cinématiques." },
+      { name: "Tickets", description: "Assistance de niveau entreprise." }
     ]
   }
 ];
@@ -78,14 +78,14 @@ export default function DocsPage() {
             <div className="h-8 w-8 rounded-lg bg-red-600 flex items-center justify-center mr-3">
               <Bot className="h-5 w-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-white font-outfit uppercase tracking-tighter hidden md:block">ZyroX Docs</span>
+            <span className="text-xl font-bold text-white font-outfit uppercase tracking-tighter hidden md:block">Documentation Haunted</span>
           </Link>
           
           <div className="hidden lg:flex items-center w-80 relative group">
             <SearchIcon className="absolute left-4 h-4 w-4 text-slate-500 group-focus-within:text-red-500 transition-colors" />
             <input 
               type="text" 
-              placeholder="Search documentation..."
+              placeholder="Rechercher dans la documentation..."
               className="w-full bg-white/[0.03] border border-white/5 rounded-2xl py-2.5 pl-12 pr-4 text-xs font-bold text-slate-300 focus:outline-none focus:ring-1 focus:ring-red-500/30 focus:bg-white/[0.05] transition-all"
             />
           </div>
@@ -100,7 +100,7 @@ export default function DocsPage() {
            </button>
            <Link href="/">
             <Button variant="ghost" className="text-slate-400 hover:text-white gap-2 text-xs font-black uppercase tracking-widest">
-              Exit Docs
+              Quitter la documentation
             </Button>
           </Link>
         </div>
@@ -145,7 +145,7 @@ export default function DocsPage() {
         <main className="flex-1 p-8 lg:p-16 relative z-10 max-w-4xl">
            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] font-black uppercase tracking-widest mb-8">
             <BookOpen className="h-3 w-3" />
-            V2.4 Runtime Environment
+            Environnement d&apos;exécution v2.4
           </div>
 
           <h1 className="text-6xl font-bold text-white font-outfit tracking-tighter uppercase mb-8 italic">
@@ -154,19 +154,19 @@ export default function DocsPage() {
 
           <div className="prose prose-invert max-w-none">
              <p className="text-lg text-slate-400 mb-12 leading-relaxed">
-               Welcome to the {activeTab} section of the Haunted Engine documentation. Our engine is designed for communities that demand absolute performance and cinematic management tools.
+               Bienvenue dans la section {activeTab} de la documentation Haunted Engine. Notre moteur est conçu pour les communautés qui exigent des performances absolues et des outils de gestion cinématiques.
              </p>
 
              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="p-8 rounded-[32px] glass border-white/5 space-y-4">
                    <Zap className="h-6 w-6 text-red-500" />
-                   <h3 className="text-xl font-bold text-white font-outfit uppercase">Fast Dispatch</h3>
-                   <p className="text-sm text-slate-500 font-bold uppercase tracking-tight">Commands are dispatched via our global edge network in under 12ms.</p>
+                   <h3 className="text-xl font-bold text-white font-outfit uppercase">Exécution rapide</h3>
+                   <p className="text-sm text-slate-500 font-bold uppercase tracking-tight">Les commandes sont exécutées via notre réseau edge mondial en moins de 12 ms.</p>
                 </div>
                 <div className="p-8 rounded-[32px] glass border-white/5 space-y-4">
                    <ShieldCheck className="h-6 w-6 text-emerald-500" />
-                   <h3 className="text-xl font-bold text-white font-outfit uppercase">Secure Node</h3>
-                   <p className="text-sm text-slate-500 font-bold uppercase tracking-tight">Every module runs in a dedicated neural sandbox with AES-256 encryption.</p>
+                   <h3 className="text-xl font-bold text-white font-outfit uppercase">Nœud sécurisé</h3>
+                   <p className="text-sm text-slate-500 font-bold uppercase tracking-tight">Chaque module s&apos;exécute dans un bac à sable neuronal dédié avec chiffrement AES-256.</p>
                 </div>
              </div>
 
@@ -174,25 +174,25 @@ export default function DocsPage() {
                 <div className="absolute top-0 right-0 p-8 opacity-10">
                    <Layers className="h-32 w-32 text-red-500" />
                 </div>
-                <h2 className="text-2xl font-bold text-white font-outfit uppercase tracking-tight mb-4">Neural Architecture</h2>
-                  <h3 className="text-white font-bold">Protocol Overview</h3>
+                <h2 className="text-2xl font-bold text-white font-outfit uppercase tracking-tight mb-4">Architecture neurale</h2>
+                  <h3 className="text-white font-bold">Aperçu du protocole</h3>
                 <p className="text-slate-500 font-bold leading-relaxed mb-8">
-                  The Haunted Engine utilizes a decentralized event stream processing model. When a Discord event is received, it is instantly routed to the nearest edge cluster.
+                  Haunted Engine utilise un modèle décentralisé de traitement de flux d&apos;événements. Lorsqu&apos;un événement Discord est reçu, il est instantanément routé vers le cluster edge le plus proche.
                 </p>
                 <div className="bg-black/40 p-6 rounded-2xl border border-white/5 font-mono text-sm text-red-500 mb-8">
-                  $ zyrox initialize --cluster-shard [neural_07] --mode enterprise
+                  $ haunted initialize --cluster-shard [neural_07] --mode enterprise
                 </div>
              </div>
           </div>
 
           <div className="mt-20 pt-12 border-t border-white/5 flex items-center justify-between">
              <div>
-                <p className="text-[10px] font-black uppercase text-slate-600 tracking-[0.4em] mb-2">Internal Ref</p>
+                <p className="text-[10px] font-black uppercase text-slate-600 tracking-[0.4em] mb-2">Réf interne</p>
                 <p className="text-sm font-bold text-slate-400">DOC-ID: CX_7749_B</p>
              </div>
              <div className="flex items-center gap-2">
                 <div className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
-                <span className="text-[10px] font-black uppercase text-red-500 tracking-[0.2em]">Live Stream Active</span>
+                <span className="text-[10px] font-black uppercase text-red-500 tracking-[0.2em]">Flux en direct actif</span>
              </div>
           </div>
         </main>

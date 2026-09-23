@@ -34,14 +34,14 @@ export default async function TicketsPage({ params }: { params: Promise<{ guildI
         <div>
           <h2 className="text-2xl font-bold text-white flex items-center gap-2">
             <Ticket className="h-6 w-6 text-primary" />
-            Ticket System
+            Système de tickets
           </h2>
-          <p className="text-slate-400 mt-1">Manage private support channels and inquiry categories.</p>
+          <p className="text-slate-400 mt-1">Gérez les salons d’assistance privés et les catégories de demandes.</p>
         </div>
         <div className="flex items-center gap-4">
           <div className="bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 rounded-2xl flex items-center gap-2">
             <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-xs font-bold text-emerald-500 uppercase">Live System</span>
+            <span className="text-xs font-bold text-emerald-500 uppercase">Système en direct</span>
           </div>
           {/* <Button variant="outline" className="gap-2">
             <ExternalLink className="h-4 w-4" />

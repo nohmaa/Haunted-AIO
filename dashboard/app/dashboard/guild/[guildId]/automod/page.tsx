@@ -33,9 +33,9 @@ export default async function AutomodPage({ params }: { params: Promise<{ guildI
         <div>
           <h2 className="text-2xl font-bold text-white flex items-center gap-2">
             <ShieldCheck className="h-6 w-6 text-primary" />
-            Auto Moderation
+            Auto-modération
           </h2>
-          <p className="text-slate-400 mt-1">Protect your community with automated filter systems.</p>
+          <p className="text-slate-400 mt-1">Protégez votre communauté avec des filtres automatiques.</p>
         </div>
       </div>
 

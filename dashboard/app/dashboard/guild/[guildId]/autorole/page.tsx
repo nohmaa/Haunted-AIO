@@ -37,9 +37,9 @@ export default async function AutoRolePage({ params }: { params: Promise<{ guild
         <div>
           <h2 className="text-2xl font-bold text-white flex items-center gap-2">
             <UserPlus className="h-6 w-6 text-primary" />
-            Auto Role
+            Rôles auto
           </h2>
-          <p className="text-slate-400 mt-1">Automatically assign roles to new members and bots.</p>
+          <p className="text-slate-400 mt-1">Attribue automatiquement des rôles aux nouveaux membres et bots.</p>
         </div>
       </div>
 

@@ -49,8 +49,8 @@ export default function VerificationPage({ params }: { params: Promise<{ guildId
       setChannels(channelsData);
       setRoles(rolesData);
     } catch (error) {
-      console.error("Failed to fetch verification data:", error);
-      toast.error("Failed to load verification configuration");
+      console.error("Échec de récupération des données de vérification :", error);
+      toast.error("Échec du chargement de la vérification");
     } finally {
       setLoading(false);
     }
@@ -68,9 +68,9 @@ export default function VerificationPage({ params }: { params: Promise<{ guildId
       enabled: config.enabled,
     });
     toast.promise(promise, {
-      loading: 'Saving verification configuration...',
-      success: 'Verification settings saved!',
-      error: 'Failed to save verification config',
+      loading: 'Enregistrement…',
+      success: 'Vérification enregistrée !',
+      error: 'Échec de l’enregistrement',
     });
     try { await promise; } catch {} finally { setSaving(false); }
   };
@@ -92,9 +92,9 @@ export default function VerificationPage({ params }: { params: Promise<{ guildId
         <div>
           <h2 className="text-2xl font-bold text-white flex items-center gap-2">
             <Shield className="h-6 w-6 text-primary" />
-            Verification
+            Vérification
           </h2>
-          <p className="text-slate-400 mt-1">Set up a gatekeeper system to verify new members.</p>
+          <p className="text-slate-400 mt-1">Mettez en place un contrôle pour vérifier les nouveaux membres.</p>
         </div>
       </div>
 
@@ -109,15 +109,15 @@ export default function VerificationPage({ params }: { params: Promise<{ guildId
                   <Power className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-black text-white">System Status</h3>
-                  <p className="text-sm text-slate-400 mt-1">Enable or disable the verification module.</p>
+                  <h3 className="text-lg font-black text-white">État du système</h3>
+                  <p className="text-sm text-slate-400 mt-1">Activez ou désactivez le module de vérification.</p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
                 <div className="px-4 py-2 rounded-full bg-slate-900 border border-slate-800 flex items-center gap-2">
                   <div className={cn("w-2 h-2 rounded-full", config.enabled ? 'bg-emerald-500 animate-pulse' : 'bg-red-500')} />
                   <span className="text-xs font-bold uppercase text-slate-300">
-                    {config.enabled ? 'Active' : 'Inactive'}
+                    {config.enabled ? 'Actif' : 'Inactif'}
                   </span>
                 </div>
                 <Switch 
@@ -130,13 +130,13 @@ export default function VerificationPage({ params }: { params: Promise<{ guildId
 
             {/* Selectors Grid */}
             <div className={cn("grid grid-cols-1 md:grid-cols-2 gap-6 transition-all duration-300", !config.enabled && "opacity-50 pointer-events-none")}>
-              {/* Verification Channel */}
+              {/* Salon de vérification */}
               <div className="p-6 bg-slate-900/40 border border-slate-800 rounded-2xl space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="p-3 bg-primary/20 text-primary rounded-xl"><Hash className="w-5 h-5" /></div>
                   <div>
-                    <h4 className="font-bold text-white">Verification Channel</h4>
-                    <p className="text-xs text-slate-400 mt-1">Channel where verification happens</p>
+                    <h4 className="font-bold text-white">Salon de vérification</h4>
+                    <p className="text-xs text-slate-400 mt-1">Salon où se fait la vérification</p>
                   </div>
                 </div>
                 <Select
@@ -144,10 +144,10 @@ export default function VerificationPage({ params }: { params: Promise<{ guildId
                   onValueChange={(val) => setConfig({ ...config, verification_channel_id: val === "none" ? null : val })}
                 >
                   <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 font-medium">
-                    <SelectValue placeholder="Select a channel..." />
+                    <SelectValue placeholder="Choisir un salon…" />
                   </SelectTrigger>
                   <SelectContent className="bg-slate-900 border-slate-800 max-h-[300px]">
-                    <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Not Set</SelectItem>
+                    <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Non défini</SelectItem>
                     {textChannels.map((c) => (
                       <SelectItem key={c.id} value={c.id} className="focus:bg-slate-800">#{c.name}</SelectItem>
                     ))}
@@ -155,13 +155,13 @@ export default function VerificationPage({ params }: { params: Promise<{ guildId
                 </Select>
               </div>
 
-              {/* Verified Role */}
+              {/* Rôle vérifié */}
               <div className="p-6 bg-slate-900/40 border border-slate-800 rounded-2xl space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="p-3 bg-emerald-500/20 text-emerald-500 rounded-xl"><UserCheck className="w-5 h-5" /></div>
                   <div>
-                    <h4 className="font-bold text-white">Verified Role</h4>
-                    <p className="text-xs text-slate-400 mt-1">Role given after verification</p>
+                    <h4 className="font-bold text-white">Rôle vérifié</h4>
+                    <p className="text-xs text-slate-400 mt-1">Rôle donné après vérification</p>
                   </div>
                 </div>
                 <Select
@@ -169,10 +169,10 @@ export default function VerificationPage({ params }: { params: Promise<{ guildId
                   onValueChange={(val) => setConfig({ ...config, verified_role_id: val === "none" ? null : val })}
                 >
                   <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 font-medium">
-                    <SelectValue placeholder="Select a role..." />
+                    <SelectValue placeholder="Choisir un rôle…" />
                   </SelectTrigger>
                   <SelectContent className="bg-slate-900 border-slate-800 max-h-[300px]">
-                    <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Not Set</SelectItem>
+                    <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Non défini</SelectItem>
                     {filteredRoles.map((r) => (
                       <SelectItem key={r.id} value={r.id} className="focus:bg-slate-800">{r.name}</SelectItem>
                     ))}
@@ -180,13 +180,13 @@ export default function VerificationPage({ params }: { params: Promise<{ guildId
                 </Select>
               </div>
 
-              {/* Verification Method */}
+              {/* Méthode de vérification */}
               <div className="p-6 bg-slate-900/40 border border-slate-800 rounded-2xl space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="p-3 bg-purple-500/20 text-purple-500 rounded-xl"><Fingerprint className="w-5 h-5" /></div>
                   <div>
-                    <h4 className="font-bold text-white">Verification Method</h4>
-                    <p className="text-xs text-slate-400 mt-1">How users verify themselves</p>
+                    <h4 className="font-bold text-white">Méthode de vérification</h4>
+                    <p className="text-xs text-slate-400 mt-1">Comment les membres se vérifient</p>
                   </div>
                 </div>
                 <Select
@@ -194,7 +194,7 @@ export default function VerificationPage({ params }: { params: Promise<{ guildId
                   onValueChange={(val) => setConfig({ ...config, verification_method: val })}
                 >
                   <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 font-medium">
-                    <SelectValue placeholder="Select method..." />
+                    <SelectValue placeholder="Choisir une méthode…" />
                   </SelectTrigger>
                   <SelectContent className="bg-slate-900 border-slate-800">
                     <SelectItem value="button" className="focus:bg-slate-800">Button Click</SelectItem>
@@ -204,13 +204,13 @@ export default function VerificationPage({ params }: { params: Promise<{ guildId
                 </Select>
               </div>
 
-              {/* Log Channel */}
+              {/* Salon de logs */}
               <div className="p-6 bg-slate-900/40 border border-slate-800 rounded-2xl space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="p-3 bg-blue-500/20 text-blue-500 rounded-xl"><Bell className="w-5 h-5" /></div>
                   <div>
-                    <h4 className="font-bold text-white">Log Channel</h4>
-                    <p className="text-xs text-slate-400 mt-1">Where verification logs are sent</p>
+                    <h4 className="font-bold text-white">Salon de logs</h4>
+                    <p className="text-xs text-slate-400 mt-1">Où sont envoyés les logs de vérification</p>
                   </div>
                 </div>
                 <Select
@@ -218,10 +218,10 @@ export default function VerificationPage({ params }: { params: Promise<{ guildId
                   onValueChange={(val) => setConfig({ ...config, log_channel_id: val === "none" ? null : val })}
                 >
                   <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 font-medium">
-                    <SelectValue placeholder="Select a channel..." />
+                    <SelectValue placeholder="Choisir un salon…" />
                   </SelectTrigger>
                   <SelectContent className="bg-slate-900 border-slate-800 max-h-[300px]">
-                    <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Disabled</SelectItem>
+                    <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Désactivé</SelectItem>
                     {textChannels.map((c) => (
                       <SelectItem key={c.id} value={c.id} className="focus:bg-slate-800">#{c.name}</SelectItem>
                     ))}
@@ -232,7 +232,7 @@ export default function VerificationPage({ params }: { params: Promise<{ guildId
 
             <Button onClick={handleSave} disabled={saving} className="w-full h-14 text-base font-bold gap-2">
               {saving ? <RefreshCcw className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
-              Save Configuration
+              Enregistrer
             </Button>
           </div>
         </div>
@@ -248,12 +248,12 @@ export default function VerificationPage({ params }: { params: Promise<{ guildId
               <h3 className="text-sm font-bold text-white">Important</h3>
             </div>
             <p className="text-xs text-slate-400 leading-relaxed mb-4">
-              Ensure @everyone does NOT have &quot;Send Messages&quot; in non-verification channels.
+              Vérifiez que @everyone N’a PAS « Envoyer des messages » hors du salon de vérification.
             </p>
             <ul className="text-xs text-slate-500 space-y-2">
-              <li>• Assign the Verified Role only to members who pass.</li>
-              <li>• The bot role must be above the Verified Role.</li>
-              <li>• CAPTCHA provides stronger anti-bot protection.</li>
+              <li>• N’attribuez le rôle vérifié qu’aux membres validés.</li>
+              <li>• Le rôle du bot doit être au-dessus du rôle vérifié.</li>
+              <li>• Le CAPTCHA offre une meilleure protection anti-bots.</li>
             </ul>
           </div>
         </div>

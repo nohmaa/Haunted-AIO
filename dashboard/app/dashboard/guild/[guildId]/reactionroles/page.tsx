@@ -42,8 +42,8 @@ export default function ReactionRolesPage({ params }: { params: Promise<{ guildI
       setConfig(configData);
       setRoles(rolesData);
     } catch (error) {
-      console.error("Failed to load RR:", error);
-      toast.error("Failed to load reaction roles configuration");
+      console.error("Échec de chargement des rôles à réactions :", error);
+      toast.error("Échec du chargement des rôles à réactions");
     } finally {
       setLoading(false);
     }
@@ -57,15 +57,15 @@ export default function ReactionRolesPage({ params }: { params: Promise<{ guildI
     try {
       await api.updateRR(guildId, { dm_enabled: val });
       setConfig({ ...config, dm_enabled: val });
-      toast.success(`DM notifications ${val ? "enabled" : "disabled"}`);
+      toast.success(`Notifications MP ${val ? "activées" : "désactivées"}`);
     } catch {
-      toast.error("Failed to update DM setting");
+      toast.error("Échec de la mise à jour des MP");
     }
   };
 
   const handleAdd = async () => {
     if (!newRR.message_id || !newRR.emoji || !newRR.role_id) {
-      toast.error("Please fill in all fields");
+      toast.error("Veuillez remplir tous les champs");
       return;
     }
     setLoadingAction(true);
@@ -77,10 +77,10 @@ export default function ReactionRolesPage({ params }: { params: Promise<{ guildI
         ...config,
         roles: [...config.roles, { message_id: newRR.message_id, emoji: newRR.emoji, role_id: newRR.role_id }]
       });
-      toast.success("Reaction role added");
+      toast.success("Rôle à réaction ajouté");
       setNewRR({ message_id: "", emoji: "", role_id: "" });
     } catch {
-      toast.error("Failed to add reaction role");
+      toast.error("Échec de l’ajout du rôle à réaction");
     } finally {
       setLoadingAction(false);
     }
@@ -97,9 +97,9 @@ export default function ReactionRolesPage({ params }: { params: Promise<{ guildI
         ...config,
         roles: config.roles.filter((r: any) => !(String(r.message_id) === String(messageId) && r.emoji === emoji))
       });
-      toast.success("Reaction role removed");
+      toast.success("Rôle à réaction retiré");
     } catch {
-      toast.error("Failed to remove reaction role");
+      toast.error("Échec du retrait du rôle à réaction");
     } finally {
       setLoadingAction(false);
     }
@@ -124,9 +124,9 @@ export default function ReactionRolesPage({ params }: { params: Promise<{ guildI
         <div>
           <h2 className="text-2xl font-bold text-white flex items-center gap-2">
             <MousePointer2 className="h-6 w-6 text-primary" />
-            Reaction Roles
+            Rôles à réactions
           </h2>
-          <p className="text-slate-400 mt-1">Allow members to self-assign roles by reacting to a message.</p>
+          <p className="text-slate-400 mt-1">Les membres obtiennent des rôles en réagissant à un message.</p>
         </div>
       </div>
 
@@ -139,8 +139,8 @@ export default function ReactionRolesPage({ params }: { params: Promise<{ guildI
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-primary/20 text-primary rounded-xl"><BellRing className="w-5 h-5" /></div>
                 <div>
-                  <h3 className="text-lg font-black text-white">DM Notifications</h3>
-                  <p className="text-sm text-slate-400 mt-1">Send a DM when a user gets/loses a role.</p>
+                  <h3 className="text-lg font-black text-white">Notifications MP</h3>
+                  <p className="text-sm text-slate-400 mt-1">Envoyer un MP quand un membre obtient/perd un rôle.</p>
                 </div>
               </div>
               <Switch
@@ -154,14 +154,14 @@ export default function ReactionRolesPage({ params }: { params: Promise<{ guildI
             <div className="pt-6 border-t border-slate-800 space-y-4">
               <div className="flex items-center gap-3">
                 <div className="p-2.5 rounded-xl bg-primary/10 text-primary"><Plus className="h-5 w-5" /></div>
-                <h4 className="font-bold text-white text-base">Create New Reaction Role</h4>
+                <h4 className="font-bold text-white text-base">Créer un rôle à réaction</h4>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-400">Message ID</label>
+                  <label className="text-xs font-bold text-slate-400">ID du message</label>
                   <Input
-                    placeholder="e.g. 1234567890"
+                    placeholder="ex. 1234567890"
                     value={newRR.message_id}
                     onChange={(e) => setNewRR({ ...newRR, message_id: e.target.value })}
                     className="bg-slate-900/50 border-slate-800 h-12"
@@ -177,13 +177,13 @@ export default function ReactionRolesPage({ params }: { params: Promise<{ guildI
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-400">Role to Assign</label>
+                  <label className="text-xs font-bold text-slate-400">Rôle à attribuer</label>
                   <Select
                     value={newRR.role_id || ""}
                     onValueChange={(val) => setNewRR({ ...newRR, role_id: val })}
                   >
                     <SelectTrigger className="w-full h-12 bg-slate-900/50 border-slate-800">
-                      <SelectValue placeholder="Select a role..." />
+                      <SelectValue placeholder="Choisir un rôle…" />
                     </SelectTrigger>
                     <SelectContent className="bg-slate-900 border-slate-800 max-h-[250px]">
                       {filteredRoles.map((role) => (
@@ -201,28 +201,28 @@ export default function ReactionRolesPage({ params }: { params: Promise<{ guildI
 
               <Button onClick={handleAdd} disabled={loadingAction} className="w-full gap-2" variant="secondary">
                 {loadingAction ? <RefreshCcw className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-                Add to Active Listeners
+                Ajouter aux écoutes actives
               </Button>
             </div>
 
             {/* Active roles */}
             <div className="pt-6 border-t border-slate-800 space-y-3">
               <h4 className="text-sm font-bold text-white flex items-center gap-2">
-                <MousePointer2 className="h-5 w-5 text-primary" /> Active Reaction Roles
+                <MousePointer2 className="h-5 w-5 text-primary" /> Active Rôles à réactions
               </h4>
 
               {config.roles.length === 0 ? (
                 <div className="text-center p-8 bg-slate-900/20 rounded-2xl border border-dashed border-slate-700">
-                  <p className="text-sm text-slate-500 italic">No reaction roles configured.</p>
+                  <p className="text-sm text-slate-500 italic">Aucun rôle à réaction configuré.</p>
                 </div>
               ) : (
                 config.roles.map((rr: any, idx: number) => {
-                  const roleName = filteredRoles.find(r => String(r.id) === String(rr.role_id))?.name || "Unknown Role";
+                  const roleName = filteredRoles.find(r => String(r.id) === String(rr.role_id))?.name || "Rôle inconnu";
                   return (
                     <div key={idx} className="flex items-center justify-between p-4 bg-slate-900/40 rounded-xl border border-slate-800">
                       <div className="flex items-center gap-6">
                         <div className="flex flex-col">
-                          <span className="text-[10px] uppercase font-bold text-slate-500">Message ID</span>
+                          <span className="text-[10px] uppercase font-bold text-slate-500">ID du message</span>
                           <span className="text-sm font-mono text-slate-300">{rr.message_id}</span>
                         </div>
                         <div className="flex flex-col items-center">
@@ -230,7 +230,7 @@ export default function ReactionRolesPage({ params }: { params: Promise<{ guildI
                           <span className="text-lg">{rr.emoji}</span>
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-[10px] uppercase font-bold text-slate-500">Role</span>
+                          <span className="text-[10px] uppercase font-bold text-slate-500">Rôle</span>
                           <span className="text-sm font-medium text-primary">{roleName}</span>
                         </div>
                       </div>
@@ -259,13 +259,13 @@ export default function ReactionRolesPage({ params }: { params: Promise<{ guildI
             </div>
             <div className="flex items-center gap-2 mb-4">
               <Info className="h-4 w-4 text-primary" />
-              <h3 className="text-sm font-bold text-white">Usage Guide</h3>
+              <h3 className="text-sm font-bold text-white">Guide d’utilisation</h3>
             </div>
             <ul className="text-xs text-slate-500 space-y-2">
-              <li>• The bot must have access to the message you specify.</li>
-              <li>• The bot role must be above the role being assigned.</li>
-              <li>• The bot auto-reacts to the message once added.</li>
-              <li>• Users react to get the role, un-react to remove it.</li>
+              <li>• Le bot doit avoir accès au message indiqué.</li>
+              <li>• Le rôle du bot doit être au-dessus du rôle attribué.</li>
+              <li>• Le bot réagit au message dès l’ajout.</li>
+              <li>• Les membres réagissent pour obtenir le rôle, retirent leur réaction pour le perdre.</li>
             </ul>
           </div>
         </div>

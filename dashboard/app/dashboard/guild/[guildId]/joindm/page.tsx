@@ -37,8 +37,8 @@ export default function JoinDMPage({ params }: { params: Promise<{ guildId: stri
       const configData = await api.getJoinDM(guildId);
       setConfig(configData);
     } catch (error) {
-      console.error("Failed to fetch JoinDM data:", error);
-      toast.error("Failed to load Join DM configuration");
+      console.error("Échec de récupération des données du MP de bienvenue :", error);
+      toast.error("Échec du chargement de la configuration du MP de bienvenue");
     } finally {
       setLoading(false);
     }
@@ -52,10 +52,10 @@ export default function JoinDMPage({ params }: { params: Promise<{ guildId: stri
     try {
       setSaving(true);
       await api.updateJoinDM(guildId, config);
-      toast.success("Join DM configuration saved successfully");
+      toast.success("MP de bienvenue enregistré");
     } catch (error) {
-      console.error("Failed to save JoinDM config:", error);
-      toast.error("Failed to save Join DM configuration");
+      console.error("Échec d’enregistrement du MP de bienvenue :", error);
+      toast.error("Échec de l’enregistrement du MP de bienvenue");
     } finally {
       setSaving(false);
     }
@@ -72,9 +72,9 @@ export default function JoinDMPage({ params }: { params: Promise<{ guildId: stri
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Join DM</h2>
+        <h2 className="text-3xl font-bold tracking-tight">MP de bienvenue</h2>
         <p className="text-muted-foreground">
-          Send a private message to new members when they join your server.
+          Envoyez un message privé aux nouveaux membres à leur arrivée.
         </p>
       </div>
 
@@ -82,17 +82,17 @@ export default function JoinDMPage({ params }: { params: Promise<{ guildId: stri
         <CardHeader>
           <div className="flex items-center gap-2">
             <MessageSquare className="w-5 h-5 text-primary" />
-            <CardTitle>Welcome Message</CardTitle>
+            <CardTitle>Message de bienvenue</CardTitle>
           </div>
           <CardDescription>
-            This message will be sent to the user&apos;s DMs. You can use text to welcome them.
+            Ce message sera envoyé en MP au membre. Accueillez-le avec votre texte.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label>Message Content</Label>
+            <Label>Contenu du message</Label>
             <Textarea
-              placeholder="Welcome to the server! Make sure to read the rules..."
+              placeholder="Bienvenue sur le serveur ! Pense à lire le règlement…"
               className="min-h-[200px]"
               value={config.message || ""}
               onChange={(e) => setConfig({ ...config, message: e.target.value })}
@@ -102,7 +102,7 @@ export default function JoinDMPage({ params }: { params: Promise<{ guildId: stri
           <div className="flex justify-end pt-4">
             <Button onClick={handleSave} disabled={saving} className="gap-2">
               {saving ? <RefreshCcw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              Save Message
+              Enregistrer le message
             </Button>
           </div>
         </CardContent>
@@ -112,13 +112,12 @@ export default function JoinDMPage({ params }: { params: Promise<{ guildId: stri
         <CardHeader>
           <div className="flex items-center gap-2">
             <Send className="w-5 h-5 text-blue-500" />
-            <CardTitle className="text-blue-500 text-base">Usage Note</CardTitle>
+            <CardTitle className="text-blue-500 text-base">Note d’utilisation</CardTitle>
           </div>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            The bot will automatically attach &quot;Sent from [Server Name]&quot; to the end of your message. 
-            Ensure your bot has permissions to DM members (usually by being in the same server and not being blocked).
+            Le bot ajoutera automatiquement « Envoyé depuis [Nom du serveur] » à la fin de votre message. Vérifiez que le bot peut envoyer des MP aux membres (même serveur, non bloqué).
           </p>
         </CardContent>
       </Card>

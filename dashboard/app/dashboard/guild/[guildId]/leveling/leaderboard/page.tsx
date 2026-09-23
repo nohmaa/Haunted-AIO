@@ -45,7 +45,7 @@ export default function LeaderboardPage({ params }: { params: Promise<{ guildId:
         const data = await api.getLeaderboard(guildId);
         setLeaderboard(data);
       } catch (err) {
-        console.error("Failed to fetch leaderboard:", err);
+        console.error("Échec de récupération du classement :", err);
       } finally {
         setLoading(false);
       }
@@ -62,7 +62,7 @@ export default function LeaderboardPage({ params }: { params: Promise<{ guildId:
     return (
       <div className="flex flex-col items-center justify-center h-96 space-y-4">
         <RefreshCcw className="h-10 w-10 text-primary animate-spin" />
-        <p className="text-slate-400 animate-pulse font-medium tracking-tight">Syncing global rankings...</p>
+        <p className="text-slate-400 animate-pulse font-medium tracking-tight">Synchronisation du classement…</p>
       </div>
     );
   }
@@ -73,15 +73,15 @@ export default function LeaderboardPage({ params }: { params: Promise<{ guildId:
         <div>
           <h2 className="text-3xl font-black text-white flex items-center gap-3 tracking-tight">
             <Trophy className="h-8 w-8 text-amber-500 drop-shadow-[0_0_10px_rgba(245,158,11,0.5)]" />
-            Social Leaderboard
+            Classement social
           </h2>
-          <p className="text-slate-400 mt-1 font-medium italic">Top contributors by experience and activity.</p>
+          <p className="text-slate-400 mt-1 font-medium italic">Meilleurs contributeurs par expérience et activité.</p>
         </div>
         
         <div className="relative w-full md:w-80 group">
            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 group-focus-within:text-primary transition-colors" />
            <Input 
-              placeholder="Search members..." 
+              placeholder="Rechercher un membre…" 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-12 bg-slate-900/50 border-slate-800 rounded-2xl h-12 focus:ring-primary/20 transition-all"
@@ -116,7 +116,7 @@ export default function LeaderboardPage({ params }: { params: Promise<{ guildId:
                
                <h3 className="text-xl font-black text-white truncate max-w-full">{user.name}</h3>
                <p className="text-sm font-bold text-slate-500 flex items-center gap-1 mt-1">
-                 LEVEL {user.level}
+                 NIVEAU {user.level}
                </p>
                
                <div className="mt-6 flex items-center gap-2 px-4 py-2 bg-black/20 rounded-2xl border border-white/5">
@@ -133,10 +133,10 @@ export default function LeaderboardPage({ params }: { params: Promise<{ guildId:
           <table className="w-full text-left">
             <thead>
               <tr className="border-b border-slate-800 bg-slate-900/30">
-                <th className="px-8 py-6 text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Rank</th>
-                <th className="px-8 py-6 text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">User</th>
-                <th className="px-8 py-6 text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Level</th>
-                <th className="px-8 py-6 text-[10px] font-black uppercase text-slate-500 tracking-[0.2em] text-right">Total XP</th>
+                <th className="px-8 py-6 text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Rang</th>
+                <th className="px-8 py-6 text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Membre</th>
+                <th className="px-8 py-6 text-[10px] font-black uppercase text-slate-500 tracking-[0.2em]">Niveau</th>
+                <th className="px-8 py-6 text-[10px] font-black uppercase text-slate-500 tracking-[0.2em] text-right">XP total</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/50">
@@ -177,7 +177,7 @@ export default function LeaderboardPage({ params }: { params: Promise<{ guildId:
               {filteredData.length === 3 && (
                 <tr>
                    <td colSpan={4} className="px-8 py-20 text-center">
-                      <p className="text-slate-500 italic font-medium">No additional members ranked yet...</p>
+                      <p className="text-slate-500 italic font-medium">Aucun autre membre classé pour l’instant…</p>
                    </td>
                 </tr>
               )}
@@ -188,7 +188,7 @@ export default function LeaderboardPage({ params }: { params: Promise<{ guildId:
         {/* Pagination Overlay (Simulation) */}
         <div className="p-6 border-t border-slate-800 bg-slate-900/20 flex items-center justify-between">
            <p className="text-xs text-slate-500 font-medium">
-             Showing <span className="text-white">{filteredData.length}</span> active competitors
+             Showing <span className="text-white">{filteredData.length}</span> concurrents actifs
            </p>
            <div className="flex items-center gap-2">
               <Button size="icon" variant="outline" className="h-8 w-8 rounded-lg border-slate-800" disabled>

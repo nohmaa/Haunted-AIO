@@ -37,7 +37,7 @@ export default function PrivacyPage() {
         <Link href="/">
           <Button variant="ghost" className="text-slate-400 hover:text-white gap-2">
             <ChevronLeft className="h-4 w-4" />
-            Back to Home
+            Retour à l&apos;accueil
           </Button>
         </Link>
       </nav>
@@ -46,11 +46,11 @@ export default function PrivacyPage() {
         <div className="max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] font-black uppercase tracking-widest mb-8">
             <ShieldCheck className="h-3 w-3" />
-            Privacy Shield v2.0
+            Bouclier confidentialité v2.0
           </div>
           
           <h1 className="text-5xl md:text-7xl font-bold text-white font-outfit tracking-tighter uppercase mb-12 italic">
-            Privacy <span className="text-red-500 not-italic">Policy.</span>
+            Confidentialité <span className="text-red-500 not-italic">Politique.</span>
           </h1>
 
           <div className="glass border-white/5 rounded-[40px] p-10 md:p-16 space-y-12">
@@ -59,10 +59,10 @@ export default function PrivacyPage() {
                 <div className="h-10 w-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-red-500">
                    <Eye className="h-5 w-5" />
                 </div>
-                <h2 className="text-2xl font-bold font-outfit uppercase tracking-tight">Data Collection</h2>
+                <h2 className="text-2xl font-bold font-outfit uppercase tracking-tight">Collecte des données</h2>
               </div>
               <p className="text-slate-400 leading-relaxed font-medium">
-                The Haunted Engine collects only the minimum necessary data to function within Discord. This includes your Discord User ID, Server (Guild) ID, and configuration settings provided during setup. We do not store message content unless explicitly configured for logging purposes by server administrators.
+                Haunted Engine ne collecte que le minimum de données nécessaires à son fonctionnement sur Discord. Cela inclut votre identifiant Discord, l&apos;identifiant du serveur (Guild) et les paramètres de configuration fournis lors de l&apos;installation. Nous ne stockons pas le contenu des messages, sauf si les administrateurs activent explicitement la journalisation.
               </p>
             </section>
 
@@ -71,10 +71,10 @@ export default function PrivacyPage() {
                 <div className="h-10 w-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-red-500">
                    <Lock className="h-5 w-5" />
                 </div>
-                <h2 className="text-2xl font-bold font-outfit uppercase tracking-tight">Data Integrity</h2>
+                <h2 className="text-2xl font-bold font-outfit uppercase tracking-tight">Intégrité des données</h2>
               </div>
               <p className="text-slate-400 leading-relaxed font-medium">
-                All configuration data is AES-256 encrypted at rest. Our neural vaults are distributed across global edge nodes, ensuring that your server settings are both secure and instantly available. We never sell or distribute your data to third parties.
+                Toutes les données de configuration sont chiffrées en AES-256 au repos. Nos coffres neuronaux sont répartis sur des nœuds edge dans le monde entier, garantissant des paramètres à la fois sécurisés et disponibles instantanément. Nous ne vendons ni ne partageons jamais vos données avec des tiers.
               </p>
             </section>
 
@@ -83,16 +83,16 @@ export default function PrivacyPage() {
                 <div className="h-10 w-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-red-500">
                    <FileText className="h-5 w-5" />
                 </div>
-                <h2 className="text-2xl font-bold font-outfit uppercase tracking-tight">User Rights</h2>
+                <h2 className="text-2xl font-bold font-outfit uppercase tracking-tight">Vos droits</h2>
               </div>
               <p className="text-slate-400 leading-relaxed font-medium">
-                You have the right to request a full dump of your data or immediate deletion of all configurations associated with your Discord account or guild. These requests can be initialized through our support matrix or directly within the dashboard settings.
+                Vous pouvez demander une copie complète de vos données ou la suppression immédiate de toutes les configurations liées à votre compte Discord ou à votre serveur. Ces demandes peuvent être initiées via notre support ou directement dans les paramètres du tableau de bord.
               </p>
             </section>
 
             <div className="pt-12 border-t border-white/5">
               <p className="text-[10px] font-black uppercase text-slate-600 tracking-[0.4em]">
-                Last Modified: March 2026 // Neural Jurisdiction: Global Edge Network
+                Dernière modification : mars 2026 // Juridiction neurale : réseau edge mondial
               </p>
             </div>
           </div>

@@ -101,9 +101,9 @@ export function AntiNukeForm({ initialConfig, guildId }: AntiNukeFormProps) {
     try {
       await api.updateAntiNuke(guildId, { status: config.status, remove_whitelist: userId });
       setWhitelistedUsers(whitelistedUsers.filter(id => id !== userId));
-      toast.success('User removed from whitelist');
+      toast.success('Utilisateur retiré de la whitelist');
     } catch (err: any) {
-      toast.error('Failed to remove user from whitelist');
+      toast.error('Échec du retrait de la whitelist');
       console.error(err);
     } finally {
       setSaving(false);
@@ -116,7 +116,7 @@ export function AntiNukeForm({ initialConfig, guildId }: AntiNukeFormProps) {
         <div className="bg-[#141B2D] border border-slate-800 rounded-3xl overflow-hidden shadow-xl">
           <div className="p-8 space-y-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-black uppercase text-slate-500 tracking-widest">Master Control</h3>
+              <h3 className="text-sm font-black uppercase text-slate-500 tracking-widest">Contrôle principal</h3>
               <Switch 
                 checked={config.status} 
                 onCheckedChange={(val) => setConfig({ ...config, status: val })}
@@ -150,7 +150,7 @@ export function AntiNukeForm({ initialConfig, guildId }: AntiNukeFormProps) {
                        {config.status && (
                          <div className="flex items-center gap-2 animate-in fade-in slide-in-from-right-2 duration-300">
                            <ShieldAlert className="h-4 w-4 text-emerald-500" />
-                           <span className="text-xs font-bold text-emerald-500 uppercase">Protected</span>
+                           <span className="text-xs font-bold text-emerald-500 uppercase">Protégé</span>
                          </div>
                        )}
                     </div>
@@ -162,12 +162,12 @@ export function AntiNukeForm({ initialConfig, guildId }: AntiNukeFormProps) {
             <div className="pt-6 border-t border-slate-800">
               <h4 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
                 <ShieldCheck className="h-5 w-5 text-emerald-500" />
-                Whitelisted Users
+                Utilisateurs whitelistés
               </h4>
               
               <div className="flex gap-2 mb-4">
                 <Input 
-                  placeholder="User ID..." 
+                  placeholder="ID d’utilisateur..." 
                   value={wlInput}
                   onChange={(e) => setWlInput(e.target.value)}
                   className="bg-slate-900/50"
@@ -179,7 +179,7 @@ export function AntiNukeForm({ initialConfig, guildId }: AntiNukeFormProps) {
 
               <div className="space-y-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
                 {whitelistedUsers.length === 0 ? (
-                  <p className="text-xs text-slate-500 italic text-center py-4">No users whitelisted.</p>
+                  <p className="text-xs text-slate-500 italic text-center py-4">Aucun utilisateur whitelisté.</p>
                 ) : (
                   whitelistedUsers.map(userId => (
                     <div key={userId} className="flex items-center justify-between p-3 rounded-xl bg-slate-900/30 border border-slate-800/50">
@@ -210,7 +210,7 @@ export function AntiNukeForm({ initialConfig, guildId }: AntiNukeFormProps) {
               className="w-full h-14 text-base font-bold gap-2"
             >
               {saving ? <RefreshCcw className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
-              Save Configuration
+              Enregistrer la configuration
             </Button>
           </div>
         </div>
@@ -221,11 +221,11 @@ export function AntiNukeForm({ initialConfig, guildId }: AntiNukeFormProps) {
             <div className="absolute -right-4 -top-4 opacity-[0.03] group-hover:scale-110 transition-transform">
               <ShieldAlert className="h-32 w-32 text-red-500" />
             </div>
-            <h3 className="text-sm font-bold text-red-400 mb-2">Maximum Protection</h3>
-            <p className="text-xs text-slate-400 leading-relaxed mb-4">Anti-Nuke is fixed to instantly Ban malicious actors. Ensure that Haunted&apos;s role is at the TOP of the role hierarchy for it to be able to ban admins.</p>
+            <h3 className="text-sm font-bold text-red-400 mb-2">Protection maximale</h3>
+            <p className="text-xs text-slate-400 leading-relaxed mb-4">L’Anti-Nuke bannit instantanément les utilisateurs malveillants. Assurez-vous que le rôle de Haunted est TOUT EN HAUT de la hiérarchie des rôles pour pouvoir bannir les admins.</p>
             <div className="flex items-center gap-2">
               <div className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
-              <span className="text-[10px] font-black uppercase text-red-500">Fixed Punishments</span>
+              <span className="text-[10px] font-black uppercase text-red-500">Sanctions fixes</span>
             </div>
          </div>
       </div>

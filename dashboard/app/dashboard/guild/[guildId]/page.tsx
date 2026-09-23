@@ -76,9 +76,9 @@ export default async function GuildOverviewPage({ params }: { params: Promise<{ 
               <span className="text-slate-400">guild_event_stream_{guildId}</span>
             </div>
             <div className="space-y-1.5 opacity-80">
-              <p className="text-slate-500">[{new Date().toLocaleTimeString()}] <span className="text-emerald-500">INIT</span> Dashboard connected to WebSocket pool...</p>
-              <p className="text-slate-500">[{new Date().toLocaleTimeString()}] <span className="text-primary">INFO</span> Fetching guild_config from primary database...</p>
-              <p className="text-slate-500">[{new Date().toLocaleTimeString()}] <span className="text-emerald-500">DONE</span> Cache synchronized successfully.</p>
+              <p className="text-slate-500">[{new Date().toLocaleTimeString()}] <span className="text-emerald-500">INIT</span> Dashboard connecté au pool WebSocket...</p>
+              <p className="text-slate-500">[{new Date().toLocaleTimeString()}] <span className="text-primary">INFO</span> Récupération de guild_config depuis la base principale...</p>
+              <p className="text-slate-500">[{new Date().toLocaleTimeString()}] <span className="text-emerald-500">OK</span> Cache synchronisé avec succès.</p>
               <p className="text-slate-400 animate-pulse">_</p>
             </div>
           </div>

@@ -36,9 +36,9 @@ export default async function WelcomePage({ params }: { params: Promise<{ guildI
         <div>
           <h2 className="text-2xl font-bold text-white flex items-center gap-2">
             <SmilePlus className="h-6 w-6 text-primary" />
-            Welcomer
+            Bienvenue
           </h2>
-          <p className="text-slate-400 mt-1">Greet new members to your server.</p>
+          <p className="text-slate-400 mt-1">Accueillez les nouveaux membres de votre serveur.</p>
         </div>
       </div>
 

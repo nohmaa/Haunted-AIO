@@ -34,8 +34,8 @@ export default function AutoReactPage({ params }: { params: Promise<{ guildId: s
       const configData = await api.getAutoReact(guildId);
       setConfig(configData);
     } catch (error) {
-      console.error("Failed to fetch auto react data:", error);
-      toast.error("Failed to load auto react configuration");
+      console.error("Échec de récupération des données des réactions auto :", error);
+      toast.error("Échec du chargement de la configuration des réactions auto");
     } finally {
       setLoading(false);
     }
@@ -47,16 +47,16 @@ export default function AutoReactPage({ params }: { params: Promise<{ guildId: s
     setSaving(true);
     const promise = api.updateAutoReact(guildId, { triggers: config.triggers });
     toast.promise(promise, {
-      loading: 'Saving auto react configuration...',
-      success: 'Auto react settings saved!',
-      error: 'Failed to save auto react config',
+      loading: 'Enregistrement de la configuration…',
+      success: 'Réactions auto enregistrées !',
+      error: 'Échec de l’enregistrement',
     });
     try { await promise; } catch {} finally { setSaving(false); }
   };
 
   const addTrigger = () => {
     if (config.triggers.length >= 10) {
-      toast.error("Maximum 10 triggers allowed");
+      toast.error("Maximum 10 déclencheurs autorisés");
       return;
     }
     setConfig({ ...config, triggers: [...config.triggers, { trigger: "", emojis: "" }] });
@@ -88,12 +88,12 @@ export default function AutoReactPage({ params }: { params: Promise<{ guildId: s
         <div>
           <h2 className="text-2xl font-bold text-white flex items-center gap-2">
             <Zap className="h-6 w-6 text-primary" />
-            Auto React
+            Réactions auto
           </h2>
-          <p className="text-slate-400 mt-1">Automatically react with emojis when specific trigger words are sent.</p>
+          <p className="text-slate-400 mt-1">Réagit automatiquement avec des emojis quand un mot déclencheur est envoyé.</p>
         </div>
         <Button onClick={addTrigger} disabled={config.triggers.length >= 10} variant="secondary" className="gap-2">
-          <Plus className="w-4 h-4" /> Add Trigger
+          <Plus className="w-4 h-4" /> Ajouter
         </Button>
       </div>
 
@@ -104,10 +104,10 @@ export default function AutoReactPage({ params }: { params: Promise<{ guildId: s
             {config.triggers.length === 0 ? (
               <div className="text-center p-12 bg-slate-900/20 rounded-2xl border border-dashed border-slate-700">
                 <Smile className="w-14 h-14 text-slate-600 mx-auto mb-4" />
-                <p className="text-lg font-medium text-slate-400">No triggers configured</p>
-                <p className="text-sm text-slate-500 mb-6">Start by adding your first auto-reaction trigger.</p>
+                <p className="text-lg font-medium text-slate-400">Aucun déclencheur configuré</p>
+                <p className="text-sm text-slate-500 mb-6">Commencez par ajouter votre premier déclencheur.</p>
                 <Button variant="outline" onClick={addTrigger} className="gap-2">
-                  <Plus className="w-4 h-4" /> Add Your First Trigger
+                  <Plus className="w-4 h-4" /> Ajouter mon premier déclencheur
                 </Button>
               </div>
             ) : (
@@ -119,7 +119,7 @@ export default function AutoReactPage({ params }: { params: Promise<{ guildId: s
                         <div className="p-2.5 rounded-xl bg-yellow-500/10 text-yellow-500">
                           <Zap className="h-4 w-4" />
                         </div>
-                        <h4 className="font-bold text-white">Trigger #{index + 1}</h4>
+                        <h4 className="font-bold text-white">Déclencheur #{index + 1}</h4>
                       </div>
                       <Button variant="ghost" size="sm" onClick={() => removeTrigger(index)} className="text-red-400 hover:text-red-300 hover:bg-red-400/10 h-8 w-8 p-0">
                         <Trash2 className="h-4 w-4" />
@@ -127,16 +127,16 @@ export default function AutoReactPage({ params }: { params: Promise<{ guildId: s
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-400">Trigger Word (single word)</label>
+                        <label className="text-xs font-bold text-slate-400">Mot déclencheur (un seul mot)</label>
                         <Input
-                          placeholder="e.g. hello"
+                          placeholder="ex. bonjour"
                           value={item.trigger}
                           onChange={(e) => updateTrigger(index, "trigger", e.target.value)}
                           className="bg-slate-900/50 border-slate-800 h-12"
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-400">Emojis (space separated)</label>
+                        <label className="text-xs font-bold text-slate-400">Emojis (séparés par des espaces)</label>
                         <Input
                           placeholder="e.g. 👋 ✨ ❤️"
                           value={item.emojis}
@@ -150,7 +150,7 @@ export default function AutoReactPage({ params }: { params: Promise<{ guildId: s
 
                 <Button onClick={handleSave} disabled={saving} className="w-full h-14 text-base font-bold gap-2">
                   {saving ? <RefreshCcw className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
-                  Save All Triggers
+                  Tout enregistrer
                 </Button>
               </>
             )}
@@ -165,13 +165,13 @@ export default function AutoReactPage({ params }: { params: Promise<{ guildId: s
             </div>
             <div className="flex items-center gap-2 mb-4">
               <Info className="h-4 w-4 text-yellow-500" />
-              <h3 className="text-sm font-bold text-white">How It Works</h3>
+              <h3 className="text-sm font-bold text-white">Comment ça marche</h3>
             </div>
             <ul className="text-xs text-slate-500 space-y-2">
-              <li>• Triggers are single words that the bot watches for.</li>
-              <li>• When a message contains a trigger, the bot reacts with the configured emojis.</li>
-              <li>• Up to 10 emojis per trigger, and 10 triggers max per guild.</li>
-              <li>• Custom emojis must be from this server.</li>
+              <li>• Les déclencheurs sont des mots uniques surveillés par le bot.</li>
+              <li>• Quand un message contient un déclencheur, le bot réagit avec les emojis configurés.</li>
+              <li>• Jusqu’à 10 emojis par déclencheur, 10 déclencheurs max par serveur.</li>
+              <li>• Les emojis personnalisés doivent venir de ce serveur.</li>
             </ul>
           </div>
         </div>

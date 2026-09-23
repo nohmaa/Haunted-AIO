@@ -43,8 +43,8 @@ export default function TrackingPage({ params }: { params: Promise<{ guildId: st
       setConfig(configData);
       setChannels(channelsData);
     } catch (error) {
-      console.error("Failed to fetch tracking data:", error);
-      toast.error("Failed to load tracking configuration");
+      console.error("Échec de récupération des données de suivi :", error);
+      toast.error("Échec du chargement du suivi des invitations");
     } finally {
       setLoading(false);
     }
@@ -58,10 +58,10 @@ export default function TrackingPage({ params }: { params: Promise<{ guildId: st
     try {
       setSaving(true);
       await api.updateTracking(guildId, config);
-      toast.success("Tracking configuration saved successfully");
+      toast.success("Suivi enregistré");
     } catch (error) {
-      console.error("Failed to save tracking config:", error);
-      toast.error("Failed to save tracking configuration");
+      console.error("Échec d’enregistrement du suivi :", error);
+      toast.error("Échec de l’enregistrement du suivi");
     } finally {
       setSaving(false);
     }
@@ -78,9 +78,9 @@ export default function TrackingPage({ params }: { params: Promise<{ guildId: st
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight">Invite Tracking</h2>
+        <h2 className="text-3xl font-bold tracking-tight">Suivi des invitations</h2>
         <p className="text-muted-foreground">
-          Configure where the bot logs invite information when a member joins.
+          Choisissez où le bot consigne les invitations à l’arrivée d’un membre.
         </p>
       </div>
 
@@ -88,20 +88,20 @@ export default function TrackingPage({ params }: { params: Promise<{ guildId: st
         <CardHeader>
           <div className="flex items-center gap-2">
             <Search className="w-5 h-5 text-primary" />
-            <CardTitle>Logging Configuration</CardTitle>
+            <CardTitle>Configuration des logs</CardTitle>
           </div>
           <CardDescription>
-            Choose a channel to receive notifications about member invites and join sources.
+            Choisissez un salon pour les notifications d’invitations et sources d’arrivée.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-2">
-            <Label>Log Channel</Label>
+            <Label>Salon de logs</Label>
             <Select
               value={config.channel_id?.toString() || "none"}
               onValueChange={(val) => setConfig({ ...config, channel_id: val === "none" ? null : parseInt(val) })}
               options={[
-                { value: "none", label: "Disabled" },
+                { value: "none", label: "Désactivé" },
                 ...channels.map((chan) => ({ value: chan.id.toString(), label: `#${chan.name}` }))
               ]}
             />
@@ -110,7 +110,7 @@ export default function TrackingPage({ params }: { params: Promise<{ guildId: st
           <div className="flex justify-end pt-4">
             <Button onClick={handleSave} disabled={saving} className="gap-2">
               {saving ? <RefreshCcw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              Save Changes
+              Enregistrer
             </Button>
           </div>
         </CardContent>
@@ -125,8 +125,7 @@ export default function TrackingPage({ params }: { params: Promise<{ guildId: st
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            The invite tracking module monitors all join events and attempts to identify which invite link was used.
-            This information is then logged to your chosen channel.
+            Le module suit toutes les arrivées et tente d’identifier le lien d’invitation utilisé. Ces informations sont consignées dans le salon choisi.
           </p>
         </CardContent>
       </Card>

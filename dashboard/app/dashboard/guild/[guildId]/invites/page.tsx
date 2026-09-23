@@ -31,8 +31,8 @@ export default function InvitesPage({ params }: { params: Promise<{ guildId: str
       const res = await api.getInvites(guildId);
       setData(res.data || []);
     } catch (error) {
-      console.error("Failed to fetch invites leaderboard:", error);
-      toast.error("Failed to load invites leaderboard");
+      console.error("Échec de récupération du classement des invitations :", error);
+      toast.error("Échec du chargement du classement des invitations");
       setData([]);
     } finally {
       setLoading(false);
@@ -55,9 +55,9 @@ export default function InvitesPage({ params }: { params: Promise<{ guildId: str
         <div>
           <h2 className="text-2xl font-bold text-white flex items-center gap-2">
             <TrendingUp className="h-6 w-6 text-primary" />
-            Invite Leaderboard
+            Classement des invitations
           </h2>
-          <p className="text-slate-400 mt-1">Top inviters in the server based on tracked join events.</p>
+          <p className="text-slate-400 mt-1">Meilleurs invitants du serveur, d’après les arrivées suivies.</p>
         </div>
         <button onClick={fetchLeaderboard} className="text-slate-400 hover:text-white transition-colors">
           <RefreshCcw className="w-5 h-5" />
@@ -91,13 +91,13 @@ export default function InvitesPage({ params }: { params: Promise<{ guildId: str
             {/* Leaderboard */}
             <div className="pt-6 border-t border-slate-800 space-y-3">
               <h4 className="text-sm font-bold text-white flex items-center gap-2 mb-4">
-                <Medal className="h-5 w-5 text-yellow-500" /> Rankings
+                <Medal className="h-5 w-5 text-yellow-500" /> Classement
               </h4>
 
               {data.length === 0 ? (
                 <div className="text-center p-12 bg-slate-900/20 rounded-2xl border border-dashed border-slate-700">
                   <TrendingUp className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-                  <p className="text-sm text-slate-500">No invite data found yet.</p>
+                  <p className="text-sm text-slate-500">Aucune donnée d’invitation pour l’instant.</p>
                 </div>
               ) : (
                 data.map((row, index) => (
@@ -119,19 +119,19 @@ export default function InvitesPage({ params }: { params: Promise<{ guildId: str
                         <div className="font-black text-primary">{row.total}</div>
                       </div>
                       <div className="text-right">
-                        <div className="text-[10px] uppercase font-bold text-slate-500">Real</div>
+                        <div className="text-[10px] uppercase font-bold text-slate-500">Réels</div>
                         <div className="font-medium text-emerald-400">{row.total - row.left - row.fake - row.rejoin}</div>
                       </div>
                       <div className="text-right">
-                        <div className="text-[10px] uppercase font-bold text-slate-500">Left</div>
+                        <div className="text-[10px] uppercase font-bold text-slate-500">Départs</div>
                         <div className="text-red-400">{row.left}</div>
                       </div>
                       <div className="text-right">
-                        <div className="text-[10px] uppercase font-bold text-slate-500">Fake</div>
+                        <div className="text-[10px] uppercase font-bold text-slate-500">Faux</div>
                         <div className="text-yellow-400">{row.fake}</div>
                       </div>
                       <div className="text-right">
-                        <div className="text-[10px] uppercase font-bold text-slate-500">Rejoin</div>
+                        <div className="text-[10px] uppercase font-bold text-slate-500">Retours</div>
                         <div className="text-blue-400">{row.rejoin}</div>
                       </div>
                     </div>
@@ -150,13 +150,13 @@ export default function InvitesPage({ params }: { params: Promise<{ guildId: str
             </div>
             <div className="flex items-center gap-2 mb-4">
               <Info className="h-4 w-4 text-primary" />
-              <h3 className="text-sm font-bold text-white">About Tracking</h3>
+              <h3 className="text-sm font-bold text-white">À propos du suivi</h3>
             </div>
             <ul className="text-xs text-slate-500 space-y-2">
-              <li>• Invite tracking is automatic for all members.</li>
-              <li>• &quot;Real&quot; = Total minus Left, Fake, and Rejoins.</li>
-              <li>• Use <span className="text-primary">,invitelogging #channel</span> to enable live logs.</li>
-              <li>• Admins can manually adjust invite counts.</li>
+              <li>• Le suivi des invitations est automatique pour tous les membres.</li>
+              <li>• « Réel » = Total moins Départs, Faux et Retours.</li>
+              <li>• Utilisez <span className="text-primary">,invitelogging #salon</span> pour activer les logs en direct.</li>
+              <li>• Les admins peuvent ajuster les compteurs manuellement.</li>
             </ul>
           </div>
         </div>

@@ -40,8 +40,8 @@ export default function InvcRolePage({ params }: { params: Promise<{ guildId: st
       setConfig(configData);
       setRoles(rolesData);
     } catch (error) {
-      console.error("Failed to fetch InvcRole data:", error);
-      toast.error("Failed to load Voice Role configuration");
+      console.error("Échec de récupération des données du rôle vocal :", error);
+      toast.error("Échec du chargement de la configuration du rôle vocal");
     } finally {
       setLoading(false);
     }
@@ -56,9 +56,9 @@ export default function InvcRolePage({ params }: { params: Promise<{ guildId: st
       enabled: config.enabled
     });
     toast.promise(promise, {
-      loading: 'Saving Voice Role configuration...',
-      success: 'Voice Role settings saved!',
-      error: 'Failed to save Voice Role config',
+      loading: 'Enregistrement…',
+      success: 'Rôle vocal enregistré !',
+      error: 'Échec de l’enregistrement',
     });
     try { await promise; } catch {} finally { setSaving(false); }
   };
@@ -84,9 +84,9 @@ export default function InvcRolePage({ params }: { params: Promise<{ guildId: st
         <div>
           <h2 className="text-2xl font-bold text-white flex items-center gap-2">
             <Volume2 className="h-6 w-6 text-primary" />
-            Voice Role
+            Rôle vocal
           </h2>
-          <p className="text-slate-400 mt-1">Automatically assign a role when members join a voice channel.</p>
+          <p className="text-slate-400 mt-1">Attribue automatiquement un rôle quand un membre rejoint un salon vocal.</p>
         </div>
       </div>
 
@@ -101,15 +101,15 @@ export default function InvcRolePage({ params }: { params: Promise<{ guildId: st
                   <Power className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-black text-white">Voice Role System</h3>
-                  <p className="text-sm text-slate-400 mt-1">{config.enabled ? "The system is active and monitoring channels." : "The system is currently disabled."}</p>
+                  <h3 className="text-lg font-black text-white">Système de rôle vocal</h3>
+                  <p className="text-sm text-slate-400 mt-1">{config.enabled ? "Le système est actif et surveille les salons." : "Le système est désactivé."}</p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
                 <div className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 flex items-center gap-2">
                   <div className={cn("w-2 h-2 rounded-full", config.enabled ? 'bg-emerald-500 animate-pulse' : 'bg-red-500')} />
                   <span className="text-[10px] font-bold uppercase text-slate-400">
-                    {config.enabled ? 'Live' : 'Off'}
+                    {config.enabled ? 'En direct' : 'Coupé'}
                   </span>
                 </div>
                 <Switch 
@@ -128,8 +128,8 @@ export default function InvcRolePage({ params }: { params: Promise<{ guildId: st
                   <ShieldCheck className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-white">Voice State Role</h4>
-                  <p className="text-xs text-slate-400 mt-1">Choose the role to be assigned automatically to voice participants.</p>
+                  <h4 className="font-bold text-white">Rôle de présence vocale</h4>
+                  <p className="text-xs text-slate-400 mt-1">Choisissez le rôle attribué automatiquement aux participants vocaux.</p>
                 </div>
               </div>
               <Select
@@ -138,10 +138,10 @@ export default function InvcRolePage({ params }: { params: Promise<{ guildId: st
                 disabled={!config.enabled}
               >
                 <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 font-medium">
-                  <SelectValue placeholder="Select a role..." />
+                  <SelectValue placeholder="Choisir un rôle…" />
                 </SelectTrigger>
                 <SelectContent className="bg-slate-900 border-slate-800 max-h-[300px]">
-                  <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">No Role Selected</SelectItem>
+                  <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Aucun rôle</SelectItem>
                   {filteredRoles.map((r) => (
                     <SelectItem key={r.id} value={r.id} className="focus:bg-slate-800">
                       <div className="flex items-center gap-2">
@@ -156,7 +156,7 @@ export default function InvcRolePage({ params }: { params: Promise<{ guildId: st
 
             <Button onClick={handleSave} disabled={saving} className="w-full h-14 text-base font-bold gap-2 shadow-lg shadow-primary/20 transition-all hover:scale-[1.01] active:scale-[0.99]">
               {saving ? <RefreshCcw className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
-              Save All Changes
+              Tout enregistrer
             </Button>
           </div>
         </div>
@@ -169,20 +169,20 @@ export default function InvcRolePage({ params }: { params: Promise<{ guildId: st
             </div>
             <div className="flex items-center gap-2 mb-4">
               <Info className="h-4 w-4 text-primary" />
-              <h3 className="text-sm font-bold text-white">How It Works</h3>
+              <h3 className="text-sm font-bold text-white">Comment ça marche</h3>
             </div>
             <ul className="text-xs text-slate-500 space-y-3 leading-relaxed">
               <li className="flex gap-2">
                 <span className="text-primary font-bold">01</span>
-                <span>Role is added when a user joins any voice channel.</span>
+                <span>Le rôle est ajouté quand un membre rejoint un salon vocal.</span>
               </li>
               <li className="flex gap-2">
                 <span className="text-primary font-bold">02</span>
-                <span>Role is removed when they disconnect from all channels.</span>
+                <span>Le rôle est retiré à la déconnexion de tous les salons.</span>
               </li>
               <li className="flex gap-2">
                 <span className="text-primary font-bold">03</span>
-                <span>Make sure the bot role is higher than the selected role.</span>
+                <span>Vérifiez que le rôle du bot est au-dessus du rôle choisi.</span>
               </li>
             </ul>
           </div>

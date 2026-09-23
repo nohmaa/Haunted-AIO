@@ -37,7 +37,7 @@ export default function TermsPage() {
         <Link href="/">
           <Button variant="ghost" className="text-slate-400 hover:text-white gap-2">
             <ChevronLeft className="h-4 w-4" />
-            Back to Home
+            Retour à l&apos;accueil
           </Button>
         </Link>
       </nav>
@@ -46,11 +46,11 @@ export default function TermsPage() {
         <div className="max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] font-black uppercase tracking-widest mb-8">
             <Scale className="h-3 w-3" />
-            Neural Protocol v2.4
+            Protocole neuronal v2.4
           </div>
           
           <h1 className="text-5xl md:text-7xl font-bold text-white font-outfit tracking-tighter uppercase mb-12 italic text-right">
-            Terms of <span className="text-red-500 not-italic">Service.</span>
+            Conditions d&apos;<span className="text-red-500 not-italic">Utilisation.</span>
           </h1>
 
           <div className="glass border-white/5 rounded-[40px] p-10 md:p-16 space-y-12 bg-gradient-to-br from-white/[0.01] to-transparent">
@@ -59,10 +59,10 @@ export default function TermsPage() {
                 <div className="h-10 w-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-red-500">
                    <Terminal className="h-5 w-5" />
                 </div>
-                <h2 className="text-2xl font-bold font-outfit uppercase tracking-tight">Acceptance of Protocol</h2>
+                <h2 className="text-2xl font-bold font-outfit uppercase tracking-tight">Acceptation du protocole</h2>
               </div>
               <p className="text-slate-400 leading-relaxed font-medium">
-                By integrating the {process.env.NEXT_PUBLIC_BRAND_NAME || "Haunted"} Engine into your Discord server, you agree to abide by these terms. The engine is provided &quot;as is,&quot; and while we strive for 100% uptime through our neural edge clusters, we are not liable for any data loss resulting from third-party API disruptions.
+                En intégrant le moteur {process.env.NEXT_PUBLIC_BRAND_NAME || "Haunted"} à votre serveur Discord, vous acceptez de respecter ces conditions. Le moteur est fourni « en l&apos;état » et, malgré notre objectif de 100 % de disponibilité grâce à nos clusters edge neuronaux, nous ne sommes pas responsables des pertes de données liées aux interruptions d&apos;API tierces.
               </p>
             </section>
 
@@ -71,10 +71,10 @@ export default function TermsPage() {
                 <div className="h-10 w-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-red-500">
                    <ShieldAlert className="h-5 w-5" />
                 </div>
-                <h2 className="text-2xl font-bold font-outfit uppercase tracking-tight">Usage Constraints</h2>
+                <h2 className="text-2xl font-bold font-outfit uppercase tracking-tight">Restrictions d&apos;utilisation</h2>
               </div>
               <p className="text-slate-400 leading-relaxed font-medium">
-                You may not use the {process.env.NEXT_PUBLIC_BRAND_NAME || "Haunted"} Engine for any illicit activities, including but not limited to: automated harassment, token logging, or raid coordination. Violation of these constraints will result in immediate neural deauthorization and blacklisting from the global cluster network.
+                Vous ne pouvez pas utiliser le moteur {process.env.NEXT_PUBLIC_BRAND_NAME || "Haunted"} pour des activités illicites, notamment : harcèlement automatisé, vol de tokens ou coordination de raids. Toute infraction entraînera une désautorisation neuronale immédiate et un bannissement du réseau mondial de clusters.
               </p>
             </section>
 
@@ -83,16 +83,16 @@ export default function TermsPage() {
                 <div className="h-10 w-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-red-500">
                    <Cpu className="h-5 w-5" />
                 </div>
-                <h2 className="text-2xl font-bold font-outfit uppercase tracking-tight">API & Scaling</h2>
+                <h2 className="text-2xl font-bold font-outfit uppercase tracking-tight">API et mise à l&apos;échelle</h2>
               </div>
               <p className="text-slate-400 leading-relaxed font-medium">
-                We reserve the right to throttle or limit API access for guilds that exceed disproportionate resource allocations. High-scale enterprise clusters are available for communities requiring dedicated neural shards.
+                Nous nous réservons le droit de limiter l&apos;accès à l&apos;API pour les serveurs dépassant une allocation disproportionnée de ressources. Des clusters entreprise à grande échelle sont disponibles pour les communautés nécessitant des shards neuronaux dédiés.
               </p>
             </section>
 
             <div className="pt-12 border-t border-white/5">
               <p className="text-[10px] font-black uppercase text-slate-600 tracking-[0.4em]">
-                March 2026 // Distributed via {process.env.NEXT_PUBLIC_BRAND_NAME || "Haunted"} Neural Cloud
+                Mars 2026 // Distribué via {process.env.NEXT_PUBLIC_BRAND_NAME || "Haunted"} Neural Cloud
               </p>
             </div>
           </div>

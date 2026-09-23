@@ -184,12 +184,12 @@ export function LoggingForm({ initialConfig, channels, guildId }: LoggingFormPro
                  <span className="bg-slate-800 text-slate-300 px-2 py-1 rounded-md text-[10px] font-black">{config.ignore_roles.length}</span>
               </div>
               <div className="flex items-center justify-between p-3 bg-slate-900/40 rounded-xl border border-slate-800 hover:border-slate-700 transition-colors">
-                 <span className="text-xs font-bold text-slate-400">Secure Channels</span>
+                 <span className="text-xs font-bold text-slate-400">Salons sécurisés</span>
                  <span className="bg-slate-800 text-slate-300 px-2 py-1 rounded-md text-[10px] font-black">{config.ignore_channels.length}</span>
               </div>
            </div>
            <p className="text-[10px] text-slate-600 mt-6 leading-relaxed italic text-center">
-             Events from these entities are currently bypassed by the audit logger.
+             Les événements de ces éléments sont actuellement ignorés par le journal d'audit.
            </p>
          </div>
       </div>

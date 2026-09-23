@@ -52,8 +52,8 @@ export default async function GuildLayout({
   try {
     guild = await api.getGuildDetails(guildId);
   } catch (err: any) {
-    console.error("Failed to fetch guild details:", err);
-    error = err.message || "Failed to load guild data.";
+    console.error("Échec de récupération des données du serveur :", err);
+    error = err.message || "Échec du chargement des données du serveur.";
   }
 
   if (error || !guild) {
@@ -94,7 +94,7 @@ export default async function GuildLayout({
                 {guild.name.charAt(0)}
               </div>
             )}
-            <div className="absolute -bottom-2 -right-2 bg-emerald-500 text-white p-2 rounded-xl shadow-lg border-2 border-[#141B2D]" title="Active">
+            <div className="absolute -bottom-2 -right-2 bg-emerald-500 text-white p-2 rounded-xl shadow-lg border-2 border-[#141B2D]" title="Actif">
               <div className="h-3 w-3 rounded-full bg-white animate-pulse" />
             </div>
           </div>

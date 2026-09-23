@@ -74,7 +74,7 @@ export function LevelingForm({ initialConfig, guildId }: LevelingFormProps) {
         <div className="bg-[#141B2D] border border-slate-800 rounded-3xl overflow-hidden shadow-xl shadow-black/20">
           <div className="p-8 space-y-8">
             <div className="flex items-center justify-between mb-4 border-b border-slate-800 pb-4">
-               <span className="text-sm font-bold text-slate-300">Social Economy Status</span>
+               <span className="text-sm font-bold text-slate-300">État du système de niveaux</span>
                <Switch 
                   checked={config.enabled} 
                   onCheckedChange={() => setConfig({...config, enabled: !config.enabled})}
@@ -85,7 +85,7 @@ export function LevelingForm({ initialConfig, guildId }: LevelingFormProps) {
               <div className="space-y-2">
                 <label className="text-xs font-black uppercase text-slate-500 tracking-widest flex items-center gap-2">
                   <Zap className="h-3 w-3" />
-                  XP Weight
+                  XP par message
                 </label>
                 <Input 
                   type="number"
@@ -100,7 +100,7 @@ export function LevelingForm({ initialConfig, guildId }: LevelingFormProps) {
               <div className="space-y-2">
                 <label className="text-xs font-black uppercase text-slate-500 tracking-widest flex items-center gap-2">
                   <Clock className="h-3 w-3" />
-                  Cooldown
+                  Délai
                 </label>
                 <div className="relative">
                   <Input 
@@ -111,7 +111,7 @@ export function LevelingForm({ initialConfig, guildId }: LevelingFormProps) {
                     disabled={!config.enabled}
                     className="py-6 text-lg font-bold pr-12"
                   />
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-700">SEC</span>
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-700">S</span>
                 </div>
               </div>
             </div>
@@ -119,12 +119,12 @@ export function LevelingForm({ initialConfig, guildId }: LevelingFormProps) {
             <div className="space-y-2">
               <label className="text-xs font-black uppercase text-slate-500 tracking-widest flex items-center gap-2">
                 <Hash className="h-3 w-3" />
-                Level Up Channel
+                Salon de montée de niveau
               </label>
               <Input 
                 value={config.level_up_channel || ""}
                 onChange={(e) => setConfig({...config, level_up_channel: e.target.value ? parseInt(e.target.value.replace(/\D/g, "")) : null})}
-                placeholder="Discord Channel ID"
+                placeholder="ID du salon Discord"
                 disabled={!config.enabled}
                 className="py-6 font-mono"
               />
@@ -136,7 +136,7 @@ export function LevelingForm({ initialConfig, guildId }: LevelingFormProps) {
               className="w-full h-14 text-base font-bold gap-2"
             >
               {saving ? <RefreshCcw className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
-              {saving ? "Updating System..." : "Update Leveling Engine"}
+              {saving ? "Mise à jour du système..." : "Mettre à jour le moteur de niveaux"}
             </Button>
           </div>
         </div>
@@ -145,11 +145,11 @@ export function LevelingForm({ initialConfig, guildId }: LevelingFormProps) {
           <div className="absolute right-0 top-0 h-full w-1 bg-primary/20" />
            <h3 className="text-sm font-black uppercase text-slate-500 tracking-widest mb-6 flex items-center gap-2">
             <Palette className="h-4 w-4" />
-            Cosmetic Defaults
+            Apparence par défaut
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 relative z-10">
              <div className="space-y-2">
-                <p className="text-xs text-slate-500 font-bold px-1">Rank Card Color</p>
+                <p className="text-xs text-slate-500 font-bold px-1">Couleur de la carte de rang</p>
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-xl border border-slate-700 shadow-inner" style={{ backgroundColor: config.embed_style.color }} />
                   <Input 
@@ -163,7 +163,7 @@ export function LevelingForm({ initialConfig, guildId }: LevelingFormProps) {
              <div className="flex items-center justify-between p-4 bg-slate-900/40 rounded-2xl border border-slate-800">
                 <div className="flex items-center gap-3">
                   <Layout className="h-4 w-4 text-slate-500" />
-                  <span className="text-sm font-bold text-slate-300">Thumbnail</span>
+                  <span className="text-sm font-bold text-slate-300">Miniature</span>
                 </div>
                 <Switch 
                   checked={config.embed_style.thumbnail}
@@ -180,9 +180,9 @@ export function LevelingForm({ initialConfig, guildId }: LevelingFormProps) {
            <div className="absolute -right-4 -top-4 opacity-[0.03] group-hover:scale-110 transition-transform">
               <Info className="h-32 w-32 text-white" />
            </div>
-           <h3 className="text-xs font-black uppercase text-slate-500 tracking-widest mb-4">Leveling Logic</h3>
+           <h3 className="text-xs font-black uppercase text-slate-500 tracking-widest mb-4">Logique de niveaux</h3>
            <div className="space-y-4 text-sm leading-relaxed text-slate-400">
-              <p>Members earn <span className="text-white font-bold italic">XP</span> by chatting.</p>
+              <p>Les membres gagnent de l'<span className="text-white font-bold italic">XP</span> en discutant.</p>
               <div className="p-4 bg-primary/5 rounded-2xl border border-primary/10 text-[10px] font-mono">
                  5 * (level ^ 2) + (50 * level) + 100
               </div>

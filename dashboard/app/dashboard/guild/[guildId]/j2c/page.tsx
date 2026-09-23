@@ -39,9 +39,9 @@ export default async function J2CPage({ params }: { params: Promise<{ guildId: s
         <div>
           <h2 className="text-2xl font-bold text-white flex items-center gap-2">
             <Mic className="h-6 w-6 text-primary" />
-            Join to Create
+            Salons temporaires
           </h2>
-          <p className="text-slate-400 mt-1">Set up temporary voice channels that are created automatically when a member joins a specific channel.</p>
+          <p className="text-slate-400 mt-1">Créez des salons vocaux temporaires dès qu’un membre rejoint un salon précis.</p>
         </div>
       </div>
 

@@ -29,11 +29,11 @@ interface CustomRolesFormProps {
 }
 
 const ROLE_INPUTS = [
-  { label: "Staff Role", key: "staff", icon: Shield, color: "text-blue-500", bg: "bg-blue-500/20" },
-  { label: "Girl Role", key: "girl", icon: Heart, color: "text-pink-500", bg: "bg-pink-500/20" },
-  { label: "VIP Role", key: "vip", icon: Crown, color: "text-yellow-500", bg: "bg-yellow-500/20" },
-  { label: "Guest Role", key: "guest", icon: Ghost, color: "text-gray-400", bg: "bg-gray-400/20" },
-  { label: "Friend Role", key: "frnd", icon: Star, color: "text-green-500", bg: "bg-green-500/20" },
+  { label: "Rôle Staff", key: "staff", icon: Shield, color: "text-blue-500", bg: "bg-blue-500/20" },
+  { label: "Rôle Fille", key: "girl", icon: Heart, color: "text-pink-500", bg: "bg-pink-500/20" },
+  { label: "Rôle VIP", key: "vip", icon: Crown, color: "text-yellow-500", bg: "bg-yellow-500/20" },
+  { label: "Rôle Invité", key: "guest", icon: Ghost, color: "text-gray-400", bg: "bg-gray-400/20" },
+  { label: "Rôle Ami", key: "frnd", icon: Star, color: "text-green-500", bg: "bg-green-500/20" },
 ];
 
 export function CustomRolesForm({ initialConfig, roles, guildId }: CustomRolesFormProps) {
@@ -72,8 +72,8 @@ export function CustomRolesForm({ initialConfig, roles, guildId }: CustomRolesFo
                 <Settings className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-lg font-black text-white">Required Permission Role</h3>
-                <p className="text-sm text-slate-400 mt-1">Users need this role to assign the custom roles below.</p>
+                <h3 className="text-lg font-black text-white">Rôle de permission requis</h3>
+                <p className="text-sm text-slate-400 mt-1">Les utilisateurs doivent avoir ce rôle pour attribuer les rôles personnalisés ci-dessous.</p>
               </div>
             </div>
             
@@ -83,10 +83,10 @@ export function CustomRolesForm({ initialConfig, roles, guildId }: CustomRolesFo
                 onValueChange={(val) => setConfig({ ...config, reqrole: val === "none" ? null : parseInt(val) })}
               >
                 <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 font-medium">
-                  <SelectValue placeholder="Select required role..." />
+                  <SelectValue placeholder="Sélectionner le rôle requis..." />
                 </SelectTrigger>
                 <SelectContent className="bg-slate-900 border-slate-800 max-h-[300px]">
-                  <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">None required / Admins only</SelectItem>
+                  <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Aucun / Admins uniquement</SelectItem>
                   {filteredRoles.map((role) => (
                     <SelectItem key={role.id} value={role.id.toString()} className="focus:bg-slate-800">
                       {role.name}
@@ -106,7 +106,7 @@ export function CustomRolesForm({ initialConfig, roles, guildId }: CustomRolesFo
                   </div>
                   <div>
                     <h4 className="font-bold text-white">{input.label}</h4>
-                    <p className="text-xs text-slate-400 mt-1">Role assigned via .{input.key} command</p>
+                    <p className="text-xs text-slate-400 mt-1">Rôle attribué via la commande .{input.key}</p>
                   </div>
                 </div>
                 
@@ -115,10 +115,10 @@ export function CustomRolesForm({ initialConfig, roles, guildId }: CustomRolesFo
                   onValueChange={(val) => setConfig({ ...config, [input.key]: val === "none" ? null : parseInt(val) })}
                 >
                   <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 font-medium">
-                    <SelectValue placeholder="Select a role..." />
+                    <SelectValue placeholder="Sélectionner un rôle..." />
                   </SelectTrigger>
                   <SelectContent className="bg-slate-900 border-slate-800 max-h-[300px]">
-                    <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Not Set</SelectItem>
+                    <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Non défini</SelectItem>
                     {filteredRoles.map((role) => (
                       <SelectItem key={role.id} value={role.id.toString()} className="focus:bg-slate-800">
                         {role.name}
@@ -136,7 +136,7 @@ export function CustomRolesForm({ initialConfig, roles, guildId }: CustomRolesFo
             className="w-full h-14 text-base font-bold gap-2"
           >
             {saving ? <RefreshCcw className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
-            Save Configuration
+            Enregistrer la configuration
           </Button>
         </div>
       </div>
@@ -146,15 +146,15 @@ export function CustomRolesForm({ initialConfig, roles, guildId }: CustomRolesFo
           <div className="absolute -right-4 -top-4 opacity-[0.03] group-hover:scale-110 transition-transform">
             <Crown className="h-32 w-32 text-blue-500" />
           </div>
-          <h3 className="text-sm font-bold text-blue-400 mb-2">Command Usage</h3>
+          <h3 className="text-sm font-bold text-blue-400 mb-2">Utilisation des commandes</h3>
           <p className="text-xs text-slate-400 leading-relaxed mb-4">
-            Allows your trusted server managers to grant specific preset roles with simple prefix commands.
+            Permet à vos gestionnaires de confiance d'attribuer des rôles prédéfinis avec de simples commandes à préfixe.
           </p>
           <ul className="text-xs text-slate-500 space-y-2">
-             <li>• <code>.staff @user</code> - Assigns/Removes Staff role</li>
-             <li>• <code>.girl @user</code> - Assigns/Removes Girl role</li>
-             <li>• <code>.vip @user</code> - Assigns/Removes VIP role</li>
-             <li>• Ensure Haunted is placed higher than these roles in server settings!</li>
+             <li>• <code>.staff @user</code> - Attribue/Retire le rôle Staff</li>
+             <li>• <code>.girl @user</code> - Attribue/Retire le rôle Fille</li>
+             <li>• <code>.vip @user</code> - Attribue/Retire le rôle VIP</li>
+             <li>• Assurez-vous que Haunted est placé au-dessus de ces rôles dans les paramètres du serveur !</li>
           </ul>
         </div>
       </div>

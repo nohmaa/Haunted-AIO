@@ -65,9 +65,9 @@ export function TicketsForm({ initialConfig, guildId }: TicketsFormProps) {
     const promise = api.updateTickets(guildId, updateData);
 
     toast.promise(promise, {
-      loading: 'Updating ticket settings...',
-      success: 'Settings updated successfully',
-      error: 'Failed to update settings',
+      loading: 'Mise à jour des paramètres de tickets...',
+      success: 'Paramètres enregistrés avec succès',
+      error: 'Échec de la mise à jour des paramètres',
     });
 
     try {
@@ -138,7 +138,7 @@ export function TicketsForm({ initialConfig, guildId }: TicketsFormProps) {
               <div className="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-900/50">
                 <h3 className="font-bold text-lg text-white flex items-center gap-2">
                    {isAdding ? <Plus className="h-5 w-5 text-primary" /> : <Edit3 className="h-5 w-5 text-primary" />}
-                   {isAdding ? "Add Category" : "Edit Category"}
+                   {isAdding ? "Ajouter une catégorie" : "Modifier la catégorie"}
                 </h3>
                 <button onClick={() => setEditingCategory(null)} className="text-slate-500 hover:text-white transition-colors">
                    <X className="h-5 w-5" />
@@ -146,24 +146,24 @@ export function TicketsForm({ initialConfig, guildId }: TicketsFormProps) {
               </div>
               <div className="p-8 space-y-6">
                 <div className="space-y-2">
-                   <label className="text-xs font-black uppercase text-slate-500 tracking-widest">Category Name</label>
+                   <label className="text-xs font-black uppercase text-slate-500 tracking-widest">Nom de la catégorie</label>
                    <Input 
                       value={editingCategory.data.name} 
                       onChange={(e) => setEditingCategory({...editingCategory, data: {...editingCategory.data, name: e.target.value}})}
-                      placeholder="e.g. Bug Reports"
+                      placeholder="ex. Signalements de bugs"
                    />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-xs font-black uppercase text-slate-500 tracking-widest">Emoji Icon</label>
+                    <label className="text-xs font-black uppercase text-slate-500 tracking-widest">Icône Emoji</label>
                     <Input 
                         value={editingCategory.data.emoji || ""} 
                         onChange={(e) => setEditingCategory({...editingCategory, data: {...editingCategory.data, emoji: e.target.value}})}
-                        placeholder="e.g. 🐛"
+                        placeholder="ex. 🐛"
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-xs font-black uppercase text-slate-500 tracking-widest">Staff Roles (IDs)</label>
+                    <label className="text-xs font-black uppercase text-slate-500 tracking-widest">Rôles Staff (IDs)</label>
                     <Input 
                         value={editingCategory.data.staff_roles.join(", ")} 
                         onChange={(e) => {
@@ -180,7 +180,7 @@ export function TicketsForm({ initialConfig, guildId }: TicketsFormProps) {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-xs font-black uppercase text-slate-500 tracking-widest">Button Style</label>
+                    <label className="text-xs font-black uppercase text-slate-500 tracking-widest">Style du bouton</label>
                     <Select 
                       value={String(editingCategory.data.button_style || 2)}
                       onValueChange={(val) => setEditingCategory({
@@ -189,34 +189,34 @@ export function TicketsForm({ initialConfig, guildId }: TicketsFormProps) {
                       })}
                     >
                       <SelectTrigger className="bg-slate-900/50 border-slate-800">
-                        <SelectValue placeholder="Select Style" />
+                        <SelectValue placeholder="Choisir un style" />
                       </SelectTrigger>
                       <SelectContent className="bg-slate-900 border-slate-800">
                         <SelectItem value="2">Blurple</SelectItem>
-                        <SelectItem value="1">Grey</SelectItem>
-                        <SelectItem value="3">Green</SelectItem>
-                        <SelectItem value="4">Red</SelectItem>
+                        <SelectItem value="1">Gris</SelectItem>
+                        <SelectItem value="3">Vert</SelectItem>
+                        <SelectItem value="4">Rouge</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-xs font-black uppercase text-slate-500 tracking-widest">Discord Category ID</label>
+                    <label className="text-xs font-black uppercase text-slate-500 tracking-widest">ID de la catégorie Discord</label>
                     <Input 
                         value={editingCategory.data.discord_category_id || ""} 
                         onChange={(e) => setEditingCategory({
                           ...editingCategory, 
                           data: { ...editingCategory.data, discord_category_id: e.target.value }
                         })}
-                        placeholder="Created tickets go here"
+                        placeholder="Les tickets créés seront placés ici"
                     />
                   </div>
                 </div>
                 
                 <div className="pt-4 flex gap-3">
-                   <Button variant="outline" className="flex-1" onClick={() => setEditingCategory(null)}>Cancel</Button>
+                   <Button variant="outline" className="flex-1" onClick={() => setEditingCategory(null)}>Annuler</Button>
                    <Button className="flex-1 gap-2" onClick={handleSaveCategory} disabled={saving || !editingCategory.data.name}>
                      {saving ? <RefreshCcw className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-                     Save Category
+                     Enregistrer la catégorie
                    </Button>
                 </div>
               </div>
@@ -231,7 +231,7 @@ export function TicketsForm({ initialConfig, guildId }: TicketsFormProps) {
               <div className="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-900/50">
                 <h3 className="font-bold text-lg text-white flex items-center gap-2">
                    <Edit3 className="h-5 w-5 text-primary" />
-                   Customize Panel Appearance
+                   Personnaliser l’apparence du panneau
                 </h3>
                 <button onClick={() => setEditingEmbed(null)} className="text-slate-500 hover:text-white transition-colors">
                    <X className="h-5 w-5" />
@@ -239,54 +239,54 @@ export function TicketsForm({ initialConfig, guildId }: TicketsFormProps) {
               </div>
               <div className="p-8 space-y-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
                 <div className="space-y-2">
-                   <label className="text-xs font-black uppercase text-slate-500 tracking-widest">Embed Title</label>
+                   <label className="text-xs font-black uppercase text-slate-500 tracking-widest">Titre de l’embed</label>
                    <Input 
                       value={editingEmbed.title || ""} 
                       onChange={(e) => setEditingEmbed({...editingEmbed, title: e.target.value})}
-                      placeholder="e.g. Support Department"
+                      placeholder="ex. Service d’assistance"
                    />
                 </div>
                 <div className="space-y-2">
-                   <label className="text-xs font-black uppercase text-slate-500 tracking-widest">Embed Description</label>
+                   <label className="text-xs font-black uppercase text-slate-500 tracking-widest">Description de l’embed</label>
                    <Textarea 
                       value={editingEmbed.description || ""} 
                       onChange={(e) => setEditingEmbed({...editingEmbed, description: e.target.value})}
-                      placeholder="Open a ticket below to talk to our staff..."
+                      placeholder="Ouvrez un ticket ci-dessous pour parler à notre staff..."
                       className="h-24"
                    />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-xs font-black uppercase text-slate-500 tracking-widest">Color (Decimal)</label>
+                    <label className="text-xs font-black uppercase text-slate-500 tracking-widest">Couleur (Décimal)</label>
                     <Input 
                         value={editingEmbed.color || ""} 
                         onChange={(e) => setEditingEmbed({...editingEmbed, color: e.target.value ? parseInt(e.target.value) : null})}
-                        placeholder="e.g. 16711680 for Red"
+                        placeholder="ex. 16711680 pour Rouge"
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-xs font-black uppercase text-slate-500 tracking-widest">Thumbnail URL</label>
+                    <label className="text-xs font-black uppercase text-slate-500 tracking-widest">URL de la miniature</label>
                     <Input 
                         value={editingEmbed.thumbnail_url || ""} 
                         onChange={(e) => setEditingEmbed({...editingEmbed, thumbnail_url: e.target.value})}
-                        placeholder="Small top-right image"
+                        placeholder="Petite image en haut à droite"
                     />
                   </div>
                 </div>
                 <div className="space-y-2">
-                   <label className="text-xs font-black uppercase text-slate-500 tracking-widest">Main Image URL</label>
+                   <label className="text-xs font-black uppercase text-slate-500 tracking-widest">URL de l’image principale</label>
                    <Input 
                       value={editingEmbed.image_url || ""} 
                       onChange={(e) => setEditingEmbed({...editingEmbed, image_url: e.target.value})}
-                      placeholder="Large bottom image"
+                      placeholder="Grande image en bas"
                    />
                 </div>
                 
                 <div className="pt-4 flex gap-3">
-                   <Button variant="outline" className="flex-1" onClick={() => setEditingEmbed(null)}>Cancel</Button>
+                   <Button variant="outline" className="flex-1" onClick={() => setEditingEmbed(null)}>Annuler</Button>
                    <Button className="flex-1 gap-2" onClick={handleSaveEmbed} disabled={saving}>
                      {saving ? <RefreshCcw className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-                     Save Appearance
+                     Enregistrer l’apparence
                    </Button>
                 </div>
               </div>
@@ -301,65 +301,65 @@ export function TicketsForm({ initialConfig, guildId }: TicketsFormProps) {
           <div className="bg-[#141B2D] border border-slate-800 rounded-3xl p-8 shadow-xl space-y-8">
             <div className="flex items-center gap-3">
               <div className="p-2.5 rounded-xl bg-primary/10 text-primary"><Settings2 className="h-5 w-5" /></div>
-              <h3 className="text-xl font-bold text-white">Global Configuration</h3>
+              <h3 className="text-xl font-bold text-white">Configuration globale</h3>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-xs font-black uppercase text-slate-500 tracking-widest">Panel Channel ID</label>
+                <label className="text-xs font-black uppercase text-slate-500 tracking-widest">ID du salon du panneau</label>
                 <Input 
                   value={config.panel_channel || ""} 
                   onChange={(e) => setConfig({...config, panel_channel: e.target.value})}
-                  placeholder="Where the ticket panel lives"
+                  placeholder="Où se trouve le panneau de tickets"
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-xs font-black uppercase text-slate-500 tracking-widest">Logging Channel ID</label>
+                <label className="text-xs font-black uppercase text-slate-500 tracking-widest">ID du salon de logs</label>
                 <Input 
                   value={config.logging_channel || ""} 
                   onChange={(e) => setConfig({...config, logging_channel: e.target.value})}
-                  placeholder="Where transcripts go"
+                  placeholder="Où sont envoyés les transcripts"
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-xs font-black uppercase text-slate-500 tracking-widest">Closed Tickets Category ID</label>
+                <label className="text-xs font-black uppercase text-slate-500 tracking-widest">ID de la catégorie des tickets fermés</label>
                 <Input 
                   value={config.closed_category || ""} 
                   onChange={(e) => setConfig({...config, closed_category: e.target.value})}
-                  placeholder="Archive closed tickets here"
+                  placeholder="Archiver les tickets fermés ici"
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-xs font-black uppercase text-slate-500 tracking-widest">Panel Interaction Type</label>
+                <label className="text-xs font-black uppercase text-slate-500 tracking-widest">Type d’interaction du panneau</label>
                 <Select 
                   value={config.panel_type || "button"}
                   onValueChange={(val) => setConfig({...config, panel_type: val})}
                 >
                   <SelectTrigger className="bg-slate-900/50 border-slate-800">
-                    <SelectValue placeholder="Select Type" />
+                    <SelectValue placeholder="Choisir un type" />
                   </SelectTrigger>
                   <SelectContent className="bg-slate-900 border-slate-800">
-                    <SelectItem value="button">Buttons</SelectItem>
-                    <SelectItem value="dropdown">Dropdown Menu</SelectItem>
+                    <SelectItem value="button">Boutons</SelectItem>
+                    <SelectItem value="dropdown">Menu déroulant</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2 md:col-span-2">
-                <label className="text-xs font-black uppercase text-slate-500 tracking-widest">Global Staff Role IDs</label>
+                <label className="text-xs font-black uppercase text-slate-500 tracking-widest">IDs des rôles Staff globaux</label>
                 <Input 
                   value={config.staff_roles.join(", ")} 
                   onChange={(e) => {
                     const roles = e.target.value.split(",").map(id => id.trim()).filter(id => id && !isNaN(Number(id))).map(Number);
                     setConfig({...config, staff_roles: roles})
                   }}
-                  placeholder="ID1, ID2... These roles can see all tickets"
+                  placeholder="ID1, ID2... Ces rôles peuvent voir tous les tickets"
                 />
               </div>
             </div>
 
             <Button onClick={handleSaveGlobal} disabled={saving} className="w-full gap-2" variant="secondary">
               {saving ? <RefreshCcw className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-              Save Core Settings
+              Enregistrer les paramètres principaux
             </Button>
           </div>
 
@@ -368,11 +368,11 @@ export function TicketsForm({ initialConfig, guildId }: TicketsFormProps) {
             <div className="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-900/20">
               <div className="flex items-center gap-2">
                 <Tag className="h-5 w-5 text-primary" />
-                <h3 className="font-bold text-white">Ticket Categories</h3>
+                <h3 className="font-bold text-white">Catégories de tickets</h3>
               </div>
               <Button size="sm" variant="outline" className="h-8 gap-1 text-xs border-primary/20 text-primary hover:bg-primary/10" onClick={handleAddCategory}>
                  <Plus className="h-3 w-3" />
-                 Add New
+                 Ajouter
               </Button>
             </div>
             <div className="p-6">
@@ -387,7 +387,7 @@ export function TicketsForm({ initialConfig, guildId }: TicketsFormProps) {
                         <span className="text-sm font-bold text-slate-200 group-hover:text-white transition-colors">{cat.name}</span>
                         <span className="text-[10px] text-slate-500 flex items-center gap-1 font-mono">
                           <Shield className="h-2 w-2" />
-                          {cat.staff_roles && cat.staff_roles.length > 0 ? `${cat.staff_roles.length} Staff Roles` : 'Global Staff'}
+                          {cat.staff_roles && cat.staff_roles.length > 0 ? `${cat.staff_roles.length} Rôles Staff` : 'Staff global'}
                         </span>
                       </div>
                     </div>
@@ -418,7 +418,7 @@ export function TicketsForm({ initialConfig, guildId }: TicketsFormProps) {
                   </div>
                   <div className="h-2 w-2 rounded-full bg-primary shadow-[0_0_10px_rgba(88,101,242,0.5)]" />
               </div>
-              <p className="text-sm font-medium text-slate-500">Currently Open</p>
+              <p className="text-sm font-medium text-slate-500">Actuellement ouverts</p>
               <h3 className="text-3xl font-black text-white mt-1">{config.open_ticket_count} Tickets</h3>
           </div>
 
@@ -428,12 +428,12 @@ export function TicketsForm({ initialConfig, guildId }: TicketsFormProps) {
             </div>
             <div className="flex items-center gap-2 mb-4">
               <Zap className="h-5 w-5 text-primary" />
-              <h3 className="font-bold text-white">Panel Appearance</h3>
+              <h3 className="font-bold text-white">Apparence du panneau</h3>
             </div>
             <div className="space-y-3 relative z-10">
                <div className="p-3 bg-black/20 rounded-xl border border-white/5">
-                  <p className="text-[10px] uppercase font-bold text-slate-500 mb-1">Title</p>
-                  <p className="text-sm text-slate-200 font-medium truncate">{config.embed.title || 'Support Department'}</p>
+                  <p className="text-[10px] uppercase font-bold text-slate-500 mb-1">Titre</p>
+                  <p className="text-sm text-slate-200 font-medium truncate">{config.embed.title || 'Service d’assistance'}</p>
                </div>
                <div className="p-3 bg-black/20 rounded-xl border border-white/5">
                   <p className="text-[10px] uppercase font-bold text-slate-500 mb-1">Description</p>

@@ -38,7 +38,7 @@ export function SettingsForm({ initialPrefix, guildId }: SettingsFormProps) {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!prefix || prefix.length > 10) {
-      toast.error("Prefix must be between 1 and 10 characters.");
+      toast.error("Le préfixe doit contenir entre 1 et 10 caractères.");
       return;
     }
 
@@ -69,13 +69,13 @@ export function SettingsForm({ initialPrefix, guildId }: SettingsFormProps) {
               <div className="space-y-2">
                 <label className="text-sm font-black uppercase text-slate-500 tracking-widest flex items-center gap-2">
                   <Command className="h-4 w-4" />
-                  Command Prefix
+                  Préfixe des commandes
                 </label>
                 <div className="relative group">
                   <Input 
                     value={prefix}
                     onChange={(e) => setPrefix(e.target.value)}
-                    placeholder="e.g. !, ?, >>"
+                    placeholder="ex. !, ?, >>"
                     maxLength={10}
                     className="text-lg font-bold pr-20 py-7"
                   />
@@ -83,7 +83,7 @@ export function SettingsForm({ initialPrefix, guildId }: SettingsFormProps) {
                     {prefix.length}/10
                   </div>
                 </div>
-                <p className="text-xs text-slate-500 italic">This character triggers bot commands (e.g. {prefix || ">"}help)</p>
+                <p className="text-xs text-slate-500 italic">Ce caractère déclenche les commandes du bot (ex. {prefix || ">"}help)</p>
               </div>
 
               <Button 
@@ -92,14 +92,14 @@ export function SettingsForm({ initialPrefix, guildId }: SettingsFormProps) {
                 className="w-full h-14 text-base font-bold gap-2 shadow-primary/20"
               >
                 {saving ? <RefreshCcw className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
-                {saving ? "Saving Changes..." : "Save Configuration"}
+                {saving ? "Enregistrement..." : "Enregistrer la configuration"}
               </Button>
             </form>
           </div>
           
           <div className="bg-slate-800/30 px-8 py-4 border-t border-slate-800 flex items-center justify-between">
-             <span className="text-xs text-slate-500 font-medium">Last synced: Just now</span>
-             <button className="text-xs text-primary hover:underline font-bold">Refresh Cache</button>
+             <span className="text-xs text-slate-500 font-medium">Dernière synchro : à l'instant</span>
+             <button className="text-xs text-primary hover:underline font-bold">Actualiser le cache</button>
           </div>
         </div>
       </div>
@@ -111,10 +111,10 @@ export function SettingsForm({ initialPrefix, guildId }: SettingsFormProps) {
           </div>
           <h3 className="text-sm font-black uppercase text-slate-500 tracking-widest mb-4 flex items-center gap-2">
             <Info className="h-4 w-4" />
-            Information
+            Informations
           </h3>
           <div className="space-y-4 text-sm leading-relaxed text-slate-400">
-            <p>The <span className="text-white font-bold italic">Prefix</span> is a unique identifier that tells the bot to process text as a command.</p>
+            <p>Le <span className="text-white font-bold italic">préfixe</span> est un identifiant unique qui indique au bot de traiter un message comme une commande.</p>
           </div>
         </div>
       </div>
