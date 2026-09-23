@@ -84,11 +84,11 @@ class zyrox(commands.AutoShardedBot):
         guild_count = len(self.guilds)
 
         self.status_list = [
-            (discord.ActivityType.playing, f"{prefix}help | Security in your Server"),
-            (discord.ActivityType.watching, f"{user_count} users"),
-            (discord.ActivityType.watching, f"{guild_count} servers"),
-            (discord.ActivityType.listening, "Killing Nukers"),
-            (discord.ActivityType.playing, f"Protector {BotName}"),
+            (discord.ActivityType.playing, f"{prefix}help | Sécurité sur ton serveur"),
+            (discord.ActivityType.watching, f"{user_count} membres"),
+            (discord.ActivityType.watching, f"{guild_count} serveurs"),
+            (discord.ActivityType.listening, "Chasse aux nukers"),
+            (discord.ActivityType.playing, f"Protecteur {BotName}"),
         ]
 
         current = self.status_list[self.status_index % len(self.status_list)]

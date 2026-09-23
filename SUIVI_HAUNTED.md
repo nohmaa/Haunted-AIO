@@ -10,6 +10,9 @@
 - **BDD runtime (non suivi git, côté prod)** : `autoreact.db` contient 1 config avec `<:king:1448951721479901334>` et `ticket.db` un emoji `<:Ticket:1496002127779201184>` — ce sont des données créées par le bot en prod, pas du code. Les listeners gèrent déjà le cas (try/except NotFound) ; pour nettoyer : `!autoreact remove <trigger>` ou réajouter avec des emojis Unicode.
 - Vérifications : `compileall` OK, plus aucune URL d'emoji d'ancienne app en dur dans le code.
 
+## 2026-09-23 — Statuts rotatifs (RPC) traduits en français
+- `core/zyrox.py` `status_task` (rotation toutes les 30 s sur le profil du bot) : les 5 statuts traduits — « {prefix}help | Sécurité sur ton serveur », « {n} membres », « {n} serveurs », « Chasse aux nukers », « Protecteur Haunted ». C'était le seul `change_presence` du code (grep vérifié). Note : le verbe affiché (« Joue à », « Regarde », « Écoute ») est traduit automatiquement par Discord selon la langue du client de chaque utilisateur — seule la partie après est sous notre contrôle. Effectif après redémarrage du bot.
+
 ## 2026-09-23 — ✅ Incident « dashboard ne récupère plus les données » : RÉSOLU et validé en prod
 - Chaîne complète vérifiée : bot `Loaded & Online!` (264 cmd + 89 slash), tunnel reconnecté, toutes requêtes dashboard → API en 200, page Serveurs listant les serveurs sans erreur. Confirmation utilisateur : « ça fonctionne nickel ».
 - Récap des causes empilées : (1) tunnel Cloudflare down (530) pendant ~25 min ; (2) pages dashboard prérendues statiques avec FETCH FAILED figé (DYNAMIC_SERVER_USAGE avalé) — corrigé par `force-dynamic` ; (3) pas de retry réseau côté Vercel — corrigé. Plus les durcissements : `/health` public, tunnel en `http2`, logs API dédoublonnés.
