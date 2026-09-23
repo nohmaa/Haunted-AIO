@@ -4,6 +4,11 @@
 > Objectifs actuels : (1) traduction en français, (2) nouvelle identité **Haunted**, (3) activation/désactivation des modules depuis le dashboard.
 > Mettre à jour ce fichier à chaque changement (date + fichiers + comportement).
 
+## 2026-09-23 — Infra prod (domaine haunted-mind.com)
+- Domaine constaté hors Cloudflare (NXDOMAIN, aucune délégation NS le 2026-09-23).
+- Topologie retenue : API bot → `https://api.haunted-mind.com` (tunnel `haunted-api`) ; dashboard → URL Vercel (domaine custom `dashboard.haunted-mind.com` optionnel plus tard).
+- Guide détaillé donné en chat (domaine → tunnel → Vercel → OAuth → CORS).
+
 ## 2026-09-23 — Déploiement dashboard + Cloudflare détaillés
 - `README.md` : section Tunnel réécrite en pas-à-pas (domaine sur Cloudflare, création du tunnel, tableau Public Hostname, correspondance token/URL → `.env`, test navigateur, dépannage). Section Vercel détaillée (tableau des réglages dont Output vide, tableau des variables avec « où trouver », redirect OAuth, `CORS_ORIGINS` côté bot, checklist finale) + schéma d'architecture.
 - `dashboard/README.md` : réglages Vercel tabulés + étape CORS.
