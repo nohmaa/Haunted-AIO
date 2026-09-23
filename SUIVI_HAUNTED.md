@@ -4,6 +4,10 @@
 > Objectifs actuels : (1) traduction en français, (2) nouvelle identité **Haunted**, (3) activation/désactivation des modules depuis le dashboard.
 > Mettre à jour ce fichier à chaque changement (date + fichiers + comportement).
 
+## 2026-09-23 — Échec Vercel « No Output Directory named public »
+- Diagnostic : le build Next réussit (compile + types + 30 routes), les erreurs `Dynamic server usage` au prerender sont bénignes (pages `ƒ` dynamiques, identiques en local). Le vrai échec est le réglage projet : **Output Directory = `public`** (ou Framework Preset ≠ Next.js).
+- Correctif côté dashboard Vercel (aucun changement de code) : Settings → General → Root Directory `dashboard`, Framework Preset **Next.js**, Build Command vide (défaut), **Output Directory vide**, Install Command vide → Redeploy.
+
 ## 2026-09-23 — Setup Vercel du dashboard dans les docs
 - `README.md` (section Déploiement) + `dashboard/README.md` (« Mise en production ») : pas-à-pas Vercel (Root Directory `dashboard`, variables, redirect OAuth, redeploy obligatoire après changement des `NEXT_PUBLIC_*`) + option Node.js manuel conservée.
 
