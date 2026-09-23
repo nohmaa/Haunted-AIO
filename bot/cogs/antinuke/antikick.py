@@ -17,6 +17,7 @@ import asyncio
 import datetime
 import pytz
 
+
 class AntiKick(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -24,8 +25,10 @@ class AntiKick(commands.Cog):
         self.cooldowns = {}
 
     async def is_blacklisted_guild(self, guild_id):
-        async with aiosqlite.connect('db/block.db') as block_db:
-            cursor = await block_db.execute("SELECT 1 FROM guild_blacklist WHERE guild_id = ?", (str(guild_id),))
+        async with aiosqlite.connect("db/block.db") as block_db:
+            cursor = await block_db.execute(
+                "SELECT 1 FROM guild_blacklist WHERE guild_id = ?", (str(guild_id),)
+            )
             return await cursor.fetchone() is not None
 
     async def fetch_audit_logs(self, guild, action, target_id):
@@ -44,16 +47,22 @@ class AntiKick(commands.Cog):
             pass
         return None
 
-    def can_fetch_audit(self, guild_id, event_name, max_requests=6, interval=10, cooldown_duration=300):
+    def can_fetch_audit(
+        self, guild_id, event_name, max_requests=6, interval=10, cooldown_duration=300
+    ):
         now = datetime.datetime.now()
-        self.event_limits.setdefault(guild_id, {}).setdefault(event_name, []).append(now)
+        self.event_limits.setdefault(guild_id, {}).setdefault(event_name, []).append(
+            now
+        )
 
         timestamps = self.event_limits[guild_id][event_name]
         timestamps = [t for t in timestamps if (now - t).total_seconds() <= interval]
         self.event_limits[guild_id][event_name] = timestamps
 
         if guild_id in self.cooldowns and event_name in self.cooldowns[guild_id]:
-            if (now - self.cooldowns[guild_id][event_name]).total_seconds() < cooldown_duration:
+            if (
+                now - self.cooldowns[guild_id][event_name]
+            ).total_seconds() < cooldown_duration:
                 return False
             del self.cooldowns[guild_id][event_name]
 
@@ -68,16 +77,20 @@ class AntiKick(commands.Cog):
         if await self.is_blacklisted_guild(member.guild.id):
             return
 
-        async with aiosqlite.connect('db/anti.db') as db:
-            async with db.execute("SELECT status FROM antinuke WHERE guild_id = ?", (member.guild.id,)) as cursor:
+        async with aiosqlite.connect("db/anti.db") as db:
+            async with db.execute(
+                "SELECT status FROM antinuke WHERE guild_id = ?", (member.guild.id,)
+            ) as cursor:
                 antinuke_status = await cursor.fetchone()
             if not antinuke_status or not antinuke_status[0]:
                 return
 
-        if not self.can_fetch_audit(member.guild.id, 'kick'):
+        if not self.can_fetch_audit(member.guild.id, "kick"):
             return
 
-        log_entry = await self.fetch_audit_logs(member.guild, discord.AuditLogAction.kick, member.id)
+        log_entry = await self.fetch_audit_logs(
+            member.guild, discord.AuditLogAction.kick, member.id
+        )
         if log_entry is None:
             return
 
@@ -85,15 +98,19 @@ class AntiKick(commands.Cog):
         if executor.id in {member.guild.owner_id, self.bot.user.id}:
             return
 
-        async with aiosqlite.connect('db/anti.db') as db:
-            async with db.execute("SELECT owner_id FROM extraowners WHERE guild_id = ? AND owner_id = ?", 
-                                  (member.guild.id, executor.id)) as cursor:
+        async with aiosqlite.connect("db/anti.db") as db:
+            async with db.execute(
+                "SELECT owner_id FROM extraowners WHERE guild_id = ? AND owner_id = ?",
+                (member.guild.id, executor.id),
+            ) as cursor:
                 extraowner_status = await cursor.fetchone()
             if extraowner_status:
                 return
 
-            async with db.execute("SELECT kick FROM whitelisted_users WHERE guild_id = ? AND user_id = ?", 
-                                  (member.guild.id, executor.id)) as cursor:
+            async with db.execute(
+                "SELECT kick FROM whitelisted_users WHERE guild_id = ? AND user_id = ?",
+                (member.guild.id, executor.id),
+            ) as cursor:
                 whitelist_status = await cursor.fetchone()
             if whitelist_status and whitelist_status[0]:
                 return
@@ -105,13 +122,15 @@ class AntiKick(commands.Cog):
         retries = 3
         while retries > 0:
             try:
-                await guild.ban(executor, reason="Member Kick | Unwhitelisted User")
+                await guild.ban(
+                    executor, reason="Expulsion de membre | Utilisateur non autorisé"
+                )
                 return
             except discord.Forbidden:
                 return
             except discord.HTTPException as e:
                 if e.status == 429:
-                    retry_after = e.response.headers.get('Retry-After')
+                    retry_after = e.response.headers.get("Retry-After")
                     if retry_after:
                         await asyncio.sleep(float(retry_after))
                         retries -= 1

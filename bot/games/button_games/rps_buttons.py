@@ -44,7 +44,7 @@ class RPSButton(discord.ui.Button["RPSView"]):
 
         if interaction.user not in players:
             return await interaction.response.send_message(
-                "This is not your game!", ephemeral=True
+                "Ce n’est pas ta partie !", ephemeral=True
             )
         else:
             if not game.player2:
@@ -52,12 +52,14 @@ class RPSButton(discord.ui.Button["RPSView"]):
                 user_choice = self.emoji.name
 
                 if user_choice == bot_choice:
-                    game.embed.description = f"**Tie!**\nWe both picked {user_choice}"
+                    game.embed.description = (
+                        f"**Égalité !**\nOn a tous les deux choisi {user_choice}"
+                    )
                 else:
                     if game.check_win(bot_choice, user_choice):
-                        game.embed.description = f"**You Won!**\nYou picked {user_choice} and I picked {bot_choice}."
+                        game.embed.description = f"**Tu as gagné !**\nTu as choisi {user_choice} et j’ai choisi {bot_choice}."
                     else:
-                        game.embed.description = f"**You Lost!**\nI picked {bot_choice} and you picked {user_choice}."
+                        game.embed.description = f"**Tu as perdu !**\nJ’ai choisi {bot_choice} et tu as choisi {user_choice}."
 
                 self.view.disable_all()
                 self.view.stop()
@@ -65,7 +67,7 @@ class RPSButton(discord.ui.Button["RPSView"]):
             else:
                 if self.get_choice(interaction.user):
                     return await interaction.response.send_message(
-                        "You have already chosen!", ephemeral=True
+                        "Tu as déjà choisi !", ephemeral=True
                     )
 
                 other_player_choice = self.get_choice(interaction.user, other=True)
@@ -74,16 +76,16 @@ class RPSButton(discord.ui.Button["RPSView"]):
                     game.player1_choice = self.emoji.name
 
                     if not other_player_choice:
-                        game.embed.description += f"\n\n{game.player1.mention} has chosen...\n*Waiting for {game.player2.mention} to choose...*"
+                        game.embed.description += f"\n\n{game.player1.mention} a choisi...\n*En attente du choix de {game.player2.mention}...*"
                 else:
                     game.player2_choice = self.emoji.name
 
                     if not other_player_choice:
-                        game.embed.description += f"\n\n{game.player2.mention} has chosen...\n*Waiting for {game.player1.mention} to choose...*"
+                        game.embed.description += f"\n\n{game.player2.mention} a choisi...\n*En attente du choix de {game.player1.mention}...*"
 
                 if game.player1_choice and game.player2_choice:
                     if game.player1_choice == game.player2_choice:
-                        game.embed.description = f"**Tie!**\nBoth {game.player1.mention} and {game.player2.mention} picked {game.player1_choice}."
+                        game.embed.description = f"**Égalité !**\n{game.player1.mention} et {game.player2.mention} ont tous les deux choisi {game.player1_choice}."
                     else:
                         who_won = (
                             game.player1
@@ -92,9 +94,9 @@ class RPSButton(discord.ui.Button["RPSView"]):
                         )
 
                         game.embed.description = (
-                            f"**{who_won.mention} Won!**"
-                            f"\n\n{game.player1.mention} chose {game.player1_choice}."
-                            f"\n{game.player2.mention} chose {game.player2_choice}."
+                            f"**{who_won.mention} a gagné !**"
+                            f"\n\n{game.player1.mention} a choisi {game.player1_choice}."
+                            f"\n{game.player2.mention} a choisi {game.player2_choice}."
                         )
 
                     self.view.disable_all()
@@ -149,9 +151,13 @@ class BetaRockPaperScissors(RockPaperScissors):
         timeout: Optional[float] = None,
     ) -> discord.Message:
         if ctx.author == self.player2:
-            embed = discord.Embed(title=f"{WARNING_ALT}   Access Denied", description="You cannot play against yourself!", color=0x000000)
+            embed = discord.Embed(
+                title=f"{WARNING_ALT}   Accès refusé",
+                description="Tu ne peux pas jouer contre toi-même !",
+                color=0x000000,
+            )
             return await ctx.reply(embed=embed)
-            
+
         """
         Starts the Rock Paper Scissors (buttons) game.
 
@@ -174,8 +180,8 @@ class BetaRockPaperScissors(RockPaperScissors):
         self.player1 = ctx.author
 
         self.embed = discord.Embed(
-            title="Rock Paper Scissors",
-            description="Select a button to play!",
+            title="Pierre Feuille Ciseaux",
+            description="Choisis un bouton pour jouer !",
             color=discord.Color.random(),
         )
 

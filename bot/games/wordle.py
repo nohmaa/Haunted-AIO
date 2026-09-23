@@ -141,7 +141,7 @@ class Wordle:
 
         embed = discord.Embed(title="Wordle!", color=discord.Color.random())
         embed.set_image(url="attachment://wordle.png")
-        embed.set_footer(text='Say "stop" to cancel the game!')
+        embed.set_footer(text='Dis "stop" pour annuler la partie !')
 
         self.message = await ctx.send(embed=embed, file=discord.File(buf, "wordle.png"))
 
@@ -164,11 +164,13 @@ class Wordle:
             content = guess.content.lower()
 
             if content == "stop":
-                await ctx.send(f"Game Over! cancelled, the word was: **{self.word}**")
+                await ctx.send(
+                    f"Partie terminée ! Annulée, le mot était : **{self.word}**"
+                )
                 break
 
             if content not in self._valid_words:
-                await ctx.send("That is not a valid word!")
+                await ctx.send("Ce n’est pas un mot valide !")
             else:
                 won = self.parse_guess(content)
                 buf = await self.render_image()
@@ -183,11 +185,11 @@ class Wordle:
                 )
 
                 if won:
-                    await ctx.send("Game Over! You won!")
+                    await ctx.send("Partie terminée ! Tu as gagné !")
                     break
                 elif len(self.guesses) >= 6:
                     await ctx.send(
-                        f"Game Over! You lose, the word was: **{self.word}**"
+                        f"Partie terminée ! Tu as perdu, le mot était : **{self.word}**"
                     )
                     break
 

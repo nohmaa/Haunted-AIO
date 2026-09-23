@@ -37,12 +37,12 @@ class TTTButton(discord.ui.Button["TTTView"]):
 
         if user not in (game.cross, game.circle):
             return await interaction.response.send_message(
-                "You are not part of this game!", ephemeral=True
+                "Tu ne fais pas partie de cette partie !", ephemeral=True
             )
 
         if user != game.turn:
             return await interaction.response.send_message(
-                "it is not your turn!", ephemeral=True
+                "Ce n’est pas ton tour !", ephemeral=True
             )
 
         self.label = game.player_to_emoji[user]

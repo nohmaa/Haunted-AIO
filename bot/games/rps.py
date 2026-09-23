@@ -75,8 +75,8 @@ class RockPaperScissors:
             Returns the game message.
         """
         embed = discord.Embed(
-            title="Rock Paper Scissors",
-            description="React to play!",
+            title="Pierre Feuille Ciseaux",
+            description="Réagis pour jouer !",
             color=discord.Color.random(),
         )
         self.message = await ctx.send(embed=embed)
@@ -89,18 +89,18 @@ class RockPaperScissors:
         try:
             user_choice = await self.wait_for_choice(ctx, timeout=timeout)
         except asyncio.TimeoutError:
-            embed.description = "You took too long to respond!"
+            embed.description = "Tu as mis trop de temps à répondre !"
             await self.message.edit(embed=embed)
             return self.message
 
         if user_choice == bot_choice:
-            embed.description = f"**Tie!**\nWe both picked {user_choice}"
-        elif self.check_win(bot_choice, user_choice):
             embed.description = (
-                f"**You Won!**\nYou picked {user_choice} and I picked {bot_choice}."
+                f"**Égalité !**\nOn a tous les deux choisi {user_choice}"
             )
+        elif self.check_win(bot_choice, user_choice):
+            embed.description = f"**Tu as gagné !**\nTu as choisi {user_choice} et j’ai choisi {bot_choice}."
         else:
-            embed.description = f"**You Lost!**\nI picked {bot_choice} and you picked {user_choice}."
+            embed.description = f"**Tu as perdu !**\nJ’ai choisi {bot_choice} et tu as choisi {user_choice}."
 
         await self.message.edit(embed=embed)
         return self.message

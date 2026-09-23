@@ -15,6 +15,7 @@ from utils.emoji import ZPEOPLE
 
 from discord.ext import commands
 
+
 class inviteTracker(commands.Cog):
 
     def __init__(self, bot):
@@ -25,16 +26,14 @@ class inviteTracker(commands.Cog):
 
     def help_custom(self):
 
-              emoji = ZPEOPLE
+        emoji = ZPEOPLE
 
-              label = "Invite Tracker"
+        label = "Suivi d’invitations"
 
-              description = "Show you Commands of Invite Tracker"
+        description = "Affiche les commandes de suivi d’invitations"
 
-              return emoji, label, description
+        return emoji, label, description
 
     @commands.group()
-
     async def __InviteTracker__(self, ctx: commands.Context):
-
         """`>invites`, `>addinvites`, `>inviteleaderboard`, `>invitelogging`"""

@@ -15,6 +15,7 @@ from utils.emoji import TICKET
 
 from discord.ext import commands
 
+
 class _ticket(commands.Cog):
 
     module_key = "tickets"
@@ -27,16 +28,14 @@ class _ticket(commands.Cog):
 
     def help_custom(self):
 
-              emoji = TICKET
+        emoji = TICKET
 
-              label = "Ticket"
+        label = "Ticket"
 
-              description = "Show you Commands of Ticket"
+        description = "Affiche les commandes de tickets"
 
-              return emoji, label, description
+        return emoji, label, description
 
     @commands.group()
-
     async def __Ticket__(self, ctx: commands.Context):
-
         """`/ticket setup`, `/ticket close`, `/ticket lock`, `/ticket claim`, `/ticket unlock`, `/ticket transcript`"""

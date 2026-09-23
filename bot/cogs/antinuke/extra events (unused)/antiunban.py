@@ -4,6 +4,7 @@ import aiosqlite
 from datetime import timedelta, datetime
 import asyncio
 
+
 class AntiUnban(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -15,7 +16,7 @@ class AntiUnban(commands.Cog):
                     return entry
         except discord.HTTPException as e:
             if e.status == 429:
-                retry_after = e.response.headers.get('Retry-After')
+                retry_after = e.response.headers.get("Retry-After")
                 if retry_after:
                     retry_after = float(retry_after)
                     await asyncio.sleep(retry_after)
@@ -26,14 +27,18 @@ class AntiUnban(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_unban(self, guild, user):
-        async with aiosqlite.connect('db/anti.db') as db:
-            async with db.execute("SELECT status FROM antinuke WHERE guild_id = ?", (guild.id,)) as cursor:
+        async with aiosqlite.connect("db/anti.db") as db:
+            async with db.execute(
+                "SELECT status FROM antinuke WHERE guild_id = ?", (guild.id,)
+            ) as cursor:
                 antinuke_status = await cursor.fetchone()
 
             if not antinuke_status or not antinuke_status[0]:
                 return
 
-            log_entry = await self.fetch_audit_logs(guild, discord.AuditLogAction.unban, user.id)
+            log_entry = await self.fetch_audit_logs(
+                guild, discord.AuditLogAction.unban, user.id
+            )
             if log_entry is None:
                 return
 
@@ -42,13 +47,19 @@ class AntiUnban(commands.Cog):
             if executor.id in {guild.owner_id, self.bot.user.id}:
                 return
 
-            async with db.execute("SELECT owner_id FROM extraowners WHERE guild_id = ? AND owner_id = ?", (guild.id, executor.id)) as cursor:
+            async with db.execute(
+                "SELECT owner_id FROM extraowners WHERE guild_id = ? AND owner_id = ?",
+                (guild.id, executor.id),
+            ) as cursor:
                 extra_owner_status = await cursor.fetchone()
 
             if extra_owner_status:
                 return
 
-            async with db.execute("SELECT ban FROM whitelisted_users WHERE guild_id = ? AND user_id = ?", (guild.id, executor.id)) as cursor:
+            async with db.execute(
+                "SELECT ban FROM whitelisted_users WHERE guild_id = ? AND user_id = ?",
+                (guild.id, executor.id),
+            ) as cursor:
                 whitelist_status = await cursor.fetchone()
 
             if whitelist_status and whitelist_status[0]:
@@ -60,29 +71,45 @@ class AntiUnban(commands.Cog):
         retries = 3
         while retries > 0:
             try:
-                await guild.ban(executor, reason="Member Unban | Unwhitelisted User")
-                await guild.ban(user, reason="Reverting unban by unwhitelisted user")
+                await guild.ban(
+                    executor,
+                    reason="Débannissement de membre | Utilisateur non autorisé",
+                )
+                await guild.ban(
+                    user,
+                    reason="Annulation du débannissement effectué par un utilisateur non autorisé",
+                )
                 return
             except discord.Forbidden:
-                print(f"Failed to ban {executor.id} or user due to missing permissions.")
+                print(
+                    f"Failed to ban {executor.id} or user due to missing permissions."
+                )
                 return
             except discord.HTTPException as e:
                 if e.status == 429:
-                    retry_after = e.response.headers.get('Retry-After')
+                    retry_after = e.response.headers.get("Retry-After")
                     if retry_after:
                         retry_after = float(retry_after)
-                        print(f"Rate limit encountered. Retrying after {retry_after} seconds.")
+                        print(
+                            f"Rate limit encountered. Retrying after {retry_after} seconds."
+                        )
                         await asyncio.sleep(retry_after)
                 else:
                     print(f"HTTPException encountered: {e}")
                     return
             except discord.errors.RateLimited as e:
-                print(f"Rate limit encountered while banning: {e}. Retrying in {e.retry_after} seconds.")
+                print(
+                    f"Rate limit encountered while banning: {e}. Retrying in {e.retry_after} seconds."
+                )
                 await asyncio.sleep(e.retry_after)
             except Exception as e:
-                print(f"An unexpected error occurred while banning {executor.id} or user: {e}")
+                print(
+                    f"An unexpected error occurred while banning {executor.id} or user: {e}"
+                )
                 return
 
             retries -= 1
 
-        print(f"Failed to ban {executor.id} after multiple attempts due to rate limits.")
+        print(
+            f"Failed to ban {executor.id} after multiple attempts due to rate limits."
+        )

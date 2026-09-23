@@ -20,15 +20,14 @@ class _sticky(commands.Cog):
         self.bot = bot
 
     """Sticky commands"""
-  
+
     def help_custom(self):
-		      emoji = PIN
-		      label = "Sticky Commands"
-		      description = "Show you Commands of Sticky"
-		      return emoji, label, description
+        emoji = PIN
+        label = "Commandes Sticky"
+        description = "Affiche les commandes de sticky"
+        return emoji, label, description
 
     @commands.group()
     async def __Sticky__(self, ctx: commands.Context):
         """`sticky setup` , `sticky edit` , `sticky list` , `sticky remove`"""
         pass
-

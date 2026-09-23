@@ -4,19 +4,27 @@ from datetime import timedelta, datetime
 import aiosqlite
 import asyncio
 
+
 class AntiSticker(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     async def fetch_audit_logs(self, guild, action):
         try:
-            await asyncio.sleep(1)  
-            logs = [entry async for entry in guild.audit_logs(action=action, limit=1, after=discord.utils.utcnow() - timedelta(hours=1))]
+            await asyncio.sleep(1)
+            logs = [
+                entry
+                async for entry in guild.audit_logs(
+                    action=action,
+                    limit=1,
+                    after=discord.utils.utcnow() - timedelta(hours=1),
+                )
+            ]
             if logs:
                 return logs[0]
         except discord.HTTPException as e:
             if e.status == 429:
-                retry_after = e.response.headers.get('Retry-After')
+                retry_after = e.response.headers.get("Retry-After")
                 if retry_after:
                     retry_after = float(retry_after)
                     await asyncio.sleep(retry_after)
@@ -34,8 +42,10 @@ class AntiSticker(commands.Cog):
         else:
             action = discord.AuditLogAction.sticker_update
 
-        async with aiosqlite.connect('db/anti.db') as db:
-            async with db.execute("SELECT status FROM antinuke WHERE guild_id = ?", (guild.id,)) as cursor:
+        async with aiosqlite.connect("db/anti.db") as db:
+            async with db.execute(
+                "SELECT status FROM antinuke WHERE guild_id = ?", (guild.id,)
+            ) as cursor:
                 antinuke_status = await cursor.fetchone()
 
             if not antinuke_status or not antinuke_status[0]:
@@ -54,13 +64,19 @@ class AntiSticker(commands.Cog):
             if executor.id in {guild.owner_id, self.bot.user.id}:
                 return
 
-            async with db.execute("SELECT mngstemo FROM whitelisted_users WHERE guild_id = ? AND user_id = ?", (guild.id, executor.id)) as cursor:
+            async with db.execute(
+                "SELECT mngstemo FROM whitelisted_users WHERE guild_id = ? AND user_id = ?",
+                (guild.id, executor.id),
+            ) as cursor:
                 whitelist_status = await cursor.fetchone()
 
             if whitelist_status and whitelist_status[0]:
                 return
 
-            async with db.execute("SELECT owner_id FROM extraowners WHERE guild_id = ? AND owner_id = ?", (guild.id, executor.id)) as cursor:
+            async with db.execute(
+                "SELECT owner_id FROM extraowners WHERE guild_id = ? AND owner_id = ?",
+                (guild.id, executor.id),
+            ) as cursor:
                 extra_owner_status = await cursor.fetchone()
 
             if extra_owner_status:
@@ -72,28 +88,36 @@ class AntiSticker(commands.Cog):
         retries = 3
         while retries > 0:
             try:
-                await guild.kick(executor, reason="Sticker Action | Unwhitelisted User")
+                await guild.kick(
+                    executor, reason="Action sur un sticker | Utilisateur non autorisé"
+                )
                 return
             except discord.Forbidden:
                 print(f"Failed to kick {executor.id} due to missing permissions.")
                 return
             except discord.HTTPException as e:
                 if e.status == 429:
-                    retry_after = e.response.headers.get('Retry-After')
+                    retry_after = e.response.headers.get("Retry-After")
                     if retry_after:
                         retry_after = float(retry_after)
-                        print(f"Rate limit encountered. Retrying after {retry_after} seconds.")
+                        print(
+                            f"Rate limit encountered. Retrying after {retry_after} seconds."
+                        )
                         await asyncio.sleep(retry_after)
                         retries -= 1
                 else:
                     print(f"HTTPException encountered: {e}")
                     return
             except discord.errors.RateLimited as e:
-                print(f"Rate limit encountered while kicking: {e}. Retrying in {e.retry_after} seconds.")
+                print(
+                    f"Rate limit encountered while kicking: {e}. Retrying in {e.retry_after} seconds."
+                )
                 await asyncio.sleep(e.retry_after)
                 retries -= 1
             except Exception as e:
                 print(f"An unexpected error occurred while kicking {executor.id}: {e}")
                 return
 
-        print(f"Failed to kick {executor.id} after multiple attempts due to rate limits.")
+        print(
+            f"Failed to kick {executor.id} after multiple attempts due to rate limits."
+        )

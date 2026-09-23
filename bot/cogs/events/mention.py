@@ -28,22 +28,22 @@ class MentionSelectView(LayoutView):
         self.prefix = prefix
 
         self.select = Select(
-            placeholder=f"Start With {BotName}",
+            placeholder=f"Commencer avec {BotName}",
             options=[
                 discord.SelectOption(
-                    label="Home",
+                    label="Accueil",
                     emoji=INDEX,
-                    description="Go to the main menu",
+                    description="Aller au menu principal",
                 ),
                 discord.SelectOption(
-                    label="Developer Info",
+                    label="Infos développeur",
                     emoji=CODEBASE,
-                    description="See who created me",
+                    description="Voir qui m’a créé",
                 ),
                 discord.SelectOption(
-                    label="Links",
+                    label="Liens",
                     emoji=ZYROXLINKS,
-                    description="Useful bot links",
+                    description="Liens utiles du bot",
                 ),
             ],
         )
@@ -54,9 +54,9 @@ class MentionSelectView(LayoutView):
                 TextDisplay(f"**{message.guild.name}**"),
                 Separator(visible=True),
                 TextDisplay(
-                    f"> {HEART3} **Hey {message.author.mention}**\n"
-                    f"> {ARROWRED} **Prefix For This Server: `{prefix}`**\n\n"
-                    f"___Type `{prefix}help` for more information.___"
+                    f"> {HEART3} **Salut {message.author.mention}**\n"
+                    f"> {ARROWRED} **Préfixe pour ce serveur : `{prefix}`**\n\n"
+                    f"___Tapez `{prefix}help` pour plus d’informations.___"
                 ),
                 ActionRow(self.select),
             )
@@ -65,28 +65,28 @@ class MentionSelectView(LayoutView):
     async def on_select(self, interaction: discord.Interaction):
         if interaction.user.id != self.message.author.id:
             await interaction.response.send_message(
-                "This menu is not for you!", ephemeral=True
+                "Ce menu n’est pas pour vous !", ephemeral=True
             )
             return
 
-        selected = interaction.data.get("values", ["Home"])[0]
+        selected = interaction.data.get("values", ["Accueil"])[0]
 
-        if selected == "Home":
+        if selected == "Accueil":
             content = (
-                f"> {HEART3} **Hey {interaction.user.mention}**\n"
-                f"> {ARROWRED} **Prefix For This Server: `{self.prefix}`**\n\n"
-                f"___Type `{self.prefix}help` for more information.___"
+                f"> {HEART3} **Salut {interaction.user.mention}**\n"
+                f"> {ARROWRED} **Préfixe pour ce serveur : `{self.prefix}`**\n\n"
+                f"___Tapez `{self.prefix}help` pour plus d’informations.___"
             )
-        elif selected == "Developer Info":
+        elif selected == "Infos développeur":
             content = (
-                "There are only 2 Founders Who Created Me. Thanks You To Them 💞.\n\n"
-                "**The Founder**\n"
+                "Il n’y a que 2 fondateurs qui m’ont créé. Merci à eux 💞.\n\n"
+                "**Les fondateurs**\n"
                 "**[01]. [Ray](https://discord.com/users/870179991462236170)**\n**[02]. [runxking](https://discord.com/users/767979794411028491)**"
             )
-        elif selected == "Links":
+        elif selected == "Liens":
             content = (
-                f"**[Invite {BotName}](https://discord.com/oauth2/authorize?client_id={self.message.guild.me.id}&permissions=8&integration_type=0&scope=bot+applications.commands)**\n"
-                f"**[Join Support Server]({SUPPORT_SERVER})**"
+                f"**[Inviter {BotName}](https://discord.com/oauth2/authorize?client_id={self.message.guild.me.id}&permissions=8&integration_type=0&scope=bot+applications.commands)**\n"
+                f"**[Rejoindre le serveur support]({SUPPORT_SERVER})**"
             )
 
         new_container = Container(

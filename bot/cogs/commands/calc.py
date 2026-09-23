@@ -22,7 +22,8 @@ class CalculatorView(View):
         self.value = ""
         self.message = None
 
-    # Button interactions 
+        # Button interactions
+
     @button(label="1", style=discord.ButtonStyle.grey, row=0)
     async def one(self, interaction: discord.Interaction, button: Button):
         await self.update_value(interaction, "1")
@@ -83,7 +84,7 @@ class CalculatorView(View):
     async def equals(self, interaction: discord.Interaction, button: Button):
         if interaction.user != self.author:
             return await interaction.response.send_message(
-                "This is not your embed.", ephemeral=True
+                "Ce n’est pas ton embed.", ephemeral=True
             )
         try:
             expression = self.value.strip().replace("\n", "")
@@ -93,22 +94,22 @@ class CalculatorView(View):
         except:
             await self.update_embed(interaction, "Error")
 
-    @button(label="Clear", style=discord.ButtonStyle.red, row=4)
+    @button(label="Effacer", style=discord.ButtonStyle.red, row=4)
     async def clear(self, interaction: discord.Interaction, button: Button):
-        await self.update_value(interaction, "Clear")
+        await self.update_value(interaction, "Effacer")
 
     async def update_value(self, interaction: discord.Interaction, value: str):
         # Check if the person interacting is the author of the embed
         if interaction.user != self.author:
             return await interaction.response.send_message(
-                "This content does not appear to be part of your embedded materials.", ephemeral=True
+                "Ce contenu ne semble pas faire partie de tes éléments.", ephemeral=True
             )
-        # Append the value or clear if "Clear"
-        if value == "Clear":
+            # Append the value or clear if "Clear"
+        if value == "Effacer":
             self.value = ""
         else:
             self.value += value
-        # Update the embed with the new value
+            # Update the embed with the new value
         await self.update_embed(interaction, self.value)
 
     async def update_embed(self, interaction: discord.Interaction, result: str):
@@ -116,11 +117,16 @@ class CalculatorView(View):
         await interaction.response.edit_message(content=content, view=self)
         self.message = interaction.message
 
+
 class calculator(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='calculator', help='Starts a calculator session', aliases=['calc', 'calculate', 'math'])
+    @commands.command(
+        name="calculator",
+        help="Démarre une session de calculatrice",
+        aliases=["calc", "calculate", "math"],
+    )
     async def calculator(self, ctx):
         """Starts a new calculator session."""
         # Ensure we pass the author to the view so it knows who triggered it
@@ -128,7 +134,8 @@ class calculator(commands.Cog):
         # We store the message so we know what to edit and update later
         view.message = await ctx.send(content="**Calculator**\n```\n \n```", view=view)
 
-# Add the cog to the bot
+        # Add the cog to the bot
+
+
 def setup(bot):
     bot.add_cog(calculator(bot))
-

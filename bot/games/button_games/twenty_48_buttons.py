@@ -38,7 +38,7 @@ class Twenty48_Button(discord.ui.Button["BaseView"]):
 
         if interaction.user != self.game.player:
             return await interaction.response.send_message(
-                "This isn't your game!", ephemeral=True
+                "Ce n’est pas ta partie !", ephemeral=True
             )
 
         emoji = str(self.emoji)
@@ -68,7 +68,7 @@ class Twenty48_Button(discord.ui.Button["BaseView"]):
 
         if lost:
             self.game.embed = discord.Embed(
-                description="Game Over! You lost.",
+                description="Partie terminée ! Tu as perdu.",
                 color=self.game.embed_color,
             )
 

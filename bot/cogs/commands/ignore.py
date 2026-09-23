@@ -118,7 +118,7 @@ class Ignore(commands.Cog):
 
     @commands.group(
         name="ignore",
-        help="Manage ignored commands, channels, users, and bypassed users.",
+        help="Gérer les commandes, salons, utilisateurs ignorés et les utilisateurs contournés.",
         invoke_without_command=True,
     )
     @blacklist_check()
@@ -134,7 +134,7 @@ class Ignore(commands.Cog):
 
     @_ignore.group(
         name="command",
-        help="Manage ignored commands in this guild.",
+        help="Gérer les commandes ignorées sur ce serveur.",
         invoke_without_command=True,
     )
     @blacklist_check()
@@ -148,7 +148,7 @@ class Ignore(commands.Cog):
             await ctx.send_help(ctx.command)
             ctx.command.reset_cooldown(ctx)
 
-    @_command.command(name="add", help="Adds a command to the ignore list.")
+    @_command.command(name="add", help="Ajoute une commande à la liste d’exceptions.")
     @commands.has_permissions(administrator=True)
     @blacklist_check()
     async def command_add(self, ctx: commands.Context, command_name: str):
@@ -156,7 +156,7 @@ class Ignore(commands.Cog):
         command = self.bot.get_command(command_name_normalized)
         if not command:
             await ctx.reply(
-                view=ErrorView("Error", f"`{command_name}` is not a valid command.")
+                view=ErrorView("Erreur", f"`{command_name}` is not a valid command.")
             )
             return
 
@@ -169,8 +169,8 @@ class Ignore(commands.Cog):
             if count[0] >= 25:
                 await ctx.reply(
                     view=WarningView(
-                        "Access Denied",
-                        "You can only add up to 25 commands to the ignore list.",
+                        "Accès refusé",
+                        "Tu ne peux ajouter que 25 commandes maximum à la liste d’exceptions.",
                     )
                 )
                 return
@@ -183,7 +183,7 @@ class Ignore(commands.Cog):
             if result:
                 await ctx.reply(
                     view=ErrorView(
-                        "Error",
+                        "Erreur",
                         f"`{command_name}` is already in the ignore commands list.",
                     )
                 )
@@ -195,12 +195,14 @@ class Ignore(commands.Cog):
                 await db.commit()
                 await ctx.reply(
                     view=SuccessView(
-                        "Success",
-                        f"Successfully added `{command_name}` to the ignore commands list.",
+                        "Succès",
+                        f"`{command_name}` ajouté à la liste des commandes ignorées avec succès.",
                     )
                 )
 
-    @_command.command(name="remove", help="Removes a command from the ignore list.")
+    @_command.command(
+        name="remove", help="Retire une commande de la liste d’exceptions."
+    )
     @commands.has_permissions(administrator=True)
     @blacklist_check()
     async def command_remove(self, ctx: commands.Context, command_name: str):
@@ -214,7 +216,8 @@ class Ignore(commands.Cog):
             if not result:
                 await ctx.reply(
                     view=ErrorView(
-                        "Error", f"`{command_name}` is not in the ignore commands list."
+                        "Erreur",
+                        f"`{command_name}` is not in the ignore commands list.",
                     )
                 )
             else:
@@ -225,12 +228,12 @@ class Ignore(commands.Cog):
                 await db.commit()
                 await ctx.reply(
                     view=SuccessView(
-                        "Success",
-                        f"Successfully removed `{command_name}` from the ignore commands list.",
+                        "Succès",
+                        f"`{command_name}` retiré de la liste des commandes ignorées avec succès.",
                     )
                 )
 
-    @_command.command(name="show", help="Displays the list of ignored commands.")
+    @_command.command(name="show", help="Affiche la liste des commandes ignorées.")
     @blacklist_check()
     @ignore_check()
     @commands.has_permissions(administrator=True)
@@ -246,7 +249,7 @@ class Ignore(commands.Cog):
                     view=ListView(
                         "Ignored Commands",
                         [],
-                        "No commands are currently ignored in this server.",
+                        "Aucune commande n’est actuellement ignorée sur ce serveur.",
                     )
                 )
             else:
@@ -256,7 +259,7 @@ class Ignore(commands.Cog):
 
     @_ignore.group(
         name="channel",
-        help="Manage ignored channels in this guild.",
+        help="Gérer les salons ignorés sur ce serveur.",
         invoke_without_command=True,
     )
     @blacklist_check()
@@ -269,7 +272,7 @@ class Ignore(commands.Cog):
             await ctx.send_help(ctx.command)
             ctx.command.reset_cooldown(ctx)
 
-    @_channel.command(name="add", help="Adds a channel to the ignore list.")
+    @_channel.command(name="add", help="Ajoute un salon à la liste d’exceptions.")
     @blacklist_check()
     @commands.has_permissions(administrator=True)
     async def channel_add(self, ctx: commands.Context, channel: discord.TextChannel):
@@ -283,8 +286,8 @@ class Ignore(commands.Cog):
             if count[0] >= 30:
                 await ctx.reply(
                     view=WarningView(
-                        "Access Denied",
-                        "You can only add up to 30 channels to the ignore list.",
+                        "Accès refusé",
+                        "Tu ne peux ajouter que 30 salons maximum à la liste d’exceptions.",
                     )
                 )
                 return
@@ -298,7 +301,7 @@ class Ignore(commands.Cog):
             if result:
                 await ctx.reply(
                     view=ErrorView(
-                        "Error",
+                        "Erreur",
                         f"{channel.mention} is already in the ignore channels list.",
                     )
                 )
@@ -310,12 +313,12 @@ class Ignore(commands.Cog):
                 await db.commit()
                 await ctx.reply(
                     view=SuccessView(
-                        "Success",
-                        f"Successfully added {channel.mention} to the ignore channels list.",
+                        "Succès",
+                        f"{channel.mention} ajouté à la liste des salons ignorés avec succès.",
                     )
                 )
 
-    @_channel.command(name="remove", help="Removes a channel from the ignore list.")
+    @_channel.command(name="remove", help="Retire un salon de la liste d’exceptions.")
     @blacklist_check()
     @commands.has_permissions(administrator=True)
     async def channel_remove(self, ctx: commands.Context, channel: discord.TextChannel):
@@ -329,7 +332,7 @@ class Ignore(commands.Cog):
             if not result:
                 await ctx.reply(
                     view=ErrorView(
-                        "Error",
+                        "Erreur",
                         f"{channel.mention} is not in the ignore channels list.",
                     )
                 )
@@ -341,12 +344,12 @@ class Ignore(commands.Cog):
                 await db.commit()
                 await ctx.reply(
                     view=SuccessView(
-                        "Success",
-                        f"Successfully removed {channel.mention} from the ignore channels list.",
+                        "Succès",
+                        f"{channel.mention} retiré de la liste des salons ignorés avec succès.",
                     )
                 )
 
-    @_channel.command(name="show", help="Displays the list of ignored channels.")
+    @_channel.command(name="show", help="Affiche la liste des salons ignorés.")
     @blacklist_check()
     @ignore_check()
     @commands.has_permissions(administrator=True)
@@ -361,21 +364,21 @@ class Ignore(commands.Cog):
             if not channels:
                 await ctx.reply(
                     view=ListView(
-                        "Ignored Channels",
+                        "Salons ignorés",
                         [],
-                        "No channels are currently ignored in this server.",
+                        "Aucun salon n’est actuellement ignoré sur ce serveur.",
                     )
                 )
             else:
                 await ctx.reply(
                     view=ListView(
-                        "Ignored Channels", [c[0] for c in channels], "", ctx.guild
+                        "Salons ignorés", [c[0] for c in channels], "", ctx.guild
                     )
                 )
 
     @_ignore.group(
         name="user",
-        help="Manage ignored users in this guild.",
+        help="Gérer les utilisateurs ignorés sur ce serveur.",
         invoke_without_command=True,
     )
     @blacklist_check()
@@ -389,7 +392,7 @@ class Ignore(commands.Cog):
             await ctx.send_help(ctx.command)
             ctx.command.reset_cooldown(ctx)
 
-    @_user.command(name="add", help="Adds a user to the ignore list.")
+    @_user.command(name="add", help="Ajoute un utilisateur à la liste d’exceptions.")
     @commands.has_permissions(administrator=True)
     @blacklist_check()
     async def user_add(self, ctx: commands.Context, user: discord.User):
@@ -402,8 +405,8 @@ class Ignore(commands.Cog):
             if count[0] >= 30:
                 await ctx.reply(
                     view=WarningView(
-                        "Access Denied",
-                        "You can only add up to 30 users to the ignore list.",
+                        "Accès refusé",
+                        "Tu ne peux ajouter que 30 utilisateurs maximum à la liste d’exceptions.",
                     )
                 )
                 return
@@ -417,7 +420,8 @@ class Ignore(commands.Cog):
             if result:
                 await ctx.reply(
                     view=ErrorView(
-                        "Error", f"{user.mention} is already in the ignore users list."
+                        "Erreur",
+                        f"{user.mention} is already in the ignore users list.",
                     )
                 )
             else:
@@ -428,12 +432,14 @@ class Ignore(commands.Cog):
                 await db.commit()
                 await ctx.reply(
                     view=SuccessView(
-                        "Success",
-                        f"Successfully added {user.mention} to the ignore users list.",
+                        "Succès",
+                        f"{user.mention} ajouté à la liste des utilisateurs ignorés avec succès.",
                     )
                 )
 
-    @_user.command(name="remove", help="Removes a user from the ignore list.")
+    @_user.command(
+        name="remove", help="Retire un utilisateur de la liste d’exceptions."
+    )
     @blacklist_check()
     @commands.has_permissions(administrator=True)
     async def user_remove(self, ctx: commands.Context, user: discord.User):
@@ -447,7 +453,7 @@ class Ignore(commands.Cog):
             if not result:
                 await ctx.reply(
                     view=ErrorView(
-                        "Error", f"{user.mention} is not in the ignore users list."
+                        "Erreur", f"{user.mention} is not in the ignore users list."
                     )
                 )
             else:
@@ -458,12 +464,12 @@ class Ignore(commands.Cog):
                 await db.commit()
                 await ctx.send(
                     view=SuccessView(
-                        "Success",
-                        f"Successfully removed {user.mention} from the ignore users list.",
+                        "Succès",
+                        f"{user.mention} retiré de la liste des utilisateurs ignorés avec succès.",
                     )
                 )
 
-    @_user.command(name="show", help="Displays the list of ignored users.")
+    @_user.command(name="show", help="Affiche la liste des utilisateurs ignorés.")
     @blacklist_check()
     @ignore_check()
     @commands.has_permissions(administrator=True)
@@ -479,7 +485,7 @@ class Ignore(commands.Cog):
                     view=ListView(
                         "Ignored Users",
                         [],
-                        "No users are currently ignored in this server.",
+                        "Aucun utilisateur n’est actuellement ignoré sur ce serveur.",
                     )
                 )
             else:
@@ -489,7 +495,7 @@ class Ignore(commands.Cog):
 
     @_ignore.group(
         name="bypass",
-        help="Manage bypassed users in this guild.",
+        help="Gérer les utilisateurs contournés sur ce serveur.",
         invoke_without_command=True,
     )
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -501,7 +507,9 @@ class Ignore(commands.Cog):
             await ctx.send_help(ctx.command)
             ctx.command.reset_cooldown(ctx)
 
-    @_bypass.command(name="add", help="Adds a user to the bypass list.")
+    @_bypass.command(
+        name="add", help="Ajoute un utilisateur à la liste de contournement."
+    )
     @blacklist_check()
     @ignore_check()
     @commands.has_permissions(administrator=True)
@@ -516,8 +524,8 @@ class Ignore(commands.Cog):
             if count[0] >= 30:
                 await ctx.reply(
                     view=WarningView(
-                        "Access Denied",
-                        "You can only add up to 30 users to the bypass list.",
+                        "Accès refusé",
+                        "Tu ne peux ajouter que 30 utilisateurs maximum à la liste de contournement.",
                     )
                 )
                 return
@@ -531,7 +539,8 @@ class Ignore(commands.Cog):
             if result:
                 await ctx.reply(
                     view=ErrorView(
-                        "Error", f"{user.mention} is already in the bypass users list."
+                        "Erreur",
+                        f"{user.mention} is already in the bypass users list.",
                     )
                 )
             else:
@@ -542,12 +551,14 @@ class Ignore(commands.Cog):
                 await db.commit()
                 await ctx.reply(
                     view=SuccessView(
-                        "Success",
-                        f"Successfully added {user.mention} to the bypass users list.",
+                        "Succès",
+                        f"{user.mention} ajouté à la liste des utilisateurs contournés avec succès.",
                     )
                 )
 
-    @_bypass.command(name="remove", help="Removes a user from the bypass list.")
+    @_bypass.command(
+        name="remove", help="Retire un utilisateur de la liste de contournement."
+    )
     @blacklist_check()
     @ignore_check()
     @commands.has_permissions(administrator=True)
@@ -562,7 +573,7 @@ class Ignore(commands.Cog):
             if not result:
                 await ctx.reply(
                     view=ErrorView(
-                        "Error", f"{user.mention} is not in the bypass users list."
+                        "Erreur", f"{user.mention} is not in the bypass users list."
                     )
                 )
             else:
@@ -573,13 +584,15 @@ class Ignore(commands.Cog):
                 await db.commit()
                 await ctx.reply(
                     view=SuccessView(
-                        "Success",
-                        f"Successfully removed {user.mention} from the bypass users list.",
+                        "Succès",
+                        f"{user.mention} retiré de la liste des utilisateurs contournés avec succès.",
                     )
                 )
 
     @_bypass.command(
-        name="show", aliases=["list"], help="Displays the list of bypassed users."
+        name="show",
+        aliases=["list"],
+        help="Affiche la liste des utilisateurs contournés.",
     )
     @blacklist_check()
     @ignore_check()
@@ -596,7 +609,7 @@ class Ignore(commands.Cog):
                     view=ListView(
                         "Bypassed Users",
                         [],
-                        "No users are currently bypassed in this server.",
+                        "Aucun utilisateur n’est actuellement contourné sur ce serveur.",
                     )
                 )
             else:

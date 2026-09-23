@@ -37,7 +37,7 @@ class Player:
         self.game = game
         self.player = player
 
-        self.embed = discord.Embed(title="Log", description="```\n\u200b\n```")
+        self.embed = discord.Embed(title="Journal", description="```\n\u200b\n```")
 
         self._logs: list[str] = []
         self.log: str = ""
@@ -60,14 +60,14 @@ class Player:
             return self.player.__getattribute__(name)
 
 
-class BattleshipInput(discord.ui.Modal, title="Input a coordinate"):
+class BattleshipInput(discord.ui.Modal, title="Entrer une coordonnée"):
     def __init__(self, view: BattleshipView) -> None:
         super().__init__()
         self.view = view
 
         self.coord = discord.ui.TextInput(
-            label="Enter your target coordinate",
-            placeholder="ex: a8",
+            label="Entre ta coordonnée cible",
+            placeholder="ex : a8",
             style=discord.TextStyle.short,
             required=True,
             min_length=2,
@@ -83,7 +83,7 @@ class BattleshipInput(discord.ui.Modal, title="Input a coordinate"):
 
         if not game.inputpat.fullmatch(content):
             return await interaction.response.send_message(
-                f"`{content}` is not a valid coordinate!", ephemeral=True
+                f"`{content}` n’est pas une coordonnée valide !", ephemeral=True
             )
         else:
             raw, coords = game.get_coords(content)
@@ -91,7 +91,7 @@ class BattleshipInput(discord.ui.Modal, title="Input a coordinate"):
 
             if coords in self.view.player_board.moves:
                 return await interaction.response.send_message(
-                    "You've attacked this coordinate before!", ephemeral=True
+                    "Tu as déjà attaqué cette coordonnée !", ephemeral=True
                 )
             else:
                 await interaction.response.defer()
@@ -104,7 +104,7 @@ class BattleshipButton(WordInputButton):
     async def callback(self, interaction: discord.Interaction) -> None:
         game = self.view.game
 
-        if self.label == "Cancel":
+        if self.label == "Annuler":
             player = self.view.player
             other_player = (
                 game.player2
@@ -118,16 +118,18 @@ class BattleshipButton(WordInputButton):
             await interaction.response.defer()
 
             if not other_player.approves_cancel:
-                await player.send("- Waiting for opponent to approve cancellation -")
+                await player.send(
+                    "- En attente de la validation de l’adversaire pour annuler -"
+                )
                 await other_player.send(
-                    "Opponent wants to cancel, press the `Cancel` button if you approve."
+                    "L’adversaire veut annuler, appuie sur le bouton `Annuler` si tu es d’accord."
                 )
             else:
                 game.view1.disable_all()
                 game.view2.disable_all()
 
-                await game.player1.send("**GAME OVER**, Cancelled")
-                await game.player2.send("**GAME OVER**, Cancelled")
+                await game.player1.send("**PARTIE TERMINÉE**, annulée")
+                await game.player2.send("**PARTIE TERMINÉE**, annulée")
 
                 await game.message1.edit(view=game.view1)
                 await game.message2.edit(view=game.view2)
@@ -137,7 +139,7 @@ class BattleshipButton(WordInputButton):
         else:
             if interaction.user != game.turn.player:
                 return await interaction.response.send_message(
-                    "It is not your turn yet!", ephemeral=True
+                    "Ce n’est pas encore ton tour !", ephemeral=True
                 )
             else:
                 return await interaction.response.send_modal(BattleshipInput(self.view))
@@ -233,11 +235,11 @@ class SetupInput(discord.ui.Modal):
         self.button = button
         self.ship = self.button.label
 
-        super().__init__(title=f"{self.ship} Setup")
+        super().__init__(title=f"Placement : {self.ship}")
 
         self.start_coord = discord.ui.TextInput(
-            label=f"Enter the starting coordinate",
-            placeholder="ex: a8",
+            label=f"Entre la coordonnée de départ",
+            placeholder="ex : a8",
             style=discord.TextStyle.short,
             required=True,
             min_length=2,
@@ -245,8 +247,8 @@ class SetupInput(discord.ui.Modal):
         )
 
         self.is_vertical = discord.ui.TextInput(
-            label=f"Do you want it to be vertical? (y/n)",
-            placeholder='"y" or "n"',
+            label=f"Le veux-tu vertical ? (y/n)",
+            placeholder='"y" ou "n"',
             style=discord.TextStyle.short,
             required=True,
             min_length=1,
@@ -266,12 +268,12 @@ class SetupInput(discord.ui.Modal):
 
         if not game.inputpat.match(start):
             return await interaction.response.send_message(
-                f"{start} is not a valid coordinate!", ephemeral=True
+                f"{start} n’est pas une coordonnée valide !", ephemeral=True
             )
 
         if vertical not in ("y", "n"):
             return await interaction.response.send_message(
-                f"Response for `vertical` must be either `y` or `n`", ephemeral=True
+                f"La réponse pour `vertical` doit être `y` ou `n`", ephemeral=True
             )
 
         vertical = vertical != "y"
@@ -302,12 +304,12 @@ class SetupInput(discord.ui.Modal):
                 if isinstance(button, discord.ui.Button)
             ):
                 await interaction.user.send(
-                    "**All setup!** (Game will soon start after the opponent finishes)"
+                    "**Tout est prêt !** (La partie commencera quand l’adversaire aura fini)"
                 )
                 return self.button.view.stop()
         else:
             return await interaction.response.send_message(
-                "Ship placement was detected to be invalid, please try again.",
+                "Le placement du navire est invalide, réessaie.",
                 ephemeral=True,
             )
 
@@ -379,7 +381,7 @@ class BetaBattleShip(BattleShip):
         embed, file, _, _ = await self.get_file(user)
 
         embed1 = discord.Embed(
-            description="**Press the buttons to place your ships!**",
+            description="**Appuie sur les boutons pour placer tes navires !**",
             color=self.embed_color,
         )
 
@@ -394,17 +396,17 @@ class BetaBattleShip(BattleShip):
 
         if hit and sunk:
             self.turn.update_log(
-                f"+ ({raw}) was a hit!, you also sank one of their ships! :)"
+                f"+ ({raw}) : touché ! Tu as aussi coulé un de leurs navires ! :)"
             )
             next_turn.update_log(
-                f"- They went for ({raw}), and it was a hit!\n- One of your ships also got sunk! :("
+                f"- Ils ont visé ({raw}), et c’était un touché !\n- Un de tes navires a aussi été coulé ! :("
             )
         elif hit:
-            self.turn.update_log(f"+ ({raw}) was a hit :)")
-            next_turn.update_log(f"- They went for ({raw}), and it was a hit! :(")
+            self.turn.update_log(f"+ ({raw}) : touché :)")
+            next_turn.update_log(f"- Ils ont visé ({raw}), et c’était un touché ! :(")
         else:
-            self.turn.update_log(f"- ({raw}) was a miss :(")
-            next_turn.update_log(f"+ They went for ({raw}), and it was a miss! :)")
+            self.turn.update_log(f"- ({raw}) : raté :(")
+            next_turn.update_log(f"+ Ils ont visé ({raw}), et c’était un raté ! :)")
 
         e1, f1, e2, f2 = await self.get_file(self.player1)
         e3, f3, e4, f4 = await self.get_file(self.player2)
@@ -412,30 +414,30 @@ class BetaBattleShip(BattleShip):
         self.turn = next_turn
 
         self.player1.embed.set_field_at(
-            0, name="\u200b", value=f"```yml\nturn: {self.turn.player}\n```"
+            0, name="\u200b", value=f"```yml\ntour: {self.turn.player}\n```"
         )
         self.player2.embed.set_field_at(
-            0, name="\u200b", value=f"```yml\nturn: {self.turn.player}\n```"
+            0, name="\u200b", value=f"```yml\ntour: {self.turn.player}\n```"
         )
 
         await self.message1.edit(
             view=self.view1,
-            content="**Battleship**",
+            content="**Bataille navale**",
             embeds=[e2, e1, self.player1.embed],
             attachments=[f2, f1],
         )
         await self.message2.edit(
             view=self.view2,
-            content="**Battleship**",
+            content="**Bataille navale**",
             embeds=[e4, e3, self.player2.embed],
             attachments=[f4, f3],
         )
 
         if winner := self.who_won():
-            await winner.send("Congrats, you won! :)")
+            await winner.send("Bravo, tu as gagné ! :)")
 
             other = self.player2 if winner == self.player1 else self.player1
-            await other.send("You lost, better luck next time :(")
+            await other.send("Tu as perdu, bonne chance pour la prochaine fois :(")
 
             self.view1.stop()
             return self.view2.stop()
@@ -471,7 +473,9 @@ class BetaBattleShip(BattleShip):
         self.timeout = timeout
         self.embed_color = embed_color
 
-        await ctx.send("**Game Started!**\nI've setup the boards in your dms!")
+        await ctx.send(
+            "**Partie commencée !**\nJ’ai préparé les plateaux dans tes MP !"
+        )
 
         if not self.random:
             await asyncio.gather(
@@ -489,20 +493,20 @@ class BetaBattleShip(BattleShip):
         self.view2 = BattleshipView(self, user=self.player2, timeout=timeout)
 
         self.player1.embed.add_field(
-            name="\u200b", value=f"```yml\nturn: {self.turn.player}\n```"
+            name="\u200b", value=f"```yml\ntour: {self.turn.player}\n```"
         )
         self.player2.embed.add_field(
-            name="\u200b", value=f"```yml\nturn: {self.turn.player}\n```"
+            name="\u200b", value=f"```yml\ntour: {self.turn.player}\n```"
         )
 
         self.message1 = await self.player1.send(
-            content="**Game starting!**",
+            content="**La partie commence !**",
             view=self.view1,
             embeds=[e2, e1, self.player1.embed],
             files=[f2, f1],
         )
         self.message2 = await self.player2.send(
-            content="**Game starting!**",
+            content="**La partie commence !**",
             view=self.view2,
             embeds=[e4, e3, self.player2.embed],
             files=[f4, f3],

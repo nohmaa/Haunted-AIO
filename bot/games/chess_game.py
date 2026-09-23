@@ -42,12 +42,12 @@ class Chess:
         return "white" if self.turn == self.white else "black"
 
     async def make_embed(self) -> discord.Embed:
-        embed = discord.Embed(title="Chess Game", color=discord.Color.random())
-        embed.description = f"**Turn:** `{self.turn}`\n**Color:** `{self.get_color()}`\n**Check:** `{self.board.is_check()}`"
+        embed = discord.Embed(title="Partie d’échecs", color=discord.Color.random())
+        embed.description = f"**Tour :** `{self.turn}`\n**Couleur :** `{self.get_color()}`\n**Échec :** `{self.board.is_check()}`"
         embed.set_image(url=f"{self.BASE_URL}{self.board.board_fen()}")
 
         embed.add_field(
-            name="Last Move",
+            name="Dernier coup",
             value=f"```yml\n{self.last_move.get('color', '-')}: {self.last_move.get('move', '-')}\n```",
         )
         return embed
@@ -61,21 +61,25 @@ class Chess:
 
     async def fetch_results(self) -> discord.Embed:
         results = self.board.result()
-        embed = discord.Embed(title="Chess Game")
+        embed = discord.Embed(title="Partie d’échecs")
 
         if self.board.is_checkmate():
-            embed.description = f"Game over\nCheckmate | Score: `{results}`"
+            embed.description = f"Partie terminée\nÉchec et mat | Score : `{results}`"
         elif self.board.is_stalemate():
-            embed.description = f"Game over\nStalemate | Score: `{results}`"
+            embed.description = f"Partie terminée\nPat | Score : `{results}`"
         elif self.board.is_insufficient_material():
-            embed.description = f"Game over\nInsufficient material left to continue the game | Score: `{results}`"
+            embed.description = f"Partie terminée\nPlus assez de matériel pour continuer la partie | Score : `{results}`"
         elif self.board.is_seventyfive_moves():
-            embed.description = f"Game over\n75-moves rule | Score: `{results}`"
+            embed.description = (
+                f"Partie terminée\nRègle des 75 coups | Score : `{results}`"
+            )
         elif self.board.is_fivefold_repetition():
-            embed.description = f"Game over\nFive-fold repitition. | Score: `{results}`"
+            embed.description = (
+                f"Partie terminée\nRépétition quintuple. | Score : `{results}`"
+            )
         else:
             embed.description = (
-                f"Game over\nVariant end condition. | Score: `{results}`"
+                f"Partie terminée\nCondition de fin de variante. | Score : `{results}`"
             )
 
         embed.set_image(url=f"{self.BASE_URL}{self.board.board_fen()}")
@@ -145,6 +149,6 @@ class Chess:
 
         embed = await self.fetch_results()
         await self.message.edit(embed=embed)
-        await ctx.send("~ Game Over ~")
+        await ctx.send("~ Partie terminée ~")
 
         return self.message

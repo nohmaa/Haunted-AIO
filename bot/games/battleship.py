@@ -293,7 +293,7 @@ class BattleShip:
         async def place_ship(ship: str, size: int, color: tuple[int, int, int]) -> bool:
             embed, file, _, _ = await self.get_file(user)
             await user.send(
-                f"Where do you want to place your `{ship}`?\nSend the start coordinate... e.g. (`a1`)",
+                f"Où veux-tu placer ton `{ship}` ?\nEnvoie la coordonnée de départ... ex. (`a1`)",
                 embed=embed,
                 file=file,
             )
@@ -309,13 +309,13 @@ class BattleShip:
                 )
             except asyncio.TimeoutError:
                 await user.send(
-                    f"The timeout of {self.timeout} seconds, has been reached. Aborting..."
+                    f"Le délai de {self.timeout} secondes a été atteint. Abandon..."
                 )
                 return False
 
             _, start = self.get_coords(message.content)
 
-            await user.send("Do you want it to be vertical?\nSay `yes` or `no`")
+            await user.send("Veux-tu qu’il soit vertical ?\nDis `yes` ou `no`")
 
             def check(msg: discord.Message) -> bool:
                 if not msg.guild and msg.author == user:
@@ -328,7 +328,7 @@ class BattleShip:
                 )
             except asyncio.TimeoutError:
                 await user.send(
-                    f"The timeout of {self.timeout} seconds, has been reached. Aborting..."
+                    f"Le délai de {self.timeout} secondes a été atteint. Abandon..."
                 )
                 return False
 
@@ -345,13 +345,15 @@ class BattleShip:
             if board._is_valid(new_ship):
                 board.ships.append(new_ship)
             else:
-                await user.send("That is a not a valid location, please try again")
+                await user.send("Ce n’est pas un emplacement valide, réessaie")
                 await place_ship(ship, size, color)
 
         for ship, (size, color) in SHIPS.items():
             await place_ship(ship, size, color)
 
-        await user.send("All setup! (Game will soon start after the opponent finishes)")
+        await user.send(
+            "Tout est prêt ! (La partie commencera quand l’adversaire aura fini)"
+        )
         return True
 
     async def start(
@@ -373,7 +375,9 @@ class BattleShip:
             returns both player's messages respectively
         """
 
-        await ctx.send("**Game Started!**\nI've setup the boards in your dms!")
+        await ctx.send(
+            "**Partie commencée !**\nJ’ai préparé les plateaux dans tes MP !"
+        )
 
         if not self.random:
             await asyncio.gather(
@@ -384,8 +388,12 @@ class BattleShip:
         _, f1, _, f2 = await self.get_file(self.player1)
         _, f3, _, f4 = await self.get_file(self.player2)
 
-        self.message1 = await self.player1.send("**Game starting!**", files=[f2, f1])
-        self.message2 = await self.player2.send("**Game starting!**", files=[f4, f3])
+        self.message1 = await self.player1.send(
+            "**La partie commence !**", files=[f2, f1]
+        )
+        self.message2 = await self.player2.send(
+            "**La partie commence !**", files=[f4, f3]
+        )
         self.timeout = timeout
 
         while not ctx.bot.is_closed():
@@ -401,14 +409,14 @@ class BattleShip:
                 )
             except asyncio.TimeoutError:
                 await ctx.send(
-                    f"The timeout of {timeout} seconds, has been reached. Aborting..."
+                    f"Le délai de {timeout} secondes a été atteint. Abandon..."
                 )
                 break
 
             raw, coords = self.get_coords(message.content)
 
             if coords in self.get_board(self.turn):
-                await self.turn.send("You've attacked this coordinate before!")
+                await self.turn.send("Tu as déjà attaqué cette coordonnée !")
 
             else:
                 sunk, hit = self.place_move(self.turn, coords)
@@ -418,18 +426,20 @@ class BattleShip:
 
                 if hit and sunk:
                     await self.turn.send(
-                        f"`{raw}` was a hit!, you also sank one of their ships! :)"
+                        f"`{raw}` : touché ! Tu as aussi coulé un de leurs navires ! :)"
                     )
                     await next_turn.send(
-                        f"They went for `{raw}`, and it was a hit!\nOne of your ships also got sunk! :("
+                        f"Ils ont visé `{raw}`, et c’était un touché !\nUn de tes navires a aussi été coulé ! :("
                     )
                 elif hit:
-                    await self.turn.send(f"`{raw}` was a hit :)")
-                    await next_turn.send(f"They went for `{raw}`, and it was a hit! :(")
-                else:
-                    await self.turn.send(f"`{raw}` was a miss :(")
+                    await self.turn.send(f"`{raw}` : touché :)")
                     await next_turn.send(
-                        f"They went for `{raw}`, and it was a miss! :)"
+                        f"Ils ont visé `{raw}`, et c’était un touché ! :("
+                    )
+                else:
+                    await self.turn.send(f"`{raw}` : raté :(")
+                    await next_turn.send(
+                        f"Ils ont visé `{raw}`, et c’était un raté ! :)"
                     )
 
                 _, f1, _, f2 = await self.get_file(self.player1)
@@ -440,10 +450,12 @@ class BattleShip:
                 self.turn = next_turn
 
                 if winner := self.who_won():
-                    await winner.send("Congrats, you won! :)")
+                    await winner.send("Bravo, tu as gagné ! :)")
 
                     other = self.player2 if winner == self.player1 else self.player1
-                    await other.send("You lost, better luck next time :(")
+                    await other.send(
+                        "Tu as perdu, bonne chance pour la prochaine fois :("
+                    )
                     break
 
         return self.message1, self.message2

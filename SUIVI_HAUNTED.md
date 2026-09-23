@@ -4,6 +4,14 @@
 > Objectifs actuels : (1) traduction en français, (2) nouvelle identité **Haunted**, (3) activation/désactivation des modules depuis le dashboard.
 > Mettre à jour ce fichier à chaque changement (date + fichiers + comportement).
 
+## 2026-09-23 — Traduction des commandes : consolidation, nettoyage et push
+- Reprise des 126 fichiers modifiés par les agents de traduction (commands A-M/N-Z, zyrox, events+moderation, antinuke+automod, games+utils) : tout était appliqué mais **non commité**.
+- Supprimés : `bot/extract2.py` et `bot/extract_v.py` (scripts temporaires des agents, pointaient vers un dossier Temp hors repo).
+- Les scripts de traduction avaient dégradé le style (`from utils .Tools`, `label ="x",style =y`, espaces traînants) : reformatage **Black** sur les 126 fichiers uniquement, puis normalisation des ~5 800 artefacts `\{expr }` → `{expr}` dans les f-strings (regex restreintes aux substitutions simples, jamais aux chaînes ni au code).
+- Vérifications : `python -m compileall bot/` **OK** (0 erreur), aucun changement d'URL/emoji/mention d'identifiant dans le diff (0 URL ajoutée, 0 emoji touché), `npm run build` dashboard **OK** (30 routes).
+- Notes : (1) les URLs d'avatar de l'ancien bot (`cdn.discordapp.com/avatars/1396114795102470196/…`, 19 occurrences dans `moderation.py` + `blacklist.py`) sont **pré-existantes** dans HEAD, non introduites par la traduction — à remplacer par `ctx.me.display_avatar.url` plus tard ; (2) quelques chaînes EN subsistent (messages internes/erreurs API dans `ai.py`, `imagine.py`, `role.py`, `dms.py`, `automod.py`, `afk.py`, `emergency.py`) — à finir au fil de l'eau.
+- Commit + push effectués : la traduction des commandes est en ligne ; le bot en production la récupère au prochain redémarrage (`AUTO_UPDATE=1`).
+
 ## 2026-09-23 — Infra prod (domaine haunted-mind.com)
 - Domaine : `haunted-mind.com` abandonné au profit de **`haunted-mind.site`** (acheté chez Hostinger). Délégation NS vers Cloudflare **active** (`adi`/`arch.ns.cloudflare.com`, vérifié).
 - Dashboard : **domaine custom = apex `haunted-mind.site`** (pas `dashboard.`). Reste à faire côté Cloudflare : A `@` → `76.76.21.21` (actuellement IP de parking `216.198.79.1`).

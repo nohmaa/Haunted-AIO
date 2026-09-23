@@ -21,13 +21,13 @@ from .wordle_buttons import WordInputButton
 from ..utils import DiscordColor, DEFAULT_COLOR, BaseView
 
 
-class ChessInput(discord.ui.Modal, title="Make your move"):
+class ChessInput(discord.ui.Modal, title="Joue ton coup"):
     def __init__(self, view: ChessView) -> None:
         super().__init__()
         self.view = view
 
         self.move_from = discord.ui.TextInput(
-            label="from coordinate",
+            label="coordonnée de départ",
             style=discord.TextStyle.short,
             required=True,
             min_length=2,
@@ -35,7 +35,7 @@ class ChessInput(discord.ui.Modal, title="Make your move"):
         )
 
         self.move_to = discord.ui.TextInput(
-            label="to coordinate",
+            label="coordonnée d’arrivée",
             style=discord.TextStyle.short,
             required=True,
             min_length=2,
@@ -59,7 +59,7 @@ class ChessInput(discord.ui.Modal, title="Make your move"):
 
         if not is_valid_uci:
             return await interaction.response.send_message(
-                f"Invalid coordinates for move: `{from_coord} -> {to_coord}`",
+                f"Coordonnées invalides pour ce coup : `{from_coord} -> {to_coord}`",
                 ephemeral=True,
             )
         else:
@@ -82,18 +82,20 @@ class ChessButton(WordInputButton):
         game = self.view.game
         if interaction.user not in (game.black, game.white):
             return await interaction.response.send_message(
-                "You are not part of this game!", ephemeral=True
+                "Tu ne fais pas partie de cette partie !", ephemeral=True
             )
         else:
-            if self.label == "Cancel":
+            if self.label == "Annuler":
                 self.view.disable_all()
                 await interaction.message.edit(view=self.view)
-                await interaction.response.send_message(f"**Game Over!** Cancelled")
+                await interaction.response.send_message(
+                    f"**Partie terminée !** Annulée"
+                )
                 return self.view.stop()
             else:
                 if interaction.user != game.turn:
                     return await interaction.response.send_message(
-                        "It is not your turn yet!", ephemeral=True
+                        "Ce n’est pas encore ton tour !", ephemeral=True
                     )
                 else:
                     return await interaction.response.send_modal(ChessInput(self.view))
@@ -106,7 +108,7 @@ class ChessView(BaseView):
         self.game = game
 
         inpbutton = ChessButton()
-        inpbutton.label = "Make your move!"
+        inpbutton.label = "Joue ton coup !"
 
         self.add_item(inpbutton)
         self.add_item(ChessButton(cancel_button=True))

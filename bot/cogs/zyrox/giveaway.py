@@ -20,12 +20,12 @@ class _giveaway(commands.Cog):
         self.bot = bot
 
     """Giveaway commands"""
-  
+
     def help_custom(self):
-		      emoji = f'{ZTADA} '
-		      label = "Giveaway Commands"
-		      description = "Show you Commands of Giveaway"
-		      return emoji, label, description
+        emoji = f"{ZTADA} "
+        label = "Commandes Giveaway"
+        description = "Affiche les commandes de giveaway"
+        return emoji, label, description
 
     @commands.group()
     async def __Giveaway__(self, ctx: commands.Context):

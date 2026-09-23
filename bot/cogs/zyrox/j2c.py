@@ -15,6 +15,7 @@ from utils.emoji import SYSTEM
 
 from discord.ext import commands
 
+
 class _J2C(commands.Cog):
 
     module_key = "j2c"
@@ -27,16 +28,14 @@ class _J2C(commands.Cog):
 
     def help_custom(self):
 
-              emoji = SYSTEM
+        emoji = SYSTEM
 
-              label = "J2C"
+        label = "J2C"
 
-              description = "Show you Commands of J2C"
+        description = "Affiche les commandes de J2C"
 
-              return emoji, label, description
+        return emoji, label, description
 
     @commands.group()
-
     async def __J2C__(self, ctx: commands.Context):
-
         """`>j2csetup`, `>j2creset`"""

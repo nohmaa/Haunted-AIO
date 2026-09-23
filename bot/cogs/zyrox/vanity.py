@@ -15,6 +15,7 @@ from utils.emoji import STAR
 
 from discord.ext import commands
 
+
 class _vanity(commands.Cog):
 
     def __init__(self, bot):
@@ -25,16 +26,14 @@ class _vanity(commands.Cog):
 
     def help_custom(self):
 
-              emoji = STAR
+        emoji = STAR
 
-              label = "Vanity"
+        label = "Vanité"
 
-              description = "Show you Commands of Vanity Roles"
+        description = "Affiche les commandes de rôles vanité"
 
-              return emoji, label, description
+        return emoji, label, description
 
     @commands.group()
-
     async def __Vanity__(self, ctx: commands.Context):
-
         """`>vanityroles setup` , `>vanityroles reset `, `>vanityroles show` ,"""

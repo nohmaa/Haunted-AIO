@@ -35,17 +35,17 @@ class ConnectFourButton(discord.ui.Button["ConnectFourView"]):
 
         if interaction.user not in (game.red_player, game.blue_player):
             return await interaction.response.send_message(
-                "You are not part of this game!", ephemeral=True
+                "Tu ne fais pas partie de cette partie !", ephemeral=True
             )
 
         if interaction.user != game.turn:
             return await interaction.response.send_message(
-                "It is not your turn yet!", ephemeral=True
+                "Ce n’est pas encore ton tour !", ephemeral=True
             )
 
         if game.board[0][self.number - 1] != BLANK:
             return await interaction.response.send_message(
-                "Selected column is full!", ephemeral=True
+                "La colonne sélectionnée est pleine !", ephemeral=True
             )
 
         game.place_move(self.number - 1, interaction.user)

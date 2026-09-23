@@ -20,12 +20,12 @@ class _welcome(commands.Cog):
         self.bot = bot
 
     """Welcome commands"""
-  
+
     def help_custom(self):
-		      emoji = SEED
-		      label = "Welcomer Commands"
-		      description = "Show you Command Of Welcomer"
-		      return emoji, label, description
+        emoji = SEED
+        label = "Commandes de bienvenue"
+        description = "Affiche les commandes de bienvenue"
+        return emoji, label, description
 
     @commands.group()
     async def __Welcomer__(self, ctx: commands.Context):

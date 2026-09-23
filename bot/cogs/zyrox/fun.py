@@ -20,12 +20,12 @@ class _fun(commands.Cog):
         self.bot = bot
 
     """Fun commands"""
-  
+
     def help_custom(self):
-		      emoji = ZROCKET
-		      label = "Fun Commands"
-		      description = "Show you Commands of Fun"
-		      return emoji, label, description
+        emoji = ZROCKET
+        label = "Commandes Fun"
+        description = "Affiche les commandes fun"
+        return emoji, label, description
 
     @commands.group()
     async def __Fun__(self, ctx: commands.Context):

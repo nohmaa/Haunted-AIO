@@ -18,6 +18,7 @@ from discord.ext import commands
 class _games(commands.Cog):
 
     module_key = "games"
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -25,8 +26,8 @@ class _games(commands.Cog):
 
     def help_custom(self):
         emoji = GAMES
-        label = "Games Commands"
-        description = "Show you Commands of Games"
+        label = "Commandes Jeux"
+        description = "Affiche les commandes de jeux"
         return emoji, label, description
 
     @commands.group()

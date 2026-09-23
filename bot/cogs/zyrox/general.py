@@ -22,10 +22,10 @@ class _general(commands.Cog):
     """General commands"""
 
     def help_custom(self):
-              emoji = ZMODULE
-              label = "General Commands"
-              description = "Show you Commands of General"
-              return emoji, label, description
+        emoji = ZMODULE
+        label = "Commandes Générales"
+        description = "Affiche les commandes générales"
+        return emoji, label, description
 
     @commands.group()
     async def __General__(self, ctx: commands.Context):

@@ -35,7 +35,7 @@ class ReactionButton(discord.ui.Button["ReactionView"]):
 
         if game.author_only and interaction.user != game.author:
             return await interaction.response.send_message(
-                "This game is only for the author!", ephemeral=True
+                "Cette partie est réservée à l’auteur !", ephemeral=True
             )
 
         if not self.edited or self.clicked:
@@ -45,7 +45,7 @@ class ReactionButton(discord.ui.Button["ReactionView"]):
             elapsed = end_time - self.view.game.start_time
 
             game.embed.description = (
-                f"{interaction.user.mention} reacted first in `{elapsed:.2f}s` !"
+                f"{interaction.user.mention} a réagi en premier en `{elapsed:.2f}s` !"
             )
             await interaction.response.edit_message(embed=game.embed)
 
@@ -121,8 +121,8 @@ class BetaReactionGame:
         self.author = ctx.author
 
         self.embed = discord.Embed(
-            title="Reaction Game",
-            description=f"Click the button below, when the button changes color!",
+            title="Jeu de réaction",
+            description=f"Clique sur le bouton ci-dessous quand il change de couleur !",
             color=discord.Color.random(),
         )
         self.view = ReactionView(self, button_style=start_button_style, timeout=timeout)

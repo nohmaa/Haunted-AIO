@@ -48,9 +48,11 @@ class DecodeErrorView(LayoutView):
 
         self.add_item(
             build_container(
-                TextDisplay(f"❌ **Invalid {codec_name}**"),
+                TextDisplay(f"❌ **{codec_name} invalide**"),
                 Separator(visible=True),
-                TextDisplay(f"The provided string is not valid {codec_name} encoding."),
+                TextDisplay(
+                    f"La chaîne fournie n’est pas un encodage {codec_name} valide."
+                ),
             )
         )
 
@@ -61,7 +63,7 @@ class PasswordSentView(LayoutView):
 
         self.add_item(
             build_container(
-                TextDisplay("🔐 **Password Generated**"),
+                TextDisplay("🔐 **Mot de passe généré**"),
                 Separator(visible=True),
                 TextDisplay(
                     f"Sending you a DM with your random generated password **{author_name}**"
@@ -76,7 +78,7 @@ class PasswordDMView(LayoutView):
 
         self.add_item(
             build_container(
-                TextDisplay("🎁 **Here is your password:**"),
+                TextDisplay("🎁 **Voici ton mot de passe :**"),
                 Separator(visible=True),
                 TextDisplay(password),
             )
@@ -205,7 +207,7 @@ class encryption(commands.Cog):
 
     @commands.command(name="password")
     async def password(self, ctx):
-        """Generates a random secure password for you"""
+        """Génère un mot de passe sécurisé aléatoire pour toi"""
         if hasattr(ctx, "guild") and ctx.guild is not None:
             await ctx.send(view=PasswordSentView(ctx.author.name))
 
@@ -214,7 +216,7 @@ class encryption(commands.Cog):
             await ctx.author.send(view=PasswordDMView(password))
         except discord.Forbidden:
             await ctx.send(
-                f"❌ Could not send DM. Here is your password: **{password}**"
+                f"❌ Could not send DM. Voici ton mot de passe : **{password}**"
             )
 
 

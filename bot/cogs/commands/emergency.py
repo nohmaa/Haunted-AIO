@@ -26,18 +26,18 @@ class EmergencyRestoreConfirmView(LayoutView):
         self.ctx = ctx
         self.value = None
 
-        self.yes_btn = Button(label="Yes", style=discord.ButtonStyle.green)
-        self.no_btn = Button(label="No", style=discord.ButtonStyle.danger)
+        self.yes_btn = Button(label="Oui", style=discord.ButtonStyle.green)
+        self.no_btn = Button(label="Non", style=discord.ButtonStyle.danger)
 
         self.yes_btn.callback = self.confirm_callback
         self.no_btn.callback = self.cancel_callback
 
         self.add_item(
             build_container(
-                TextDisplay("**Confirm Restoration**"),
+                TextDisplay("**Confirmer Restoration**"),
                 Separator(visible=True),
                 TextDisplay(
-                    "This will restore previously disabled permissions for emergency roles. Do you want to proceed?"
+                    "Cela restaurera les permissions précédemment désactivées pour les rôles d’urgence. Veux-tu continuer ?"
                 ),
                 ActionRow(self.yes_btn, self.no_btn),
             )
@@ -46,7 +46,8 @@ class EmergencyRestoreConfirmView(LayoutView):
     async def confirm_callback(self, interaction: discord.Interaction):
         if interaction.user.id != self.ctx.author.id:
             return await interaction.response.send_message(
-                "Only the Server Owner can use this button.", ephemeral=True
+                "Seul le propriétaire du serveur peut utiliser ce bouton.",
+                ephemeral=True,
             )
         self.value = True
         await interaction.response.defer()
@@ -55,7 +56,8 @@ class EmergencyRestoreConfirmView(LayoutView):
     async def cancel_callback(self, interaction: discord.Interaction):
         if interaction.user.id != self.ctx.author.id:
             return await interaction.response.send_message(
-                "Only the Server Owner can use this button.", ephemeral=True
+                "Seul le propriétaire du serveur peut utiliser ce bouton.",
+                ephemeral=True,
             )
         self.value = False
         await interaction.response.defer()
@@ -68,7 +70,7 @@ class EmergencyMainView(LayoutView):
         self.prefix = prefix
         self.add_item(
             build_container(
-                TextDisplay("__Emergency Situation__"),
+                TextDisplay("__Situation d’urgence__"),
                 Separator(visible=True),
                 TextDisplay(
                     f"The `emergency` command group is designed to protect your server from malicious activity or accidental damage.\n\n"
@@ -89,11 +91,11 @@ class EnableSuccessView(LayoutView):
         content = (
             "\n".join([f"{r.mention}" for r in roles_added])
             if roles_added
-            else "No new roles with dangerous permissions were found."
+            else "Aucun nouveau rôle avec des permissions dangereuses n’a été trouvé."
         )
         self.add_item(
             build_container(
-                TextDisplay(f"**{TICK} Success**"),
+                TextDisplay(f"**{TICK} Succès**"),
                 Separator(visible=True),
                 TextDisplay(content),
             )
@@ -107,7 +109,9 @@ class EnableErrorView(LayoutView):
             build_container(
                 TextDisplay(f"**{CROSS} Error**"),
                 Separator(visible=True),
-                TextDisplay("Only the server owner can enable emergency mode."),
+                TextDisplay(
+                    "Seul le propriétaire du serveur peut activer le mode urgence."
+                ),
             )
         )
 
@@ -117,10 +121,10 @@ class DisableSuccessView(LayoutView):
         super().__init__(timeout=None)
         self.add_item(
             build_container(
-                TextDisplay(f"**{TICK_ALT} Success**"),
+                TextDisplay(f"**{TICK_ALT} Succès**"),
                 Separator(visible=True),
                 TextDisplay(
-                    "Emergency mode has been disabled, and all emergency roles have been cleared."
+                    "Le mode urgence a été désactivé et tous les rôles d’urgence ont été effacés."
                 ),
             )
         )
@@ -133,7 +137,9 @@ class DisableErrorView(LayoutView):
             build_container(
                 TextDisplay(f"**{CROSS_ALT} Error**"),
                 Separator(visible=True),
-                TextDisplay("Only the server owner can disable emergency mode."),
+                TextDisplay(
+                    "Seul le propriétaire du serveur peut désactiver le mode urgence."
+                ),
             )
         )
 
@@ -143,7 +149,7 @@ class AuthoriseSuccessView(LayoutView):
         super().__init__(timeout=None)
         self.add_item(
             build_container(
-                TextDisplay(f"**{TICK_ALT} Success**"),
+                TextDisplay(f"**{TICK_ALT} Succès**"),
                 Separator(visible=True),
                 TextDisplay(f"**{member_name}** has been {action}."),
             )
@@ -154,18 +160,18 @@ class AuthoriseErrorView(LayoutView):
     def __init__(self, error_type):
         super().__init__(timeout=None)
         content = {
-            "owner_add": "Only the server owner can add authorised users.",
-            "owner_remove": "Only the server owner can remove authorised users.",
-            "owner_list": "Only the server owner can view the list.",
-            "limit": "Only up to 5 authorised users can be added.",
-            "exists": "This user is already authorised.",
-            "not_found": "This user is not authorised.",
-        }.get(error_type, "An error occurred.")
+            "owner_add": "Seul le propriétaire du serveur peut ajouter des utilisateurs autorisés.",
+            "owner_remove": "Seul le propriétaire du serveur peut retirer des utilisateurs autorisés.",
+            "owner_list": "Seul le propriétaire du serveur peut voir la liste.",
+            "limit": "Tu peux ajouter jusqu’à 5 utilisateurs autorisés maximum.",
+            "exists": "Cet utilisateur est déjà autorisé.",
+            "not_found": "Cet utilisateur n’est pas autorisé.",
+        }.get(error_type, "Une erreur est survenue.")
         is_warning = error_type == "limit"
         self.add_item(
             build_container(
                 TextDisplay(
-                    f"**{ZWARNING} Access Denied**"
+                    f"**{ZWARNING} Accès refusé**"
                     if is_warning
                     else f"**{CROSS_ALT} Error**"
                 ),
@@ -181,29 +187,29 @@ class AuthoriseListView(LayoutView):
         if not is_owner:
             self.add_item(
                 build_container(
-                    TextDisplay(f"**{ZWARNING} Access Denied**"),
+                    TextDisplay(f"**{ZWARNING} Accès refusé**"),
                     Separator(visible=True),
-                    TextDisplay("Only the server owner can view the list."),
+                    TextDisplay("Seul le propriétaire du serveur peut voir la liste."),
                 )
             )
         elif not users:
             self.add_item(
                 build_container(
-                    TextDisplay("**Authorized Users**"),
+                    TextDisplay("**Utilisateurs autorisés**"),
                     Separator(visible=True),
-                    TextDisplay("No authorized users found."),
+                    TextDisplay("Aucun utilisateur autorisé trouvé."),
                 )
             )
         else:
             desc = "\n".join(
                 [
-                    f"{i + 1}. [{ctx.guild.get_member(u[0]).name}](https://discord.com/users/{u[0]}) - {u[0]}"
+                    f"{i +1 }. [{ctx .guild .get_member (u [0 ]).name }](https://discord.com/users/{u[0]}) - {u[0]}"
                     for i, u in enumerate(users)
                 ]
             )
             self.add_item(
                 build_container(
-                    TextDisplay("**Authorized Users**"),
+                    TextDisplay("**Utilisateurs autorisés**"),
                     Separator(visible=True),
                     TextDisplay(desc),
                 )
@@ -215,7 +221,7 @@ class RoleSuccessView(LayoutView):
         super().__init__(timeout=None)
         self.add_item(
             build_container(
-                TextDisplay(f"**{TICK_ALT} Success**"),
+                TextDisplay(f"**{TICK_ALT} Succès**"),
                 Separator(visible=True),
                 TextDisplay(f"**{role_name}** has been {action} the emergency list."),
             )
@@ -226,20 +232,18 @@ class RoleErrorView(LayoutView):
     def __init__(self, error_type):
         super().__init__(timeout=None)
         content = {
-            "owner_add": "Only the server owner can add role for emergency situation.",
-            "owner_remove": "Only the server owner can remove roles from emergency list.",
-            "owner_list": "You are not authorised to view list of roles.",
-            "limit": "Only up to 25 roles can be added.",
-            "exists": "This role is already in the emergency list.",
-            "not_found": "This role is not in the emergency list.",
-        }.get(error_type, "An error occurred.")
+            "owner_add": "Seul le propriétaire du serveur peut ajouter un rôle pour la situation d’urgence.",
+            "owner_remove": "Seul le propriétaire du serveur peut retirer des rôles de la liste d’urgence.",
+            "owner_list": "Tu n’es pas autorisé à voir la liste des rôles.",
+            "limit": "Tu peux ajouter jusqu’à 25 rôles maximum.",
+            "exists": "Ce rôle est déjà dans la liste d’urgence.",
+            "not_found": "Ce rôle n’est pas dans la liste d’urgence.",
+        }.get(error_type, "Une erreur est survenue.")
         is_warning = error_type == "limit"
         self.add_item(
             build_container(
                 TextDisplay(
-                    f"**{ZWARNING} Error**"
-                    if is_warning
-                    else f"**{CROSS_ALT} Error**"
+                    f"**{ZWARNING} Error**" if is_warning else f"**{CROSS_ALT} Error**"
                 ),
                 Separator(visible=True),
                 TextDisplay(content),
@@ -253,26 +257,26 @@ class RoleListView(LayoutView):
         if not is_authorised:
             self.add_item(
                 build_container(
-                    TextDisplay(f"**{ZWARNING} Access Denied**"),
+                    TextDisplay(f"**{ZWARNING} Accès refusé**"),
                     Separator(visible=True),
-                    TextDisplay("You are not authorised to view list of roles."),
+                    TextDisplay("Tu n’es pas autorisé à voir la liste des rôles."),
                 )
             )
         elif not roles:
             self.add_item(
                 build_container(
-                    TextDisplay("**Emergency Roles**"),
+                    TextDisplay("**Rôles d’urgence**"),
                     Separator(visible=True),
-                    TextDisplay("No roles added for emergency situation."),
+                    TextDisplay("Aucun rôle ajouté pour la situation d’urgence."),
                 )
             )
         else:
             desc = "\n".join(
-                [f"{i + 1}. <@&{r[0]}> - {r[0]}" for i, r in enumerate(roles)]
+                [f"{i +1 }. <@&{r[0]}> - {r[0]}" for i, r in enumerate(roles)]
             )
             self.add_item(
                 build_container(
-                    TextDisplay("**Emergency Roles**"),
+                    TextDisplay("**Rôles d’urgence**"),
                     Separator(visible=True),
                     TextDisplay(desc),
                 )
@@ -283,14 +287,14 @@ class EmergencySituationErrorView(LayoutView):
     def __init__(self, error_type):
         super().__init__(timeout=None)
         content = (
-            "You are not authorised to execute the emergency situation."
+            "Tu n’es pas autorisé à exécuter la situation d’urgence."
             if error_type == "access"
-            else "No roles have been added for the emergency situation."
+            else "Aucun rôle n’a été ajouté pour la situation d’urgence."
         )
         self.add_item(
             build_container(
                 TextDisplay(
-                    f"**{ZWARNING} Access Denied**"
+                    f"**{ZWARNING} Accès refusé**"
                     if error_type == "access"
                     else f"**{CROSS_ALT} Error**"
                 ),
@@ -312,15 +316,15 @@ class EmergencySituationResultView(LayoutView):
         super().__init__(timeout=None)
         desc = f"**{TICK_ALT} Roles Modified**:\n{success_msg}\n\n"
         if moved_role:
-            desc += f"**{ZWARNING} Role Moved**: {moved_role.mention} moved below bot's top role.\n\n"
+            desc += f"**{ZWARNING} Rôle déplacé**: {moved_role.mention} déplacé sous le rôle le plus haut du bot.\n\n"
         elif move_failed:
-            desc += "**ℹ️ Role Couldn't Moved**: Permission error.\n\n"
+            desc += "**ℹ️ Rôle non déplacé**: Erreur de permission.\n\n"
         elif move_error:
-            desc += f"**ℹ️ Role Couldn't Moved**: {move_error}\n\n"
+            desc += f"**ℹ️ Rôle non déplacé**: {move_error}\n\n"
         desc += f"**Errors**: {error_msg}"
         self.add_item(
             build_container(
-                TextDisplay("**Emergency Situation**"),
+                TextDisplay("**Situation d’urgence**"),
                 Separator(visible=True),
                 TextDisplay(desc),
             )
@@ -332,10 +336,10 @@ class EmergencyRestoreAccessErrorView(LayoutView):
         super().__init__(timeout=None)
         self.add_item(
             build_container(
-                TextDisplay(f"**{ZWARNING} Access Denied**"),
+                TextDisplay(f"**{ZWARNING} Accès refusé**"),
                 Separator(visible=True),
                 TextDisplay(
-                    "Only the server owner can execute the emergency restore command."
+                    "Seul le propriétaire du serveur peut exécuter la commande de restauration d’urgence."
                 ),
             )
         )
@@ -349,7 +353,7 @@ class EmergencyRestoreNoRolesView(LayoutView):
                 TextDisplay(f"**{CROSS_ALT} Error**"),
                 Separator(visible=True),
                 TextDisplay(
-                    "No roles were found with disabled permissions for restore."
+                    "Aucun rôle avec des permissions désactivées n’a été trouvé pour la restauration."
                 ),
             )
         )
@@ -418,7 +422,10 @@ class Emergency(commands.Cog):
     @commands.cooldown(1, 4, commands.BucketType.user)
     @commands.guild_only()
     async def enable(self, ctx):
-        if ctx.author.id != ctx.guild.owner_id and str(ctx.author.id) not in OWNER_IDS_STR:
+        if (
+            ctx.author.id != ctx.guild.owner_id
+            and str(ctx.author.id) not in OWNER_IDS_STR
+        ):
             return await ctx.reply(view=EnableErrorView())
         dangerous_perms = [
             "administrator",
@@ -457,7 +464,10 @@ class Emergency(commands.Cog):
     @commands.cooldown(1, 4, commands.BucketType.user)
     @commands.guild_only()
     async def disable(self, ctx):
-        if ctx.author.id != ctx.guild.owner_id and str(ctx.author.id) not in OWNER_IDS_STR:
+        if (
+            ctx.author.id != ctx.guild.owner_id
+            and str(ctx.author.id) not in OWNER_IDS_STR
+        ):
             return await ctx.reply(view=DisableErrorView())
         async with aiosqlite.connect(self.db_path) as db:
             await db.execute(
@@ -619,13 +629,16 @@ class Emergency(commands.Cog):
     @commands.guild_only()
     @commands.bot_has_permissions(manage_roles=True)
     async def emergencysituation(self, ctx):
-        if not await self.is_guild_owner_or_authorised(ctx) and str(
-            ctx.author.id
-        ) not in OWNER_IDS_STR:
+        if (
+            not await self.is_guild_owner_or_authorised(ctx)
+            and str(ctx.author.id) not in OWNER_IDS_STR
+        ):
             return await ctx.reply(view=EmergencySituationErrorView("access"))
 
         proc_msg = await ctx.reply(
-            view=LayoutView(build_container(TextDisplay("Processing Emergency Situation...")))
+            view=LayoutView(
+                build_container(TextDisplay("Processing Situation d’urgence..."))
+            )
         )
         guild_id = ctx.guild.id
 
@@ -682,7 +695,7 @@ class Emergency(commands.Cog):
                         disabled.append(p)
                 if disabled:
                     try:
-                        await role.edit(permissions=perms, reason="Emergency Situation")
+                        await role.edit(permissions=perms, reason="Situation d’urgence")
                         modified.append(role)
                         await db.execute(
                             "INSERT INTO restore_roles VALUES (?, ?, ?)",
@@ -692,8 +705,8 @@ class Emergency(commands.Cog):
                     except:
                         unchanged.append(role)
 
-        success = "\n".join([r.mention for r in modified]) or "No roles modified."
-        errors = "\n".join([r.mention for r in unchanged]) or "No errors."
+        success = "\n".join([r.mention for r in modified]) or "Aucun rôle modifié."
+        errors = "\n".join([r.mention for r in unchanged]) or "Aucune erreur."
 
         most_mem = max(
             [
@@ -710,7 +723,7 @@ class Emergency(commands.Cog):
         if most_mem:
             try:
                 await most_mem.edit(
-                    position=bot_top.position - 1, reason="Emergency Situation"
+                    position=bot_top.position - 1, reason="Situation d’urgence"
                 )
                 result_view = EmergencySituationResultView(
                     success, errors, moved_role=most_mem
@@ -741,7 +754,10 @@ class Emergency(commands.Cog):
     @commands.guild_only()
     @commands.bot_has_permissions(manage_roles=True)
     async def emergencyrestore(self, ctx):
-        if ctx.author.id != ctx.guild.owner_id and str(ctx.author.id) not in OWNER_IDS_STR:
+        if (
+            ctx.author.id != ctx.guild.owner_id
+            and str(ctx.author.id) not in OWNER_IDS_STR
+        ):
             return await ctx.reply(view=EmergencyRestoreAccessErrorView())
 
         async with aiosqlite.connect(self.db_path) as db:
@@ -761,12 +777,14 @@ class Emergency(commands.Cog):
         if view.value is None:
             return await ctx.reply(
                 view=LayoutView(
-                    build_container(TextDisplay("**Restore Cancelled** - Timed out."))
+                    build_container(
+                        TextDisplay("**Restore Annulerled** - Temps écoulé.")
+                    )
                 )
             )
         if view.value is False:
             return await ctx.reply(
-                view=LayoutView(build_container(TextDisplay("**Restore Cancelled**")))
+                view=LayoutView(build_container(TextDisplay("**Restore Annulerled**")))
             )
 
         modified, unchanged = [], []
@@ -792,8 +810,8 @@ class Emergency(commands.Cog):
             )
             await db.commit()
 
-        success = "\n".join([r.mention for r in modified]) or "No roles restored."
-        errors = "\n".join([r.mention for r in unchanged]) or "No errors."
+        success = "\n".join([r.mention for r in modified]) or "Aucun rôle restauré."
+        errors = "\n".join([r.mention for r in unchanged]) or "Aucune erreur."
         await ctx.reply(view=EmergencyRestoreResultView(success, errors))
 
 

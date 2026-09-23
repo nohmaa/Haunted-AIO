@@ -18,40 +18,51 @@ from discord.ext import commands
 import aiosqlite
 from datetime import datetime, timedelta
 
+
 class AutoBlacklist(Cog):
     def __init__(self, client: zyrox):
         self.client = client
-        self.spam_cd_mapping = commands.CooldownMapping.from_cooldown(5, 5, commands.BucketType.member)
-        self.spam_command_mapping = commands.CooldownMapping.from_cooldown(6, 10, commands.BucketType.member)
+        self.spam_cd_mapping = commands.CooldownMapping.from_cooldown(
+            5, 5, commands.BucketType.member
+        )
+        self.spam_command_mapping = commands.CooldownMapping.from_cooldown(
+            6, 10, commands.BucketType.member
+        )
         self.last_spam = {}
         self.spam_threshold = 5
         self.spam_window = timedelta(minutes=10)
-        self.db_path = 'db/block.db'
+        self.db_path = "db/block.db"
         self.bot_user_id = self.client.user.id if self.client.user else None
-        self.guild_command_tracking = {}  
+        self.guild_command_tracking = {}
 
     async def add_to_blacklist(self, user_id=None, guild_id=None, channel=None):
         try:
             async with aiosqlite.connect(self.db_path) as db:
                 timestamp = datetime.utcnow()
                 if guild_id:
-                    await db.execute('''
+                    await db.execute(
+                        """
                         INSERT OR IGNORE INTO guild_blacklist (guild_id, timestamp) VALUES (?, ?)
-                    ''', (guild_id, timestamp))
+                    """,
+                        (guild_id, timestamp),
+                    )
                     if channel:
                         embed = discord.Embed(
-                            title=f"{ZWARNING} Guild Blacklisted",
+                            title=f"{ZWARNING} Serveur blacklisté",
                             description=(
-                                f"This guild has been blacklisted due to spamming or automation. "
-                                f"If you believe this is a mistake, please contact our [Support Server]({SUPPORT_SERVER}) with any proof if possible."
+                                f"Ce serveur a été blacklisté pour spam ou automatisation. "
+                                f"Si vous pensez qu’il s’agit d’une erreur, veuillez contacter notre [Serveur Support]({SUPPORT_SERVER}) avec une preuve si possible."
                             ),
-                            color=0xFF0000
+                            color=0xFF0000,
                         )
                         await channel.send(embed=embed)
                 elif user_id:
-                    await db.execute('''
+                    await db.execute(
+                        """
                         INSERT OR IGNORE INTO user_blacklist (user_id, timestamp) VALUES (?, ?)
-                    ''', (user_id, timestamp))
+                    """,
+                        (user_id, timestamp),
+                    )
                 await db.commit()
         except aiosqlite.Error as e:
             print(f"Database error: {e}")
@@ -59,15 +70,18 @@ class AutoBlacklist(Cog):
     async def check_and_blacklist_guild(self, guild_id):
         async with aiosqlite.connect(self.db_path) as db:
             async with db.execute(
-                '''
+                """
                 SELECT COUNT(DISTINCT user_id) FROM user_blacklist 
                 WHERE timestamp >= ?
-                ''', 
-                (datetime.utcnow() - self.spam_window,)
+                """,
+                (datetime.utcnow() - self.spam_window,),
             ) as cursor:
                 count = await cursor.fetchone()
                 if count[0] >= self.spam_threshold:
-                    async with db.execute('SELECT channel_id FROM guild_settings WHERE guild_id = ?', (guild_id,)) as cursor:
+                    async with db.execute(
+                        "SELECT channel_id FROM guild_settings WHERE guild_id = ?",
+                        (guild_id,),
+                    ) as cursor:
                         channel_id = await cursor.fetchone()
                         if channel_id:
                             channel = self.client.get_channel(channel_id[0])
@@ -79,51 +93,54 @@ class AutoBlacklist(Cog):
         if message.author.bot:
             return
 
-        
         guild_id = message.guild.id if message.guild else None
         if guild_id:
             if guild_id not in self.guild_command_tracking:
                 self.guild_command_tracking[guild_id] = []
 
-            
             self.guild_command_tracking[guild_id].append(datetime.utcnow())
 
-            
             self.guild_command_tracking[guild_id] = [
-                timestamp for timestamp in self.guild_command_tracking[guild_id] if timestamp >= datetime.utcnow() - timedelta(seconds=2)
+                timestamp
+                for timestamp in self.guild_command_tracking[guild_id]
+                if timestamp >= datetime.utcnow() - timedelta(seconds=2)
             ]
 
-            
             if len(self.guild_command_tracking[guild_id]) > 8:
-                
+
                 await self.add_to_blacklist(guild_id=guild_id, channel=message.channel)
                 embed = discord.Embed(
-                    title=f"{ZWARNING} Guild Blacklisted",
+                    title=f"{ZWARNING} Serveur blacklisté",
                     description=(
-                        f"The guild has been blacklisted for excessive command usage. "
-                        f"If you believe this is a mistake, please contact our [Support Server]({SUPPORT_SERVER})."
+                        f"Le serveur a été blacklisté pour utilisation excessive de commandes. "
+                        f"Si vous pensez qu’il s’agit d’une erreur, veuillez contacter notre [Serveur Support]({SUPPORT_SERVER})."
                     ),
-                    color=0xFF0000
+                    color=0xFF0000,
                 )
                 await message.channel.send(embed=embed)
                 return
 
-        
         bucket = self.spam_cd_mapping.get_bucket(message)
         retry = bucket.update_rate_limit()
 
         if retry:
             async with aiosqlite.connect(self.db_path) as db:
-                async with db.execute('SELECT user_id FROM user_blacklist WHERE user_id = ?', (message.author.id,)) as cursor:
+                async with db.execute(
+                    "SELECT user_id FROM user_blacklist WHERE user_id = ?",
+                    (message.author.id,),
+                ) as cursor:
                     if await cursor.fetchone():
                         return
 
-                if message.content in (f'<@{self.bot_user_id}>', f'<@!{self.bot_user_id}>'):
+                if message.content in (
+                    f"<@{self.bot_user_id}>",
+                    f"<@!{self.bot_user_id}>",
+                ):
                     await self.add_to_blacklist(user_id=message.author.id)
                     embed = discord.Embed(
-                        title=f"{ZWARNING} User Blacklisted",
-                        description=f"**{message.author.mention} has been blacklisted for repeatedly mentioning me. If you believe this is a mistake, please contact our [Support Server]({SUPPORT_SERVER}) with any proof if possible.**",
-                        color=0xFF0000
+                        title=f"{ZWARNING} Utilisateur blacklisté",
+                        description=f"**{message.author.mention} a été blacklisté pour m’avoir mentionné de façon répétée. Si vous pensez qu’il s’agit d’une erreur, veuillez contacter notre [Serveur Support]({SUPPORT_SERVER}) avec une preuve si possible.**",
+                        color=0xFF0000,
                     )
                     await message.channel.send(embed=embed)
                     return
@@ -132,7 +149,11 @@ class AutoBlacklist(Cog):
                     if message.author.id not in self.last_spam:
                         self.last_spam[message.author.id] = []
                     self.last_spam[message.author.id].append(datetime.utcnow())
-                    recent_spam = [timestamp for timestamp in self.last_spam.get(message.author.id, []) if timestamp >= datetime.utcnow() - self.spam_window]
+                    recent_spam = [
+                        timestamp
+                        for timestamp in self.last_spam.get(message.author.id, [])
+                        if timestamp >= datetime.utcnow() - self.spam_window
+                    ]
                     self.last_spam[message.author.id] = recent_spam
                     if len(recent_spam) >= self.spam_threshold:
                         await self.check_and_blacklist_guild(message.guild.id)
@@ -147,14 +168,17 @@ class AutoBlacklist(Cog):
 
         if retry:
             async with aiosqlite.connect(self.db_path) as db:
-                async with db.execute('SELECT user_id FROM user_blacklist WHERE user_id = ?', (ctx.author.id,)) as cursor:
+                async with db.execute(
+                    "SELECT user_id FROM user_blacklist WHERE user_id = ?",
+                    (ctx.author.id,),
+                ) as cursor:
                     if await cursor.fetchone():
                         return
 
                 await self.add_to_blacklist(user_id=ctx.author.id)
                 embed = discord.Embed(
-                    title=f"{ZWARNING} User Blacklisted",
-                    description=f"**{ctx.author.mention} has been blacklisted for spamming commands. If you believe this is a mistake, please contact our [Support Server]({SUPPORT_SERVER}) with any proof if possible.**",
-                    color=0xFF0000
+                    title=f"{ZWARNING} Utilisateur blacklisté",
+                    description=f"**{ctx.author.mention} a été blacklisté pour spam de commandes. Si vous pensez qu’il s’agit d’une erreur, veuillez contacter notre [Serveur Support]({SUPPORT_SERVER}) avec une preuve si possible.**",
+                    color=0xFF0000,
                 )
                 await ctx.reply(embed=embed)

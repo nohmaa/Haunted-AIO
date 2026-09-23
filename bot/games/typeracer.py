@@ -68,7 +68,7 @@ class TypeRacer:
             return buffer
 
     def format_line(self, i: int, data: UserData) -> str:
-        return f" • {self.EMOJI_MAP[i]} | {data['user'].mention} in {data['time']:.2f}s | **WPM:** {data['wpm']:.2f} | **ACC:** {data['acc']:.2f}%"
+        return f" • {self.EMOJI_MAP[i]} | {data['user'].mention} en {data['time']:.2f}s | **WPM :** {data['wpm']:.2f} | **PRÉCISION :** {data['acc']:.2f}%"
 
     async def wait_for_tr_response(
         self,
@@ -106,7 +106,7 @@ class TypeRacer:
                     break
                 else:
                     return await ctx.reply(
-                        "Looks like no one responded",
+                        "On dirait que personne n’a répondu",
                         allowed_mentions=discord.AllowedMentions.none(),
                     )
 
@@ -135,9 +135,11 @@ class TypeRacer:
 
         desc = [self.format_line(i, x) for i, x in enumerate(winners, 1)]
         embed = discord.Embed(
-            title="Typerace results", color=discord.Color.random(), timestamp=dt.utcnow()
+            title="Résultats de la course",
+            color=discord.Color.random(),
+            timestamp=dt.utcnow(),
         )
-        embed.add_field(name="Winners", value="\n".join(desc))
+        embed.add_field(name="Gagnants", value="\n".join(desc))
 
         return await ctx.reply(
             embed=embed, allowed_mentions=discord.AllowedMentions.none()
@@ -147,7 +149,7 @@ class TypeRacer:
         self,
         ctx: commands.Context[commands.Bot],
         *,
-        embed_title: str = "Type the following sentence in the chat now!",
+        embed_title: str = "Tape la phrase suivante dans le chat maintenant !",
         embed_color: DiscordColor = DEFAULT_COLOR,
         path_to_text_font: Optional[str] = None,
         timeout: float = 40,
@@ -215,9 +217,7 @@ class TypeRacer:
                 text = textwrap.shorten(text, width=max_quote_length, placeholder="")
 
         if not path_to_text_font:
-            path_to_text_font = str(
-                parent / "assets/segoe-ui-semilight-411.ttf"
-            )
+            path_to_text_font = str(parent / "assets/segoe-ui-semilight-411.ttf")
 
         buffer = await self._tr_img(text, path_to_text_font)
 

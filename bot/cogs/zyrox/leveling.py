@@ -10,24 +10,25 @@
 # ║                                                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 
-import discord 
+import discord
 from utils.emoji import LEVEL_UP
-from discord .ext import commands 
+from discord.ext import commands
 
 
-class _leveling (commands .Cog ):
+class _leveling(commands.Cog):
     module_key = "leveling"
-    def __init__ (self ,bot ):
-        self .bot =bot 
+
+    def __init__(self, bot):
+        self.bot = bot
 
     """Leveling commands"""
 
-    def help_custom (self ):
-		      emoji =LEVEL_UP
-		      label ="Leveling Commands"
-		      description ="Shows you the commands of leveling"
-		      return emoji ,label ,description 
+    def help_custom(self):
+        emoji = LEVEL_UP
+        label = "Commandes de niveaux"
+        description = "Affiche les commandes de niveaux"
+        return emoji, label, description
 
-    @commands .group ()
-    async def __Leveling__ (self ,ctx :commands .Context ):
+    @commands.group()
+    async def __Leveling__(self, ctx: commands.Context):
         """`level status`, `level channel`, `level message`, `level desc`, `level color`, `level thumbnail`, `level image`, `level clearimage`, `level xprange`, `level multiplier`, `level addreward`, `level removereward`, `level rewards`, `level setxp`, `level preview`, `level xpboost`, `level xpboost add`, `level xpboost remove`, `level xpboost list`, `level blacklist`, `level blacklist channel`, `level blacklist role`, `level unblacklist`, `level unblacklist channel`, `level unblacklist role`, `level stats`, `level leaderboard`, `level reset`, `level reset user`, `level reset all`, `level placeholders`, `level rank`"""

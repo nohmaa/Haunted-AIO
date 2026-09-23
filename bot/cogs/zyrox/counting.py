@@ -15,6 +15,7 @@ from utils.emoji import ZCOUNTING
 
 from discord.ext import commands
 
+
 class _Counting(commands.Cog):
 
     def __init__(self, bot):
@@ -25,16 +26,14 @@ class _Counting(commands.Cog):
 
     def help_custom(self):
 
-              emoji = ZCOUNTING
+        emoji = ZCOUNTING
 
-              label = "Counting"
+        label = "Comptage"
 
-              description = "Show you Commands of Counting"
+        description = "Affiche les commandes de comptage"
 
-              return emoji, label, description
+        return emoji, label, description
 
     @commands.group()
-
     async def __Counting__(self, ctx: commands.Context):
-
         """`>counting`, `>counting enable/disable`, `>counting channel #channel`, `>counting stats`, `>counting config continue/reset`"""

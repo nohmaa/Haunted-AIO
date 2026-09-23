@@ -22,10 +22,10 @@ class _ignore(commands.Cog):
     """Ignore commands"""
 
     def help_custom(self):
-              emoji = ZBAN
-              label = "Ignore Commands"
-              description = "Show you Commands of Ignore"
-              return emoji, label, description
+        emoji = ZBAN
+        label = "Commandes Ignore"
+        description = "Affiche les commandes d’ignore"
+        return emoji, label, description
 
     @commands.group()
     async def __Ignore__(self, ctx: commands.Context):

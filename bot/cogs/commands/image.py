@@ -20,16 +20,18 @@ from utils.cv2 import CV2, build_container
 
 PEXELS_API_KEY = "js24mfV1bCCvgV6KfnEFvo5UnCHnATFarFnAdDrpDbczl7f0yXpjDF8x"
 
+
 class ImageCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     async def fetch_pexels_image(self, query):
-        headers = {
-            "Authorization": PEXELS_API_KEY
-        }
+        headers = {"Authorization": PEXELS_API_KEY}
         async with aiohttp.ClientSession() as session:
-            async with session.get(f"https://api.pexels.com/v1/search?query={query}&per_page=50", headers=headers) as resp:
+            async with session.get(
+                f"https://api.pexels.com/v1/search?query={query}&per_page=50",
+                headers=headers,
+            ) as resp:
                 data = await resp.json()
                 if data.get("photos"):
                     image = random.choice(data["photos"])
@@ -50,7 +52,9 @@ class ImageCommands(commands.Cog):
             view.add_item(build_container(TextDisplay(f"**{title}**"), gallery))
             await ctx.send(view=view)
         else:
-            await ctx.send(view=CV2("❌ Error", f"No image found for {title.lower()}."))
+            await ctx.send(
+                view=CV2("❌ Error", f"Aucune image trouvée pour {title.lower()}.")
+            )
 
     @commands.command(name="boy")
     async def boy_image(self, ctx):
@@ -71,6 +75,7 @@ class ImageCommands(commands.Cog):
     async def anime_image(self, ctx):
         url = await self.fetch_waifu_image("waifu")
         await self.send_image_view(ctx, "🧚 Anime Waifu", url)
+
 
 async def setup(bot):
     await bot.add_cog(ImageCommands(bot))

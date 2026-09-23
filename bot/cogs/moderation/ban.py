@@ -16,6 +16,7 @@ from discord.ext import commands
 from discord import ui
 from utils.Tools import *
 
+
 class Ban(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -26,9 +27,10 @@ class Ban(commands.Cog):
 
     @commands.hybrid_command(
         name="ban",
-        help="Bans a user from the Server",
+        help="Bannit un utilisateur du serveur",
         usage="ban <member>",
-        aliases=["fuckban", "hackban","kuttaban"])
+        aliases=["fuckban", "hackban", "kuttaban"],
+    )
     @blacklist_check()
     @ignore_check()
     @top_check()
@@ -46,7 +48,11 @@ class Ban(commands.Cog):
             except discord.NotFound:
                 # User not found container
                 container = ui.Container()
-                container.add_item(ui.TextDisplay(f"❌ **User Not Found**\nUser with ID {user.id} not found."))
+                container.add_item(
+                    ui.TextDisplay(
+                        f"❌ **Utilisateur introuvable**\nUtilisateur avec l’ID {user.id} introuvable."
+                    )
+                )
                 view = ui.LayoutView()
                 view.add_item(container)
                 await ctx.send(view=view)
@@ -56,9 +62,13 @@ class Ban(commands.Cog):
         if any(ban_entry.user.id == user.id for ban_entry in bans):
             # Already banned container
             container = ui.Container()
-            container.add_item(ui.TextDisplay(f"⚠️ **{user.name} is Already Banned!**"))
-            container.add_item(ui.TextDisplay("**Requested User is already banned in this server.**"))
-            container.add_item(ui.TextDisplay(f"*Requested by {ctx.author}*"))
+            container.add_item(ui.TextDisplay(f"⚠️ **{user.name} est déjà banni !**"))
+            container.add_item(
+                ui.TextDisplay(
+                    "**L’utilisateur demandé est déjà banni sur ce serveur.**"
+                )
+            )
+            container.add_item(ui.TextDisplay(f"*Demandé par {ctx.author}*"))
             view = ui.LayoutView()
             view.add_item(container)
             await ctx.send(view=view)
@@ -67,19 +77,28 @@ class Ban(commands.Cog):
         if member == ctx.guild.owner:
             # Server owner error container
             container = ui.Container()
-            container.add_item(ui.TextDisplay("❌ **Error Banning User**"))
-            container.add_item(ui.TextDisplay("I can't ban the Server Owner!"))
-            container.add_item(ui.TextDisplay(f"*Requested by {ctx.author}*"))
+            container.add_item(ui.TextDisplay("❌ **Erreur lors du bannissement**"))
+            container.add_item(
+                ui.TextDisplay("Je ne peux pas bannir le propriétaire du serveur !")
+            )
+            container.add_item(ui.TextDisplay(f"*Demandé par {ctx.author}*"))
             view = ui.LayoutView()
             view.add_item(container)
             return await ctx.send(view=view)
 
-        if isinstance(member, discord.Member) and member.top_role >= ctx.guild.me.top_role:
+        if (
+            isinstance(member, discord.Member)
+            and member.top_role >= ctx.guild.me.top_role
+        ):
             # Role hierarchy error container
             container = ui.Container()
-            container.add_item(ui.TextDisplay("❌ **Error Banning User**"))
-            container.add_item(ui.TextDisplay("I can't ban a user with a higher or equal role!"))
-            container.add_item(ui.TextDisplay(f"*Requested by {ctx.author}*"))
+            container.add_item(ui.TextDisplay("❌ **Erreur lors du bannissement**"))
+            container.add_item(
+                ui.TextDisplay(
+                    "Je ne peux pas bannir un utilisateur avec un rôle supérieur ou égal !"
+                )
+            )
+            container.add_item(ui.TextDisplay(f"*Demandé par {ctx.author}*"))
             view = ui.LayoutView()
             view.add_item(container)
             return await ctx.send(view=view)
@@ -89,16 +108,24 @@ class Ban(commands.Cog):
                 if member.top_role >= ctx.author.top_role:
                     # Author role hierarchy error container
                     container = ui.Container()
-                    container.add_item(ui.TextDisplay("❌ **Error Banning User**"))
-                    container.add_item(ui.TextDisplay("You can't ban a user with a higher or equal role!"))
-                    container.add_item(ui.TextDisplay(f"*Requested by {ctx.author}*"))
+                    container.add_item(
+                        ui.TextDisplay("❌ **Erreur lors du bannissement**")
+                    )
+                    container.add_item(
+                        ui.TextDisplay(
+                            "Vous ne pouvez pas bannir un utilisateur avec un rôle supérieur ou égal !"
+                        )
+                    )
+                    container.add_item(ui.TextDisplay(f"*Demandé par {ctx.author}*"))
                     view = ui.LayoutView()
                     view.add_item(container)
                     return await ctx.send(view=view)
 
         # Try to DM the user
         try:
-            await user.send(f"{ZWARNING} You have been banned from **{ctx.guild.name}** by **{ctx.author}**. Reason: {reason or 'No reason provided'}")
+            await user.send(
+                f"{ZWARNING} Vous avez été banni de **{ctx.guild.name}** par **{ctx.author}**. Raison : {reason or 'Aucune raison fournie'}"
+            )
             dm_status = "Yes"
         except discord.Forbidden:
             dm_status = "No"
@@ -106,25 +133,35 @@ class Ban(commands.Cog):
             dm_status = "No"
 
         # Ban the user
-        await ctx.guild.ban(user, reason=f"Ban requested by {ctx.author} for reason: {reason or 'No reason provided'}")
+        await ctx.guild.ban(
+            user,
+            reason=f"Bannissement demandé par {ctx.author} pour la raison : {reason or 'Aucune raison fournie'}",
+        )
 
         # Success container with Components V2
         container = ui.Container()
-        container.add_item(ui.TextDisplay(f"✅ **Successfully Banned {user.name}**"))
+        container.add_item(ui.TextDisplay(f"✅ **{user.name} banni avec succès**"))
         container.add_item(ui.Separator())
-        container.add_item(ui.TextDisplay(
-            f"**{TICK} | [{user}](https://discord.com/users/{user.id}) Has Been Banned Successfully**"
-            f"\n**Reason:** {reason or 'No reason provided'}"
-            f"\n**DM Sent:** {dm_status}"
-            f"\n**Moderator:** {ctx.author.mention}"
-        ))
+        container.add_item(
+            ui.TextDisplay(
+                f"**{TICK} | [{user}](https://discord.com/users/{user.id}) a été banni avec succès**"
+                f"\n**Raison :** {reason or 'Aucune raison fournie'}"
+                f"\n**MP envoyé :** {dm_status}"
+                f"\n**Modérateur :** {ctx.author.mention}"
+            )
+        )
         container.add_item(ui.Separator())
-        container.add_item(ui.TextDisplay(f"*Requested by {ctx.author} • {discord.utils.format_dt(discord.utils.utcnow(), 'R')}*"))
-        
+        container.add_item(
+            ui.TextDisplay(
+                f"*Demandé par {ctx.author} • {discord.utils.format_dt(discord.utils.utcnow(), 'R')}*"
+            )
+        )
+
         view = ui.LayoutView()
         view.add_item(container)
-        
+
         message = await ctx.send(view=view)
+
 
 async def setup(bot):
     await bot.add_cog(Ban(bot))

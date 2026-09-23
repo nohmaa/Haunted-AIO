@@ -71,8 +71,8 @@ class ReactionGame:
             returns the game message
         """
         embed = discord.Embed(
-            title="Reaction Game",
-            description=f"React with {self.emoji} when the embed is edited!",
+            title="Jeu de réaction",
+            description=f"Réagis avec {self.emoji} quand le message est modifié !",
             color=discord.Color.random(),
         )
 
@@ -82,7 +82,7 @@ class ReactionGame:
         pause = random.uniform(1.0, 5.0)
         await asyncio.sleep(pause)
 
-        embed.description = f"React with {self.emoji} now!"
+        embed.description = f"Réagis avec {self.emoji} maintenant !"
         await self.message.edit(embed=embed)
 
         try:
@@ -90,7 +90,7 @@ class ReactionGame:
         except asyncio.TimeoutError:
             return self.message
 
-        embed.description = f"{user.mention} reacted first in `{elapsed:.2f}s` !"
+        embed.description = f"{user.mention} a réagi en premier en `{elapsed:.2f}s` !"
         await self.message.edit(embed=embed)
 
         return self.message

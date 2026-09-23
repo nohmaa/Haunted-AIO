@@ -21,9 +21,9 @@ from ..wordle import Wordle
 from ..utils import DiscordColor, DEFAULT_COLOR, BaseView
 
 
-class WordInput(discord.ui.Modal, title="Word Input"):
+class WordInput(discord.ui.Modal, title="Entrer un mot"):
     word = discord.ui.TextInput(
-        label=f"Input your guess",
+        label=f"Entre ta proposition",
         style=discord.TextStyle.short,
         required=True,
         min_length=5,
@@ -40,7 +40,7 @@ class WordInput(discord.ui.Modal, title="Word Input"):
 
         if content not in game._valid_words:
             return await interaction.response.send_message(
-                "That is not a valid word!", ephemeral=True
+                "Ce n’est pas un mot valide !", ephemeral=True
             )
         else:
             won = game.parse_guess(content)
@@ -52,11 +52,11 @@ class WordInput(discord.ui.Modal, title="Word Input"):
 
             if won:
                 await interaction.message.reply(
-                    "Game Over! You won!", mention_author=True
+                    "Partie terminée ! Tu as gagné !", mention_author=True
                 )
             elif lost := len(game.guesses) >= 6:
                 await interaction.message.reply(
-                    f"Game Over! You lose, the word was: **{game.word}**",
+                    f"Partie terminée ! Tu as perdu, le mot était : **{game.word}**",
                     mention_author=True,
                 )
 
@@ -72,22 +72,24 @@ class WordInput(discord.ui.Modal, title="Word Input"):
 class WordInputButton(discord.ui.Button["WordleView"]):
     def __init__(self, *, cancel_button: bool = False):
         super().__init__(
-            label="Cancel" if cancel_button else "Make a guess!",
-            style=discord.ButtonStyle.red
-            if cancel_button
-            else discord.ButtonStyle.blurple,
+            label="Annuler" if cancel_button else "Proposer un mot !",
+            style=(
+                discord.ButtonStyle.red
+                if cancel_button
+                else discord.ButtonStyle.blurple
+            ),
         )
 
     async def callback(self, interaction: discord.Interaction) -> None:
         game = self.view.game
         if interaction.user != game.player:
             return await interaction.response.send_message(
-                "This isn't your game!", ephemeral=True
+                "Ce n’est pas ta partie !", ephemeral=True
             )
         else:
-            if self.label == "Cancel":
+            if self.label == "Annuler":
                 await interaction.response.send_message(
-                    f"Game Over! the word was: **{game.word}**"
+                    f"Partie terminée ! Le mot était : **{game.word}**"
                 )
                 await interaction.message.delete()
                 return self.view.stop()

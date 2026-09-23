@@ -22,7 +22,6 @@ import random
 import asyncio
 
 
-
 class Games(Cog):
 
     module_key = "games"
@@ -31,10 +30,9 @@ class Games(Cog):
     def __init__(self, client: zyrox):
         self.client = client
 
-
-    @commands.hybrid_command(name="chess",
-                             help="Play Chess with a user.",
-                             usage="Chess <user>")
+    @commands.hybrid_command(
+        name="chess", help="Jouer aux échecs avec un utilisateur.", usage="Chess <user>"
+    )
     @blacklist_check()
     @ignore_check()
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -42,18 +40,21 @@ class Games(Cog):
     @commands.guild_only()
     async def _chess(self, ctx: Context, player: discord.Member):
         if player == ctx.author:
-            await ctx.send(view=CV2("❌ Error", "You Cannot play game with yourself!"))
+            await ctx.send(
+                view=CV2("❌ Error", "Tu ne peux pas jouer contre toi-même !")
+            )
         elif player.bot:
-            await ctx.send(view=CV2("❌ Error", "You cannot play with bots!"))
+            await ctx.send(view=CV2("❌ Error", "Tu ne peux pas jouer avec des bots !"))
         else:
             game = btn.BetaChess(white=ctx.author, black=player)
             await game.start(ctx)
 
-
-    @commands.hybrid_command(name="rps",
-                             help="Play Rock Paper Scissor with bot/user.",
-                             aliases=["rockpaperscissors"],
-                             usage="Rockpaperscissors")
+    @commands.hybrid_command(
+        name="rps",
+        help="Jouer à pierre-feuille-ciseaux avec le bot/un utilisateur.",
+        aliases=["rockpaperscissors"],
+        usage="Rockpaperscissors",
+    )
     @blacklist_check()
     @ignore_check()
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -63,10 +64,12 @@ class Games(Cog):
         game = btn.BetaRockPaperScissors(player)
         await game.start(ctx, timeout=120)
 
-    @commands.hybrid_command(name="tic-tac-toe",
-                             help="play tic-tac-toe game with a user.",
-                             aliases=["ttt", "tictactoe"],
-                             usage="Ticktactoe <member>")
+    @commands.hybrid_command(
+        name="tic-tac-toe",
+        help="Jouer au morpion avec un utilisateur.",
+        aliases=["ttt", "tictactoe"],
+        usage="Ticktactoe <member>",
+    )
     @blacklist_check()
     @ignore_check()
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -74,16 +77,18 @@ class Games(Cog):
     @commands.guild_only()
     async def _ttt(self, ctx: Context, player: discord.Member):
         if player == ctx.author:
-            await ctx.send(view=CV2("❌ Error", "You cannot play game with yourself!"))
+            await ctx.send(
+                view=CV2("❌ Error", "Tu ne peux pas jouer contre toi-même !")
+            )
         elif player.bot:
-            await ctx.send(view=CV2("❌ Error", "You cannot play with bots!"))
+            await ctx.send(view=CV2("❌ Error", "Tu ne peux pas jouer avec des bots !"))
         else:
             game = btn.BetaTictactoe(cross=ctx.author, circle=player)
             await game.start(ctx, timeout=30)
 
-    @commands.hybrid_command(name="wordle",
-                             help="Wordle Game | Play with bot.",
-                             usage="Wordle")
+    @commands.hybrid_command(
+        name="wordle", help="Jeu Wordle | Jouer avec le bot.", usage="Wordle"
+    )
     @blacklist_check()
     @ignore_check()
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -93,10 +98,12 @@ class Games(Cog):
         game = games.Wordle()
         await game.start(ctx, timeout=120)
 
-    @commands.hybrid_command(name="2048",
-                             help="Play 2048 game with bot.",
-                             aliases=["twenty48"],
-                             usage="2048")
+    @commands.hybrid_command(
+        name="2048",
+        help="Jouer au 2048 avec le bot.",
+        aliases=["twenty48"],
+        usage="2048",
+    )
     @blacklist_check()
     @ignore_check()
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -106,10 +113,12 @@ class Games(Cog):
         game = btn.BetaTwenty48()
         await game.start(ctx, win_at=2048)
 
-    @commands.hybrid_command(name="memory-game",
-                             help="How strong is your memory?",
-                             aliases=["memory"],
-                             usage="memory-game")
+    @commands.hybrid_command(
+        name="memory-game",
+        help="Quelle est la force de ta mémoire ?",
+        aliases=["memory"],
+        usage="memory-game",
+    )
     @blacklist_check()
     @ignore_check()
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -119,10 +128,12 @@ class Games(Cog):
         game = btn.MemoryGame()
         await game.start(ctx)
 
-    @commands.hybrid_command(name="number-slider",
-                             help="slide numbers with bot",
-                             aliases=["slider"],
-                             usage="slider")
+    @commands.hybrid_command(
+        name="number-slider",
+        help="Faire glisser les nombres avec le bot",
+        aliases=["slider"],
+        usage="slider",
+    )
     @blacklist_check()
     @ignore_check()
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -132,10 +143,12 @@ class Games(Cog):
         game = btn.NumberSlider()
         await game.start(ctx)
 
-    @commands.hybrid_command(name="battleship",
-                             help="Play battleship game with your friend.",
-                             aliases=["battle-ship"],
-                             usage="battleship <user>")
+    @commands.hybrid_command(
+        name="battleship",
+        help="Jouer à la bataille navale avec ton ami.",
+        aliases=["battle-ship"],
+        usage="battleship <user>",
+    )
     @blacklist_check()
     @ignore_check()
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -145,30 +158,36 @@ class Games(Cog):
         game = btn.BetaBattleShip(player1=ctx.author, player2=player)
         await game.start(ctx)
 
-    @commands.group(name="country-guesser",
-                    help="Guess name of the country by flag.",
-                    aliases=["guess", "guesser", "countryguesser"],
-                    usage="country-guesser")
+    @commands.group(
+        name="country-guesser",
+        help="Devine le nom du pays grâce au drapeau.",
+        aliases=["guess", "guesser", "countryguesser"],
+        usage="country-guesser",
+    )
     @commands.guild_only()
     async def _country_guesser(self, ctx: Context):
         if ctx.invoked_subcommand is None:
             await ctx.send_help("country-guesser")
 
-    @_country_guesser.command(name="start",
-                              help="Starts the country guesser game. It's a 100 Seconds Game so suggested to play in a SPECIFIC CHANNEL.")
+    @_country_guesser.command(
+        name="start",
+        help="Démarre le jeu de devinette de pays. C’est un jeu de 100 secondes, il est conseillé d’y jouer dans un SALON DÉDIÉ.",
+    )
     async def _start_country_guesser(self, ctx: Context):
         game = games.CountryGuesser(is_flags=True, hints=2)
         await game.start(ctx)
 
     """@_country_guesser.command(name="end",
-                              help="Ends the country guesser game.")
+                              help="Termine le jeu de devinette de pays.")
     async def _end_country_guesser(self, ctx: Context):
         await self.country_guesser_game.end_game_manually(ctx)"""
 
-    @commands.hybrid_command(name="connectfour",
-                             help="Play Connect Four game with user.",
-                             aliases=["c4", "connect-four", "connect4"],
-                             usage="connectfour <user>")
+    @commands.hybrid_command(
+        name="connectfour",
+        help="Jouer au Puissance 4 avec un utilisateur.",
+        aliases=["c4", "connect-four", "connect4"],
+        usage="connectfour <user>",
+    )
     @blacklist_check()
     @ignore_check()
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -176,19 +195,21 @@ class Games(Cog):
     @commands.guild_only()
     async def _connectfour(self, ctx: Context, player: discord.Member):
         if player == ctx.author:
-            await ctx.send(view=CV2("❌ Error", "You cannot play against yourself!"))
+            await ctx.send(
+                view=CV2("❌ Error", "Tu ne peux pas jouer contre toi-même !")
+            )
         elif player.bot:
-            await ctx.send(view=CV2("❌ Error", "You cannot play with bots!"))
+            await ctx.send(view=CV2("❌ Error", "Tu ne peux pas jouer avec des bots !"))
         else:
-            game = games.ConnectFour(red=ctx.author, blue=player)  
+            game = games.ConnectFour(red=ctx.author, blue=player)
             await game.start(ctx, timeout=300)
 
-
-
-    @commands.hybrid_command(name="lights-out",
-                             help="Play Lights Show game with bot.",
-                             aliases=["lightsout"],
-                             usage="Lights-out")
+    @commands.hybrid_command(
+        name="lights-out",
+        help="Jouer au jeu de lumières avec le bot.",
+        aliases=["lightsout"],
+        usage="Lights-out",
+    )
     @blacklist_check()
     @ignore_check()
     @commands.cooldown(1, 3, commands.BucketType.user)

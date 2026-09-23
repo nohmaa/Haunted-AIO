@@ -19,19 +19,15 @@ from utils.Tools import *
 from utils.cv2 import CV2, build_container
 
 
-
-
-
 class Whitelist(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.bot.loop.create_task(self.initialize_db())
 
-    
-    #@commands.Cog.listener()
+    # @commands.Cog.listener()
     async def initialize_db(self):
-        self.db = await aiosqlite.connect('db/anti.db')
-        await self.db.execute('''
+        self.db = await aiosqlite.connect("db/anti.db")
+        await self.db.execute("""
             CREATE TABLE IF NOT EXISTS whitelisted_users (
                 guild_id INTEGER,
                 user_id INTEGER,
@@ -52,92 +48,168 @@ class Whitelist(commands.Cog):
                 mngstemo BOOLEAN DEFAULT FALSE,
                 PRIMARY KEY (guild_id, user_id)
             )
-        ''')
+        """)
         await self.db.commit()
 
-    @commands.hybrid_command(name='whitelist', aliases=['wl'], help="Whitelists a user from antinuke for a specific action.")
-
+    @commands.hybrid_command(
+        name="whitelist",
+        aliases=["wl"],
+        help="Whiteliste un utilisateur de l’antinuke pour une action précise.",
+    )
     @blacklist_check()
     @ignore_check()
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.max_concurrency(1, per=commands.BucketType.default, wait=False)
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
-
     async def whitelist(self, ctx, member: discord.Member = None):
         if ctx.guild.member_count < 2:
-            view = CV2(f"{CROSS} Error", "Your Server Doesn't Meet My 30 Member Criteria")
+            view = CV2(
+                f"{CROSS} Error",
+                "Votre serveur ne remplit pas mon critère de 30 membres",
+            )
             return await ctx.send(view=view)
 
-        prefix=ctx.prefix
+        prefix = ctx.prefix
 
         async with self.db.execute(
             "SELECT owner_id FROM extraowners WHERE guild_id = ? AND owner_id = ?",
-            (ctx.guild.id, ctx.author.id)
+            (ctx.guild.id, ctx.author.id),
         ) as cursor:
             check = await cursor.fetchone()
 
         async with self.db.execute(
-            "SELECT status FROM antinuke WHERE guild_id = ?",
-            (ctx.guild.id,)
+            "SELECT status FROM antinuke WHERE guild_id = ?", (ctx.guild.id,)
         ) as cursor:
             antinuke = await cursor.fetchone()
 
         is_owner = ctx.author.id == ctx.guild.owner_id
         if not is_owner and not check:
-            view = CV2(f"{CROSS} Access Denied", "Only Server Owner or Extra Owner can Run this Command!")
+            view = CV2(
+                f"{CROSS} Accès refusé",
+                "Seul le propriétaire du serveur ou un Extra Owner peut exécuter cette commande !",
+            )
             return await ctx.send(view=view)
 
         if not antinuke or not antinuke[0]:
             view = CV2(
                 f"{ctx.guild.name} Security Settings {MANAGER}",
-                f"Ohh No! looks like your server doesn't enabled Antinuke\n\nCurrent Status : {CROSS}\n\nTo enable use `{prefix}antinuke enable`"
+                f"Ohh Non! looks like your server doesn't enabled Antinuke\n\nCurrent Status : {CROSS}\n\nTo enable use `{prefix}antinuke enable`",
             )
             return await ctx.send(view=view)
 
         if not member:
             view = CV2(
-                "__Whitelist Commands__",
-                "**Adding a user to the whitelist means that no actions will be taken against them if they trigger the Anti-Nuke Module.**",
-                f"**Usage**\n{ARROWRED} `{prefix}whitelist @user/id`\n{ARROWRED} `{prefix}wl @user`"
+                "__Commandes Whitelist__",
+                "**Ajouter un utilisateur à la whitelist signifie qu’aucune action ne sera prise contre lui s’il déclenche le module Anti-Nuke.**",
+                f"**Usage**\n{ARROWRED} `{prefix}whitelist @user/id`\n{ARROWRED} `{prefix}wl @user`",
             )
             return await ctx.send(view=view)
 
         async with self.db.execute(
             "SELECT * FROM whitelisted_users WHERE guild_id = ? AND user_id = ?",
-            (ctx.guild.id, member.id)
+            (ctx.guild.id, member.id),
         ) as cursor:
             data = await cursor.fetchone()
 
         if data:
-            view = CV2(f"{CROSS} Error", f"<@{member.id}> is already a whitelisted member, **Unwhitelist** the user and try again.")
+            view = CV2(
+                f"{CROSS} Error",
+                f"<@{member.id}> est déjà un membre whitelisté, **unwhiteliste** l’utilisateur puis réessaie.",
+            )
             return await ctx.send(view=view)
 
         await self.db.execute(
             "INSERT INTO whitelisted_users (guild_id, user_id) VALUES (?, ?)",
-            (ctx.guild.id, member.id)
+            (ctx.guild.id, member.id),
         )
         await self.db.commit()
 
         options = [
-            discord.SelectOption(label="Ban", description="Whitelist a member with ban permission", value="ban"),
-            discord.SelectOption(label="Kick", description="Whitelist a member with kick permission", value="kick"),
-            discord.SelectOption(label="Prune", description="Whitelist a member with prune permission", value="prune"),
-            discord.SelectOption(label="Bot Add", description="Whitelist a member with bot add permission", value="botadd"),
-            discord.SelectOption(label="Server Update", description="Whitelist a member with server update permission", value="serverup"),
-            discord.SelectOption(label="Member Update", description="Whitelist a member with member update permission", value="memup"),
-            discord.SelectOption(label="Channel Create", description="Whitelist a member with channel create permission", value="chcr"),
-            discord.SelectOption(label="Channel Delete", description="Whitelist a member with channel delete permission", value="chdl"),
-            discord.SelectOption(label="Channel Update", description="Whitelist a member with channel update permission", value="chup"),
-            discord.SelectOption(label="Role Create", description="Whitelist a member with role create permission", value="rlcr"),
-            discord.SelectOption(label="Role Update", description="Whitelist a member with role update permission", value="rlup"),
-            discord.SelectOption(label="Role Delete", description="Whitelist a member with role delete permission", value="rldl"),
-            discord.SelectOption(label="Mention Everyone", description="Whitelist a member with mention everyone permission", value="meneve"),
-            discord.SelectOption(label="Manage Webhook", description="Whitelist a member with manage webhook permission", value="mngweb")
+            discord.SelectOption(
+                label="Bannissement",
+                description="Whitelister un membre pour le bannissement",
+                value="ban",
+            ),
+            discord.SelectOption(
+                label="Expulsion",
+                description="Whitelister un membre pour l’expulsion",
+                value="kick",
+            ),
+            discord.SelectOption(
+                label="Prune",
+                description="Whitelister un membre pour le prune",
+                value="prune",
+            ),
+            discord.SelectOption(
+                label="Ajout de bots",
+                description="Whitelister un membre pour l’ajout de bots",
+                value="botadd",
+            ),
+            discord.SelectOption(
+                label="Modif. serveur",
+                description="Whitelister un membre pour la modification du serveur",
+                value="serverup",
+            ),
+            discord.SelectOption(
+                label="Modif. membres",
+                description="Whitelister un membre pour la modification des membres",
+                value="memup",
+            ),
+            discord.SelectOption(
+                label="Création salon",
+                description="Whitelister un membre pour la création de salons",
+                value="chcr",
+            ),
+            discord.SelectOption(
+                label="Suppression salon",
+                description="Whitelister un membre pour la suppression de salons",
+                value="chdl",
+            ),
+            discord.SelectOption(
+                label="Modif. salon",
+                description="Whitelister un membre pour la modification de salons",
+                value="chup",
+            ),
+            discord.SelectOption(
+                label="Création rôle",
+                description="Whitelister un membre pour la création de rôles",
+                value="rlcr",
+            ),
+            discord.SelectOption(
+                label="Modif. rôle",
+                description="Whitelister un membre pour la modification de rôles",
+                value="rlup",
+            ),
+            discord.SelectOption(
+                label="Suppression rôle",
+                description="Whitelister un membre pour la suppression de rôles",
+                value="rldl",
+            ),
+            discord.SelectOption(
+                label="Mention everyone",
+                description="Whitelister un membre pour la mention everyone",
+                value="meneve",
+            ),
+            discord.SelectOption(
+                label="Gestion webhooks",
+                description="Whitelister un membre pour la gestion des webhooks",
+                value="mngweb",
+            ),
         ]
 
-        select = discord.ui.Select(placeholder="Choose Your Options", min_values=1, max_values=len(options), options=options, custom_id="wl")
-        button = discord.ui.Button(label="Add This User To All Categories", style=discord.ButtonStyle.primary, custom_id="catWl")
+        select = discord.ui.Select(
+            placeholder="Choisis tes options",
+            min_values=1,
+            max_values=len(options),
+            options=options,
+            custom_id="wl",
+        )
+        button = discord.ui.Button(
+            label="Ajouter cet utilisateur à toutes les catégories",
+            style=discord.ButtonStyle.primary,
+            custom_id="catWl",
+        )
 
         action_view = discord.ui.View()
         action_view.add_item(select)
@@ -163,21 +235,44 @@ class Whitelist(commands.Cog):
         wl_view = CV2(
             ctx.guild.name,
             disabled_list,
-            f"**Executor:** <@!{ctx.author.id}> │ **Target:** <@!{member.id}>"
+            f"**Executor:** <@!{ctx.author.id}> │ **Target:** <@!{member.id}>",
         )
 
         msg = await ctx.send(view=action_view)
 
         def check(interaction):
-            return interaction.user.id == ctx.author.id and interaction.message.id == msg.id
+            return (
+                interaction.user.id == ctx.author.id
+                and interaction.message.id == msg.id
+            )
 
         try:
-            interaction = await self.bot.wait_for("interaction", check=check, timeout=60.0)
+            interaction = await self.bot.wait_for(
+                "interaction", check=check, timeout=60.0
+            )
             if interaction.data["custom_id"] == "catWl":
-                
+
                 await self.db.execute(
                     "UPDATE whitelisted_users SET ban = ?, kick = ?, prune = ?, botadd = ?, serverup = ?, memup = ?, chcr = ?, chdl = ?, chup = ?, rlcr = ?, rldl = ?, rlup = ?, meneve = ?, mngweb = ?, mngstemo = ? WHERE guild_id = ? AND user_id = ?",
-                    (True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, ctx.guild.id, member.id)
+                    (
+                        True,
+                        True,
+                        True,
+                        True,
+                        True,
+                        True,
+                        True,
+                        True,
+                        True,
+                        True,
+                        True,
+                        True,
+                        True,
+                        True,
+                        True,
+                        ctx.guild.id,
+                        member.id,
+                    ),
                 )
                 await self.db.commit()
 
@@ -201,29 +296,28 @@ class Whitelist(commands.Cog):
                 result = CV2(
                     ctx.guild.name,
                     enabled_list,
-                    f"**Executor:** <@!{ctx.author.id}> │ **Target:** <@!{member.id}>"
+                    f"**Executor:** <@!{ctx.author.id}> │ **Target:** <@!{member.id}>",
                 )
                 await interaction.response.edit_message(view=result)
             else:
-                
+
                 fields = {
-                    'ban': 'Ban',
-                    'kick': 'Kick',
-                    'prune': 'Prune',
-                    'botadd': 'Bot Add',
-                    'serverup': 'Server Update',
-                    'memup': 'Member Update',
-                    'chcr': 'Channel Create',
-                    'chdl': 'Channel Delete',
-                    'chup': 'Channel Update',
-                    'rlcr': 'Role Create',
-                    'rldl': 'Role Delete',
-                    'rlup': 'Role Update',
-                    'meneve': 'Mention Everyone',
-                    'mngweb': 'Manage Webhooks'
+                    "ban": "Ban",
+                    "kick": "Kick",
+                    "prune": "Prune",
+                    "botadd": "Bot Add",
+                    "serverup": "Server Update",
+                    "memup": "Member Update",
+                    "chcr": "Channel Create",
+                    "chdl": "Channel Delete",
+                    "chup": "Channel Update",
+                    "rlcr": "Role Create",
+                    "rldl": "Role Delete",
+                    "rlup": "Role Update",
+                    "meneve": "Mention Everyone",
+                    "mngweb": "Manage Webhooks",
                 }
 
-                
                 status_lines = []
                 selected_values = interaction.data["values"]
                 for key, name in fields.items():
@@ -235,7 +329,7 @@ class Whitelist(commands.Cog):
                 for value in selected_values:
                     await self.db.execute(
                         f"UPDATE whitelisted_users SET {value} = ? WHERE guild_id = ? AND user_id = ?",
-                        (True, ctx.guild.id, member.id)
+                        (True, ctx.guild.id, member.id),
                     )
 
                 await self.db.commit()
@@ -243,14 +337,17 @@ class Whitelist(commands.Cog):
                 result = CV2(
                     ctx.guild.name,
                     "\n".join(status_lines),
-                    f"**Executor:** <@!{ctx.author.id}> │ **Target:** <@!{member.id}>"
+                    f"**Executor:** <@!{ctx.author.id}> │ **Target:** <@!{member.id}>",
                 )
                 await interaction.response.edit_message(view=result)
         except TimeoutError:
             await msg.edit(view=None)
 
-
-    @commands.hybrid_command(name='whitelisted', aliases=['wlist'], help="Shows the list of whitelisted users.")
+    @commands.hybrid_command(
+        name="whitelisted",
+        aliases=["wlist"],
+        help="Affiche la liste des utilisateurs whitelistés.",
+    )
     @blacklist_check()
     @ignore_check()
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -259,54 +356,64 @@ class Whitelist(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def whitelisted(self, ctx):
         if ctx.guild.member_count < 2:
-            view = CV2(f"{CROSS} Error", "Your Server Doesn't Meet My 30 Member Criteria")
+            view = CV2(
+                f"{CROSS} Error",
+                "Votre serveur ne remplit pas mon critère de 30 membres",
+            )
             return await ctx.send(view=view)
 
-        pre=ctx.prefix
+        pre = ctx.prefix
 
         async with self.db.execute(
             "SELECT owner_id FROM extraowners WHERE guild_id = ? AND owner_id = ?",
-            (ctx.guild.id, ctx.author.id)
+            (ctx.guild.id, ctx.author.id),
         ) as cursor:
             check = await cursor.fetchone()
 
         async with self.db.execute(
-            "SELECT status FROM antinuke WHERE guild_id = ?",
-            (ctx.guild.id,)
+            "SELECT status FROM antinuke WHERE guild_id = ?", (ctx.guild.id,)
         ) as cursor:
             antinuke = await cursor.fetchone()
 
         is_owner = ctx.author.id == ctx.guild.owner_id
         if not is_owner and not check:
-            view = CV2(f"{CROSS} Access Denied", "Only Server Owner or Extra Owner can Run this Command!")
+            view = CV2(
+                f"{CROSS} Accès refusé",
+                "Seul le propriétaire du serveur ou un Extra Owner peut exécuter cette commande !",
+            )
             return await ctx.send(view=view)
 
         if not antinuke or not antinuke[0]:
             view = CV2(
                 f"{ctx.guild.name} Security Settings {MANAGER}",
-                f"Ohh NO! looks like your server doesn't enabled security\n\nCurrent Status : {CROSS}\n\nTo enable use `{pre}antinuke enable`"
+                f"Ohh NO! looks like your server doesn't enabled security\n\nCurrent Status : {CROSS}\n\nTo enable use `{pre}antinuke enable`",
             )
             return await ctx.send(view=view)
 
-
         async with self.db.execute(
-            "SELECT user_id FROM whitelisted_users WHERE guild_id = ?",
-            (ctx.guild.id,)
+            "SELECT user_id FROM whitelisted_users WHERE guild_id = ?", (ctx.guild.id,)
         ) as cursor:
             data = await cursor.fetchall()
 
         if not data:
-            view = CV2(f"{CROSS} Error", "No whitelisted users found.")
+            view = CV2(f"{CROSS} Error", "Aucun utilisateur whitelisté trouvé.")
             return await ctx.send(view=view)
 
         whitelisted_users = [self.bot.get_user(user_id[0]) for user_id in data]
-        whitelisted_users_str = ", ".join(f"<@!{user.id}>" for user in whitelisted_users if user)
+        whitelisted_users_str = ", ".join(
+            f"<@!{user.id}>" for user in whitelisted_users if user
+        )
 
-        view = CV2(f"__Whitelisted Users for {ctx.guild.name}__", whitelisted_users_str)
+        view = CV2(
+            f"__Utilisateurs whitelistés pour {ctx.guild.name}__", whitelisted_users_str
+        )
         await ctx.send(view=view)
 
-
-    @commands.hybrid_command(name="whitelistreset", aliases=['wlreset'], help="Resets the whitelisted users.")
+    @commands.hybrid_command(
+        name="whitelistreset",
+        aliases=["wlreset"],
+        help="Réinitialise les utilisateurs whitelistés.",
+    )
     @blacklist_check()
     @ignore_check()
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -315,49 +422,55 @@ class Whitelist(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def whitelistreset(self, ctx):
         if ctx.guild.member_count < 2:
-            view = CV2(f"{CROSS} Error", "Your Server Doesn't Meet My 30 Member Criteria")
+            view = CV2(
+                f"{CROSS} Error",
+                "Votre serveur ne remplit pas mon critère de 30 membres",
+            )
             return await ctx.send(view=view)
 
-        pre=ctx.prefix
+        pre = ctx.prefix
 
         async with self.db.execute(
             "SELECT owner_id FROM extraowners WHERE guild_id = ? AND owner_id = ?",
-            (ctx.guild.id, ctx.author.id)
+            (ctx.guild.id, ctx.author.id),
         ) as cursor:
             check = await cursor.fetchone()
 
         async with self.db.execute(
-            "SELECT status FROM antinuke WHERE guild_id = ?",
-            (ctx.guild.id,)
+            "SELECT status FROM antinuke WHERE guild_id = ?", (ctx.guild.id,)
         ) as cursor:
             antinuke = await cursor.fetchone()
 
         is_owner = ctx.author.id == ctx.guild.owner_id
         if not is_owner and not check:
-            view = CV2(f"{CROSS} Access Denied", "Only Server Owner or Extra Owner can Run this Command!")
+            view = CV2(
+                f"{CROSS} Accès refusé",
+                "Seul le propriétaire du serveur ou un Extra Owner peut exécuter cette commande !",
+            )
             return await ctx.send(view=view)
 
         if not antinuke or not antinuke[0]:
             view = CV2(
                 f"{ctx.guild.name} Security Settings {MANAGER}",
-                f"Ohh NO! looks like your server doesn't enabled security\n\nCurrent Status : {CROSS}\n\nTo enable use `{pre}antinuke enable`"
+                f"Ohh NO! looks like your server doesn't enabled security\n\nCurrent Status : {CROSS}\n\nTo enable use `{pre}antinuke enable`",
             )
             return await ctx.send(view=view)
 
         async with self.db.execute(
-            "SELECT user_id FROM whitelisted_users WHERE guild_id = ?",
-            (ctx.guild.id,)
+            "SELECT user_id FROM whitelisted_users WHERE guild_id = ?", (ctx.guild.id,)
         ) as cursor:
             data = await cursor.fetchall()
 
-
         if not data:
-            view = CV2(f"{CROSS} Error", "No whitelisted users found.")
+            view = CV2(f"{CROSS} Error", "Aucun utilisateur whitelisté trouvé.")
             return await ctx.send(view=view)
 
-        await self.db.execute("DELETE FROM whitelisted_users WHERE guild_id = ?", (ctx.guild.id,))
+        await self.db.execute(
+            "DELETE FROM whitelisted_users WHERE guild_id = ?", (ctx.guild.id,)
+        )
         await self.db.commit()
-        view = CV2(f"{TICK} Success", f"Removed all whitelisted members from {ctx.guild.name}")
+        view = CV2(
+            f"{TICK} Succès",
+            f"Tous les membres whitelistés ont été retirés de {ctx.guild.name}",
+        )
         await ctx.send(view=view)
-
- 

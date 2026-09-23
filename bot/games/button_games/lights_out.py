@@ -47,7 +47,7 @@ class LightsOutButton(discord.ui.Button["LightsOutView"]):
 
         if interaction.user != game.player:
             return await interaction.response.send_message(
-                "This is not your game!", ephemeral=True
+                "Ce n’est pas ta partie !", ephemeral=True
             )
         else:
             row, col = self.row, self.col
@@ -61,12 +61,12 @@ class LightsOutButton(discord.ui.Button["LightsOutView"]):
             self.view.update_board(clear=True)
 
             game.moves += 1
-            game.embed.set_field_at(0, name="\u200b", value=f"Moves: `{game.moves}`")
+            game.embed.set_field_at(0, name="\u200b", value=f"Coups : `{game.moves}`")
 
             if game.tiles == game.completed:
                 self.view.disable_all()
                 self.view.stop()
-                game.embed.description = "**Congrats! You won!**"
+                game.embed.description = "**Bravo ! Tu as gagné !**"
 
             return await interaction.response.edit_message(
                 embed=game.embed, view=self.view
@@ -167,9 +167,9 @@ class LightsOut:
 
         self.view = LightsOutView(self, timeout=timeout)
         self.embed = discord.Embed(
-            description="Turn off all the tiles!", color=embed_color
+            description="Éteins toutes les cases !", color=embed_color
         )
-        self.embed.add_field(name="\u200b", value="Moves: `0`")
+        self.embed.add_field(name="\u200b", value="Coups : `0`")
 
         self.message = await ctx.send(embed=self.embed, view=self.view)
 

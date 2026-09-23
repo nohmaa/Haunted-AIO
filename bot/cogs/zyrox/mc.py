@@ -20,12 +20,12 @@ class _mc(commands.Cog):
         self.bot = bot
 
     """Minecraft commands"""
-  
+
     def help_custom(self):
-		      emoji = MINECRAFT
-		      label = "Minecraft Commands"
-		      description = "Show you Commands of Minecraft"
-		      return emoji, label, description
+        emoji = MINECRAFT
+        label = "Commandes Minecraft"
+        description = "Affiche les commandes de Minecraft"
+        return emoji, label, description
 
     @commands.group()
     async def __Minecraft__(self, ctx: commands.Context):

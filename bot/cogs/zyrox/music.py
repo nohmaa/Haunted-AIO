@@ -18,16 +18,17 @@ from discord.ext import commands
 class _music(commands.Cog):
 
     module_key = "music"
+
     def __init__(self, bot):
         self.bot = bot
 
     """Music commands"""
 
     def help_custom(self):
-              emoji = MUSIC
-              label = "Music Commands"
-              description = "Show you Commands of Music"
-              return emoji, label, description
+        emoji = MUSIC
+        label = "Commandes de musique"
+        description = "Affiche les commandes de musique"
+        return emoji, label, description
 
     @commands.group()
     async def __Music__(self, ctx: commands.Context):

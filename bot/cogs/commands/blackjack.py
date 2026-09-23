@@ -20,6 +20,7 @@ from utils.Tools import *
 from utils.cv2 import CV2, build_container
 from discord.ui import LayoutView, TextDisplay, Separator, Container
 
+
 class CV2(LayoutView):
     def __init__(self, title, *sections):
         super().__init__(timeout=None)
@@ -30,7 +31,9 @@ class CV2(LayoutView):
                 items.append(TextDisplay(str(s)))
         self.add_item(build_container(*items))
 
-CARDS_PATH = 'data/cards/'
+
+CARDS_PATH = "data/cards/"
+
 
 class Card:
     suits = ["clubs", "diamonds", "hearts", "spades"]
@@ -47,18 +50,19 @@ class Card:
             return str(self.value)
         else:
             return {
-                11: 'jack',
-                12: 'queen',
-                13: 'king',
-                14: 'ace',
+                11: "jack",
+                12: "queen",
+                13: "king",
+                14: "ace",
             }[self.value]
 
     @property
     def image(self):
         return (
-            f"{self.symbol if self.name != '10' else '10'}" \
-            f"{self.suit[0].upper()}.png" \
-            if not self.down else "red_back.png"
+            f"{self.symbol if self.name != '10' else '10'}"
+            f"{self.suit[0].upper()}.png"
+            if not self.down
+            else "red_back.png"
         )
 
     def flip(self):
@@ -66,7 +70,7 @@ class Card:
         return self
 
     def __str__(self) -> str:
-        return f'{self.name.title()} of {self.suit.title()}'
+        return f"{self.name.title()} of {self.suit.title()}"
 
     def __repr__(self) -> str:
         return str(self)
@@ -82,7 +86,7 @@ class Blackjack(commands.Cog):
 
     @staticmethod
     def center(*hands: Tuple[Image.Image]) -> Image.Image:
-        bg: Image.Image = Image.open(os.path.join(CARDS_PATH, 'table.png'))
+        bg: Image.Image = Image.open(os.path.join(CARDS_PATH, "table.png"))
         bg_center_x = bg.size[0] // 2
         bg_center_y = bg.size[1] // 2
 
@@ -92,7 +96,9 @@ class Blackjack(commands.Cog):
         start_y = bg_center_y - (((len(hands) * img_h) + ((len(hands) - 1) * 15)) // 2)
 
         for hand in hands:
-            start_x = bg_center_x - (((len(hand) * img_w) + ((len(hand) - 1) * 10)) // 2)
+            start_x = bg_center_x - (
+                ((len(hand) * img_w) + ((len(hand) - 1) * 10)) // 2
+            )
             for card in hand:
                 bg.alpha_composite(card, (start_x, start_y))
                 start_x += img_w + 10
@@ -101,16 +107,16 @@ class Blackjack(commands.Cog):
         return bg
 
     def output(self, name, *hands: Tuple[List[Card]]) -> None:
-        self.center(*map(self.hand_to_images, hands)).save(f'data/{name}.png')
+        self.center(*map(self.hand_to_images, hands)).save(f"data/{name}.png")
 
     @staticmethod
     def calc_hand(hand: List[Card]) -> int:
-        non_aces = [c for c in hand if c.symbol != 'A']
-        aces = [c for c in hand if c.symbol == 'A']
+        non_aces = [c for c in hand if c.symbol != "A"]
+        aces = [c for c in hand if c.symbol == "A"]
         total_sum = 0
         for card in non_aces:
             if not card.down:
-                if card.symbol in 'JQK':
+                if card.symbol in "JQK":
                     total_sum += 10
                 else:
                     total_sum += card.value
@@ -122,7 +128,11 @@ class Blackjack(commands.Cog):
                     total_sum += 1
         return total_sum
 
-    @commands.command(aliases=['bj', 'blackjacks'], help="Play a simple game of blackjack.", usage="blackjack")
+    @commands.command(
+        aliases=["bj", "blackjacks"],
+        help="Jouer une partie simple de blackjack.",
+        usage="blackjack",
+    )
     @blacklist_check()
     @ignore_check()
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -139,25 +149,33 @@ class Blackjack(commands.Cog):
             player_hand.append(deck.pop())
             dealer_hand.append(deck.pop())
 
-            dealer_hand[1] = dealer_hand[1].flip() 
+            dealer_hand[1] = dealer_hand[1].flip()
 
             player_score = self.calc_hand(player_hand)
             dealer_score = self.calc_hand(dealer_hand)
 
             async def out_table(**kwargs) -> discord.Message:
                 self.output(ctx.author.id, dealer_hand, player_hand)
-                file = discord.File(f"data/{ctx.author.id}.png", filename=f"{ctx.author.id}.png")
-                view = CV2(kwargs.get('title', 'Blackjack'), kwargs.get('description', ''))
+                file = discord.File(
+                    f"data/{ctx.author.id}.png", filename=f"{ctx.author.id}.png"
+                )
+                view = CV2(
+                    kwargs.get("title", "Blackjack"), kwargs.get("description", "")
+                )
                 msg: discord.Message = await ctx.send(file=file, view=view)
                 return msg
 
-            def check(reaction: discord.Reaction, user: Union[discord.Member, discord.User]) -> bool:
-                return all((
-                    str(reaction.emoji) in ("🇸", "🇭"),
-                    user == ctx.author,
-                    user != self.bot.user,
-                    reaction.message == msg
-                ))
+            def check(
+                reaction: discord.Reaction, user: Union[discord.Member, discord.User]
+            ) -> bool:
+                return all(
+                    (
+                        str(reaction.emoji) in ("🇸", "🇭"),
+                        user == ctx.author,
+                        user != self.bot.user,
+                        reaction.message == msg,
+                    )
+                )
 
             standing = False
 
@@ -165,24 +183,26 @@ class Blackjack(commands.Cog):
                 player_score = self.calc_hand(player_hand)
                 dealer_score = self.calc_hand(dealer_hand)
 
-                if player_score == 21:  
-                    result = ("Blackjack!", 'won')
+                if player_score == 21:
+                    result = ("Blackjack !", "won")
                     break
 
-                elif player_score > 21: 
-                    result = ("Player busts", 'lost')
+                elif player_score > 21:
+                    result = ("Le joueur dépasse 21", "lost")
                     break
 
                 msg = await out_table(
-                    title="Your Turn",
-                    description=f"Your hand: {player_score}\nDealer's hand: {dealer_score}"
+                    title="À ton tour",
+                    description=f"Ta main : {player_score}\nMain du croupier : {dealer_score}",
                 )
 
                 await msg.add_reaction("🇭")
                 await msg.add_reaction("🇸")
 
                 try:
-                    reaction, _ = await self.bot.wait_for('reaction_add', timeout=60, check=check)
+                    reaction, _ = await self.bot.wait_for(
+                        "reaction_add", timeout=60, check=check
+                    )
                 except asyncio.TimeoutError:
                     await msg.delete()
                     return
@@ -197,7 +217,7 @@ class Blackjack(commands.Cog):
                     break
 
             if standing:
-                dealer_hand[1] = dealer_hand[1].flip()  
+                dealer_hand[1] = dealer_hand[1].flip()
                 player_score = self.calc_hand(player_hand)
                 dealer_score = self.calc_hand(dealer_hand)
 
@@ -206,20 +226,24 @@ class Blackjack(commands.Cog):
                     dealer_score = self.calc_hand(dealer_hand)
 
                 if dealer_score == 21:
-                    result = ('Dealer blackjack', 'lost')
+                    result = ("Blackjack du croupier", "lost")
                 elif dealer_score > 21:
-                    result = ("Dealer busts", 'won')
+                    result = ("Le croupier dépasse 21", "won")
                 elif dealer_score == player_score:
-                    result = ("Tie!", 'kept')
+                    result = ("Égalité !", "kept")
                 elif dealer_score > player_score:
-                    result = ("You lose!", 'lost')
+                    result = ("Tu as perdu !", "lost")
                 elif dealer_score < player_score:
-                    result = ("You win!", 'won')
+                    result = ("Tu as gagné !", "won")
 
             color = (
-                discord.Color.red() if result[1] == 'lost'
-                else discord.Color.green() if result[1] == 'won'
-                else discord.Color.blue()
+                discord.Color.red()
+                if result[1] == "lost"
+                else (
+                    discord.Color.green()
+                    if result[1] == "won"
+                    else discord.Color.blue()
+                )
             )
             try:
                 await msg.delete()
@@ -229,13 +253,10 @@ class Blackjack(commands.Cog):
                 title=result[0],
                 color=color,
                 description=(
-                    f"**You {result[1]}**\nYour hand: {player_score}\n" +
-                    f"Dealer's hand: {dealer_score}"
-                )
+                    f"**Tu as {result[1]}**\nTa main : {player_score}\n"
+                    + f"Main du croupier : {dealer_score}"
+                ),
             )
-            os.remove(f'data/{ctx.author.id}.png')
+            os.remove(f"data/{ctx.author.id}.png")
         except Exception as e:
             print(e)
-
-
- 

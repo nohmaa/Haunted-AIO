@@ -49,14 +49,14 @@ class Guild(Cog):
                 return
 
             channels = len(set(self.client.get_all_channels()))
-            embed = discord.Embed(title=f"{guild.name}'s Information", color=0xFF0000)
+            embed = discord.Embed(title=f"Informations de {guild.name}", color=0xFF0000)
 
-            embed.set_author(name="Guild Joined")
-            embed.set_footer(text=f"Added in {guild.name}")
+            embed.set_author(name="Serveur rejoint")
+            embed.set_footer(text=f"Ajouté sur {guild.name}")
 
             embed.add_field(
-                name="**__About__**",
-                value=f"**Name : ** {guild.name}\n**ID :** {guild.id}\n**Owner {KING}  :** {guild.owner} (<@{guild.owner_id}>)\n**Created At : **{guild.created_at.month}/{guild.created_at.day}/{guild.created_at.year}\n**Members :** {len(guild.members)}",
+                name="**__À propos__**",
+                value=f"**Nom : ** {guild.name}\n**ID :** {guild.id}\n**Propriétaire {KING}  :** {guild.owner} (<@{guild.owner_id}>)\n**Créé le : **{guild.created_at.month}/{guild.created_at.day}/{guild.created_at.year}\n**Membres :** {len(guild.members)}",
                 inline=False,
             )
             embed.add_field(
@@ -65,24 +65,24 @@ class Guild(Cog):
                 inline=False,
             )
             embed.add_field(
-                name="**__Members__**",
-                value=f"""{ZROCKET} Members : {len(guild.members)}\n {ZHUMAN} Humans : {len(list(filter(lambda m: not m.bot, guild.members)))}\n {ZBOT} Bots : {len(list(filter(lambda m: m.bot, guild.members)))}
+                name="**__Membres__**",
+                value=f"""{ZROCKET} Membres : {len(guild.members)}\n {ZHUMAN} Humains : {len(list(filter(lambda m: not m.bot, guild.members)))}\n {ZBOT} Bots : {len(list(filter(lambda m: m.bot, guild.members)))}
                 """,
                 inline=False,
             )
             embed.add_field(
-                name="**__Channels__**",
+                name="**__Salons__**",
                 value=f"""
-Categories : {len(guild.categories)}
-Text Channels : {len(guild.text_channels)}
-Voice Channels : {len(guild.voice_channels)}
-Threads : {len(guild.threads)}
+Catégories : {len(guild.categories)}
+Salons textuels : {len(guild.text_channels)}
+Salons vocaux : {len(guild.voice_channels)}
+Fils : {len(guild.threads)}
                 """,
                 inline=False,
             )
             embed.add_field(
-                name="__Bot Stats:__",
-                value=f"Servers: `{len(self.client.guilds)}`\nUsers: `{len(self.client.users)}`\nChannels: `{channels}`",
+                name="__Stats du bot :__",
+                value=f"Serveurs : `{len(self.client.guilds)}`\nUtilisateurs : `{len(self.client.users)}`\nSalons : `{channels}`",
                 inline=False,
             )
 
@@ -91,21 +91,22 @@ Threads : {len(guild.threads)}
 
             embed.timestamp = discord.utils.utcnow()
             await me.send(
-                f"{rope[0]}" if rope else "No Pre-Made Invite Found", embed=embed
+                f"{rope[0]}" if rope else "Aucune invitation pré-créée trouvée",
+                embed=embed,
             )
 
             if not guild.chunked:
                 await guild.chunk()
 
             embed = discord.Embed(
-                description=f"{ARROWRED} Prefix For This Server is `>`\n{ARROWRED} Get Started with `>help`\n{ARROWRED} For detailed guides, FAQ & information, visit our **[Support Server]({SUPPORT_SERVER})**",
+                description=f"{ARROWRED} Le préfixe pour ce serveur est `>`\n{ARROWRED} Commencez avec `>help`\n{ARROWRED} Pour des guides détaillés, la FAQ et des informations, visitez notre **[Serveur Support]({SUPPORT_SERVER})**",
                 color=0xFF0000,
             )
             embed.set_author(
-                name="Thanks for adding me!", icon_url=guild.me.display_avatar.url
+                name="Merci de m’avoir ajouté !", icon_url=guild.me.display_avatar.url
             )
             embed.set_footer(
-                text=f"Powered by {BRAND_NAME}™",
+                text=f"Propulsé par {BRAND_NAME}™",
             )
             if guild.icon:
                 embed.set_thumbnail(url=guild.icon.url)
@@ -164,14 +165,14 @@ Threads : {len(guild.threads)}
                 return
 
             channels = len(set(self.client.get_all_channels()))
-            embed = discord.Embed(title=f"{guild.name}'s Information", color=0xFF0000)
+            embed = discord.Embed(title=f"Informations de {guild.name}", color=0xFF0000)
 
-            embed.set_author(name="Guild Removed")
+            embed.set_author(name="Serveur quitté")
             embed.set_footer(text=f"{guild.name}")
 
             embed.add_field(
-                name="**__About__**",
-                value=f"**Name : ** {guild.name}\n**ID :** {guild.id}\n**Owner {KING} :** {guild.owner} (<@{guild.owner_id}>)\n**Created At : **{guild.created_at.month}/{guild.created_at.day}/{guild.created_at.year}\n**Members :** {len(guild.members)}",
+                name="**__À propos__**",
+                value=f"**Nom : ** {guild.name}\n**ID :** {guild.id}\n**Propriétaire {KING} :** {guild.owner} (<@{guild.owner_id}>)\n**Créé le : **{guild.created_at.month}/{guild.created_at.day}/{guild.created_at.year}\n**Membres :** {len(guild.members)}",
                 inline=False,
             )
             embed.add_field(
@@ -181,27 +182,27 @@ Threads : {len(guild.threads)}
             )
 
             embed.add_field(
-                name="**__Members__**",
+                name="**__Membres__**",
                 value=f"""
-Members : {len(guild.members)}
-Humans : {len(list(filter(lambda m: not m.bot, guild.members)))}
+Membres : {len(guild.members)}
+Humains : {len(list(filter(lambda m: not m.bot, guild.members)))}
 Bots : {len(list(filter(lambda m: m.bot, guild.members)))}
                 """,
                 inline=False,
             )
             embed.add_field(
-                name="**__Channels__**",
+                name="**__Salons__**",
                 value=f"""
-Categories : {len(guild.categories)}
-Text Channels : {len(guild.text_channels)}
-Voice Channels : {len(guild.voice_channels)}
-Threads : {len(guild.threads)}
+Catégories : {len(guild.categories)}
+Salons textuels : {len(guild.text_channels)}
+Salons vocaux : {len(guild.voice_channels)}
+Fils : {len(guild.threads)}
                 """,
                 inline=False,
             )
             embed.add_field(
-                name="__Bot Stats:__",
-                value=f"Servers: `{len(self.client.guilds)}`\nUsers: `{len(self.client.users)}`\nChannels: `{channels}`",
+                name="__Stats du bot :__",
+                value=f"Serveurs : `{len(self.client.guilds)}`\nUtilisateurs : `{len(self.client.users)}`\nSalons : `{channels}`",
                 inline=False,
             )
 

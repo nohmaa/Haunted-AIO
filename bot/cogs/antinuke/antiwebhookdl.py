@@ -17,6 +17,7 @@ import asyncio
 import datetime
 import pytz
 
+
 class AntiWebhookDelete(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -36,16 +37,22 @@ class AntiWebhookDelete(commands.Cog):
             return None
         return None
 
-    def can_fetch_audit(self, guild_id, event_name, max_requests=6, interval=10, cooldown_duration=300):
+    def can_fetch_audit(
+        self, guild_id, event_name, max_requests=6, interval=10, cooldown_duration=300
+    ):
         now = datetime.datetime.now()
-        self.event_limits.setdefault(guild_id, {}).setdefault(event_name, []).append(now)
+        self.event_limits.setdefault(guild_id, {}).setdefault(event_name, []).append(
+            now
+        )
 
         timestamps = self.event_limits[guild_id][event_name]
         timestamps = [t for t in timestamps if (now - t).total_seconds() <= interval]
         self.event_limits[guild_id][event_name] = timestamps
 
         if guild_id in self.cooldowns and event_name in self.cooldowns[guild_id]:
-            if (now - self.cooldowns[guild_id][event_name]).total_seconds() < cooldown_duration:
+            if (
+                now - self.cooldowns[guild_id][event_name]
+            ).total_seconds() < cooldown_duration:
                 return False
             del self.cooldowns[guild_id][event_name]
 
@@ -56,8 +63,10 @@ class AntiWebhookDelete(commands.Cog):
         return True
 
     async def is_blacklisted_guild(self, guild_id):
-        async with aiosqlite.connect('db/block.db') as block_db:
-            cursor = await block_db.execute("SELECT 1 FROM guild_blacklist WHERE guild_id = ?", (str(guild_id),))
+        async with aiosqlite.connect("db/block.db") as block_db:
+            cursor = await block_db.execute(
+                "SELECT 1 FROM guild_blacklist WHERE guild_id = ?", (str(guild_id),)
+            )
             return await cursor.fetchone() is not None
 
     @commands.Cog.listener()
@@ -66,17 +75,21 @@ class AntiWebhookDelete(commands.Cog):
         if await self.is_blacklisted_guild(guild.id):
             return
 
-        async with aiosqlite.connect('db/anti.db') as db:
-            async with db.execute("SELECT status FROM antinuke WHERE guild_id = ?", (guild.id,)) as cursor:
+        async with aiosqlite.connect("db/anti.db") as db:
+            async with db.execute(
+                "SELECT status FROM antinuke WHERE guild_id = ?", (guild.id,)
+            ) as cursor:
                 antinuke_status = await cursor.fetchone()
 
             if not antinuke_status or not antinuke_status[0]:
                 return
 
-        if not self.can_fetch_audit(guild.id, 'webhook_delete'):
+        if not self.can_fetch_audit(guild.id, "webhook_delete"):
             return
 
-        entry = await self.fetch_audit_logs(guild, discord.AuditLogAction.webhook_delete, channel.id)
+        entry = await self.fetch_audit_logs(
+            guild, discord.AuditLogAction.webhook_delete, channel.id
+        )
         if entry is None:
             return
 
@@ -85,16 +98,20 @@ class AntiWebhookDelete(commands.Cog):
         if executor.id in {guild.owner_id, self.bot.user.id}:
             return
 
-        async with aiosqlite.connect('db/anti.db') as db:
-            async with db.execute("SELECT mngweb FROM whitelisted_users WHERE guild_id = ? AND user_id = ?", 
-                                  (guild.id, executor.id)) as cursor:
+        async with aiosqlite.connect("db/anti.db") as db:
+            async with db.execute(
+                "SELECT mngweb FROM whitelisted_users WHERE guild_id = ? AND user_id = ?",
+                (guild.id, executor.id),
+            ) as cursor:
                 whitelist_status = await cursor.fetchone()
 
             if whitelist_status and whitelist_status[0]:
                 return
 
-            async with db.execute("SELECT owner_id FROM extraowners WHERE guild_id = ? AND owner_id = ?", 
-                                  (guild.id, executor.id)) as cursor:
+            async with db.execute(
+                "SELECT owner_id FROM extraowners WHERE guild_id = ? AND owner_id = ?",
+                (guild.id, executor.id),
+            ) as cursor:
                 extra_owner_status = await cursor.fetchone()
 
             if extra_owner_status and extra_owner_status[0]:
@@ -110,13 +127,15 @@ class AntiWebhookDelete(commands.Cog):
         retries = 3
         while retries > 0:
             try:
-                await guild.ban(executor, reason="Webhook Delete | Unwhitelisted User")
+                await guild.ban(
+                    executor, reason="Suppression de webhook | Utilisateur non autorisé"
+                )
                 return
             except discord.Forbidden:
                 return
             except discord.HTTPException as e:
                 if e.status == 429:
-                    retry_after = e.response.headers.get('Retry-After')
+                    retry_after = e.response.headers.get("Retry-After")
                     if retry_after:
                         await asyncio.sleep(float(retry_after))
                 else:

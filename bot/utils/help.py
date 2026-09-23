@@ -19,11 +19,10 @@ from discord.ui import LayoutView, TextDisplay, Separator, ActionRow
 
 class Dropdown(discord.ui.Select):
 
-    def __init__(self, ctx, options, placeholder="Choose a Category for Help"):
-        super().__init__(placeholder=placeholder,
-                         min_values=1,
-                         max_values=1,
-                         options=options)
+    def __init__(self, ctx, options, placeholder="Choisis une catégorie d’aide"):
+        super().__init__(
+            placeholder=placeholder, min_values=1, max_values=1, options=options
+        )
         self.invoker = ctx.author
 
     async def callback(self, interaction: discord.Interaction):
@@ -34,7 +33,9 @@ class Dropdown(discord.ui.Select):
             await self.view.set_page(index, interaction)
         else:
             await interaction.response.send_message(
-                "You must run this command to interact with it.", ephemeral=True)
+                "Tu dois exécuter cette commande pour interagir avec elle.",
+                ephemeral=True,
+            )
 
 
 class View(LayoutView):
@@ -48,23 +49,27 @@ class View(LayoutView):
         self.ui = ui
 
         self.options, self.pages, self.total_pages = self.gen_pages(homeembed)
-        self.pages[0]['footer'] = f"• Help page 1/{self.total_pages} | Requested by: {self.ctx.author.display_name}"
+        self.pages[0][
+            "footer"
+        ] = f"• Page d’aide 1/{self.total_pages} | Demandée par : {self.ctx.author.display_name}"
         self._rebuild()
 
     def _rebuild(self):
         self.clear_items()
         page = self.pages[self.index]
-        page['footer'] = f"• Help page {self.index + 1}/{self.total_pages} | Requested by: {self.ctx.author.display_name}"
+        page["footer"] = (
+            f"• Page d’aide {self.index + 1}/{self.total_pages} | Demandée par : {self.ctx.author.display_name}"
+        )
 
         # Build container items (text content)
         items = []
-        if page.get('title'):
+        if page.get("title"):
             items.append(TextDisplay(f"**{page['title']}**"))
-        if page.get('description'):
+        if page.get("description"):
             if items:
                 items.append(Separator(visible=True))
-            items.append(TextDisplay(page['description']))
-        for name, value in page.get('fields', []):
+            items.append(TextDisplay(page["description"]))
+        for name, value in page.get("fields", []):
             items.append(Separator(visible=True))
             items.append(TextDisplay(f"**{name}**\n{value}"))
 
@@ -72,11 +77,30 @@ class View(LayoutView):
         is_first = self.index == 0
         is_last = self.index >= len(self.pages) - 1
 
-        homeB = discord.ui.Button(label="", emoji=REWIND, style=discord.ButtonStyle.secondary, disabled=is_first)
-        backB = discord.ui.Button(label="", emoji=PREVIOUS, style=discord.ButtonStyle.secondary, disabled=is_first)
-        quitB = discord.ui.Button(label="", emoji=DELETE, style=discord.ButtonStyle.danger)
-        nextB = discord.ui.Button(label="", emoji=NEXT, style=discord.ButtonStyle.secondary, disabled=is_last)
-        lastB = discord.ui.Button(label="", emoji=FORWARD, style=discord.ButtonStyle.secondary, disabled=is_last)
+        homeB = discord.ui.Button(
+            label="",
+            emoji=REWIND,
+            style=discord.ButtonStyle.secondary,
+            disabled=is_first,
+        )
+        backB = discord.ui.Button(
+            label="",
+            emoji=PREVIOUS,
+            style=discord.ButtonStyle.secondary,
+            disabled=is_first,
+        )
+        quitB = discord.ui.Button(
+            label="", emoji=DELETE, style=discord.ButtonStyle.danger
+        )
+        nextB = discord.ui.Button(
+            label="", emoji=NEXT, style=discord.ButtonStyle.secondary, disabled=is_last
+        )
+        lastB = discord.ui.Button(
+            label="",
+            emoji=FORWARD,
+            style=discord.ButtonStyle.secondary,
+            disabled=is_last,
+        )
 
         homeB.callback = self._home_cb
         backB.callback = self._back_cb
@@ -94,14 +118,30 @@ class View(LayoutView):
             mid = len(self.options) // 2
             o1, o2 = self.options[:mid], self.options[mid:]
             if o1:
-                items.append(ActionRow(Dropdown(ctx=self.ctx, options=o1, placeholder="Main Commands")))
+                items.append(
+                    ActionRow(
+                        Dropdown(
+                            ctx=self.ctx,
+                            options=o1,
+                            placeholder="Commandes principales",
+                        )
+                    )
+                )
             if o2:
-                items.append(ActionRow(Dropdown(ctx=self.ctx, options=o2, placeholder="Extra Commands")))
+                items.append(
+                    ActionRow(
+                        Dropdown(
+                            ctx=self.ctx,
+                            options=o2,
+                            placeholder="Commandes supplémentaires",
+                        )
+                    )
+                )
         elif self.ui == 3:
             items.append(ActionRow(Dropdown(ctx=self.ctx, options=self.options)))
 
         # Add footer after controls
-        if page.get('footer'):
+        if page.get("footer"):
             items.append(Separator(visible=True))
             items.append(TextDisplay(f"*{page['footer']}*"))
 
@@ -110,7 +150,10 @@ class View(LayoutView):
 
     async def _check(self, interaction):
         if interaction.user != self.ctx.author:
-            await interaction.response.send_message("You must run this command to interact with it.", ephemeral=True)
+            await interaction.response.send_message(
+                "Tu dois exécuter cette commande pour interagir avec elle.",
+                ephemeral=True,
+            )
             return False
         return True
 
@@ -120,7 +163,9 @@ class View(LayoutView):
 
     async def _back_cb(self, interaction):
         if await self._check(interaction):
-            await self.set_page(self.index - 1 if self.index > 0 else len(self.pages) - 1, interaction)
+            await self.set_page(
+                self.index - 1 if self.index > 0 else len(self.pages) - 1, interaction
+            )
 
     async def _quit_cb(self, interaction):
         if await self._check(interaction):
@@ -129,7 +174,9 @@ class View(LayoutView):
 
     async def _next_cb(self, interaction):
         if await self._check(interaction):
-            await self.set_page(self.index + 1 if self.index < len(self.pages) - 1 else 0, interaction)
+            await self.set_page(
+                self.index + 1 if self.index < len(self.pages) - 1 else 0, interaction
+            )
 
     async def _last_cb(self, interaction):
         if await self._check(interaction):
@@ -162,27 +209,39 @@ class View(LayoutView):
         total_pages = 0
         used_labels = set()
 
-        options.append(discord.SelectOption(label="Home", emoji=HOME, description=""))
+        options.append(
+            discord.SelectOption(label="Accueil", emoji=HOME, description="")
+        )
 
         # Convert homeembed (CV2Embed) to page data
-        if hasattr(homeembed, '_title'):
+        if hasattr(homeembed, "_title"):
             home_page = {
-                'title': homeembed._title or '',
-                'description': homeembed._description or '',
-                'fields': list(homeembed._fields) if hasattr(homeembed, '_fields') else [],
-                'footer': None
+                "title": homeembed._title or "",
+                "description": homeembed._description or "",
+                "fields": (
+                    list(homeembed._fields) if hasattr(homeembed, "_fields") else []
+                ),
+                "footer": None,
             }
         else:
             home_page = {
-                'title': getattr(homeembed, 'title', '') or '',
-                'description': getattr(homeembed, 'description', '') or '',
-                'fields': [(f.name, f.value) for f in homeembed.fields] if hasattr(homeembed, 'fields') and homeembed.fields else [],
-                'footer': homeembed.footer.text if hasattr(homeembed, 'footer') and homeembed.footer else None
+                "title": getattr(homeembed, "title", "") or "",
+                "description": getattr(homeembed, "description", "") or "",
+                "fields": (
+                    [(f.name, f.value) for f in homeembed.fields]
+                    if hasattr(homeembed, "fields") and homeembed.fields
+                    else []
+                ),
+                "footer": (
+                    homeembed.footer.text
+                    if hasattr(homeembed, "footer") and homeembed.footer
+                    else None
+                ),
             }
 
         pages.append(home_page)
         total_pages += 1
-        used_labels.add("Home")
+        used_labels.add("Accueil")
 
         for cog in self.get_cogs():
             if cog.__class__.__name__ == "Roleplay":
@@ -195,7 +254,11 @@ class View(LayoutView):
                     label = f"{original_label} {counter}"
                     counter += 1
                 used_labels.add(label)
-                options.append(discord.SelectOption(label=label, emoji=emoji, description=description))
+                options.append(
+                    discord.SelectOption(
+                        label=label, emoji=emoji, description=description
+                    )
+                )
 
                 fields = []
                 for command in cog.get_commands():
@@ -203,17 +266,19 @@ class View(LayoutView):
                     for param in command.clean_params:
                         if param not in ["self", "ctx"]:
                             params += f" <{param}>"
-                    help_text = command.help or "No description available"
+                    help_text = command.help or "Aucune description disponible"
                     if len(help_text) > 1020:
                         help_text = help_text[:1017] + "..."
                     fields.append((f"{command.name}{params}", f"{help_text}\n•"))
 
-                pages.append({
-                    'title': f"{emoji} {original_label}",
-                    'description': '',
-                    'fields': fields,
-                    'footer': None
-                })
+                pages.append(
+                    {
+                        "title": f"{emoji} {original_label}",
+                        "description": "",
+                        "fields": fields,
+                        "footer": None,
+                    }
+                )
                 total_pages += 1
 
         return options, pages, total_pages

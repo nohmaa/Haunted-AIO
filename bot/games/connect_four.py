@@ -69,10 +69,10 @@ class ConnectFour:
     def make_embed(self, *, status: bool) -> discord.Embed:
         embed = discord.Embed(color=discord.Color.random())
         if not status:
-            embed.description = f"**Turn:** {self.turn.name}\n**Piece:** `{self.player_to_emoji[self.turn]}`"
+            embed.description = f"**Tour :** {self.turn.name}\n**Pion :** `{self.player_to_emoji[self.turn]}`"
         else:
-            status_ = f"{self.winner} won!" if self.winner else "Tie"
-            embed.description = f"**Game over**\n{status_}"
+            status_ = f"{self.winner} a gagné !" if self.winner else "Égalité"
+            embed.description = f"**Partie terminée**\n{status_}"
         return embed
 
     def place_move(self, column: Union[str, int], user) -> list[list[str]]:

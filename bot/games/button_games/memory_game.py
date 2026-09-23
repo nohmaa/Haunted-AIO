@@ -37,7 +37,7 @@ class MemoryButton(discord.ui.Button["MemoryView"]):
 
         if opened := self.view.opened:
             game.moves += 1
-            game.embed.set_field_at(0, name="\u200b", value=f"Moves: `{game.moves}`")
+            game.embed.set_field_at(0, name="\u200b", value=f"Coups : `{game.moves}`")
 
             self.emoji = self.value
             self.disabled = True
@@ -61,7 +61,7 @@ class MemoryButton(discord.ui.Button["MemoryView"]):
                     if isinstance(button, discord.ui.Button)
                 ):
                     await interaction.message.edit(
-                        content="Game Over, Congrats!", view=self.view
+                        content="Partie terminée, bravo !", view=self.view
                     )
                     return self.view.stop()
 
@@ -173,9 +173,9 @@ class MemoryGame:
         """
         self.embed_color = discord.Color.random()
         self.embed = discord.Embed(
-            description="**Memory Game**", color=discord.Color.random()
+            description="**Jeu de mémoire**", color=discord.Color.random()
         )
-        self.embed.add_field(name="\u200b", value="Moves: `0`")
+        self.embed.add_field(name="\u200b", value="Coups : `0`")
 
         self.view = MemoryView(
             game=self,

@@ -11,15 +11,26 @@
 # ╚══════════════════════════════════════════════════════════════════╝
 
 import discord
-from utils.emoji import ARROWRED, CROSS, NEXT_ALT1, REDRULESBOOK, RED_BUTTON, RED_PIN, STAR, TICK, ZBACK, ZPAUSE, ZPLAY, ZWARNING
+from utils.emoji import (
+    ARROWRED,
+    CROSS,
+    NEXT_ALT1,
+    REDRULESBOOK,
+    RED_BUTTON,
+    RED_PIN,
+    STAR,
+    TICK,
+    ZBACK,
+    ZPAUSE,
+    ZPLAY,
+    ZWARNING,
+)
 from discord.ext import commands
 import json
 import os
 import asyncio
 from discord.ui import LayoutView, TextDisplay, Separator, Container
 from utils.cv2 import CV2, build_container
-
-
 
 # Emoji Variables
 CROSS = CROSS
@@ -36,18 +47,19 @@ ARROW = ARROWRED
 PIN = RED_PIN
 STAR = STAR
 
+
 class Counting(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.data_file = "db/counting.json"
         if not os.path.exists(self.data_file):
-            with open(self.data_file, 'w') as f:
+            with open(self.data_file, "w") as f:
                 json.dump({}, f)
-        with open(self.data_file, 'r') as f:
+        with open(self.data_file, "r") as f:
             self.counting_data = json.load(f)
 
     def save_data(self):
-        with open(self.data_file, 'w') as f:
+        with open(self.data_file, "w") as f:
             json.dump(self.counting_data, f, indent=4)
 
     def is_enabled(self, guild_id):
@@ -55,22 +67,26 @@ class Counting(commands.Cog):
         return self.counting_data.get(guild_id, {}).get("enabled", False)
 
     async def not_enabled_embed(self, ctx):
-        await ctx.send(view=CV2(
-            f"{BOOK} Counting Settings For {ctx.guild.name}",
-            f"**Current Status:** {CROSS} Disabled",
-            "**How to Enable:** Use `counting enable` to enable counting."
-        ))
+        await ctx.send(
+            view=CV2(
+                f"{BOOK} Counting Settings For {ctx.guild.name}",
+                f"**Current Status:** {CROSS} Disabled",
+                "**Comment activer :** utilise `counting enable` pour activer le comptage.",
+            )
+        )
 
     async def send_help_embed(self, ctx):
-        await ctx.send(view=CV2(
-            f"{BOOK} Counting Commands",
-            "Manage and control the counting game settings.\n\n"
-            "**counting enable/disable** — Enable or Disable counting in server\n"
-            "**counting channel #channel** — Set counting channel\n"
-            "**counting config reset/continue** — Set reset mode on mistake\n"
-            "**counting reset** — Reset counting back to 0\n"
-            "**counting stats** — View current counting stats"
-        ))
+        await ctx.send(
+            view=CV2(
+                f"{BOOK} Counting Commands",
+                "Manage and control the counting game settings.\n\n"
+                "**counting enable/disable** — Activer ou désactiver le comptage sur le serveur\n"
+                "**counting channel #channel** — Définir le salon de comptage\n"
+                "**counting config reset/continue** — Définir le mode de réinitialisation en cas d’erreur\n"
+                "**counting reset** — Réinitialiser le comptage à 0\n"
+                "**counting stats** — Voir les stats actuelles du comptage",
+            )
+        )
 
     @commands.group(name="counting", invoke_without_command=True)
     async def counting(self, ctx):
@@ -84,11 +100,16 @@ class Counting(commands.Cog):
     async def enable(self, ctx):
         guild_id = str(ctx.guild.id)
         if guild_id not in self.counting_data:
-            self.counting_data[guild_id] = {"enabled": True, "channel": None, "count": 0, "reset_on_fail": False}
+            self.counting_data[guild_id] = {
+                "enabled": True,
+                "channel": None,
+                "count": 0,
+                "reset_on_fail": False,
+            }
         else:
             self.counting_data[guild_id]["enabled"] = True
         self.save_data()
-        await ctx.send(view=CV2("Counting", f"{TICK} Counting has been Enabled!"))
+        await ctx.send(view=CV2("Counting", f"{TICK} Le comptage a été activé !"))
 
     @counting.command(name="disable")
     @commands.has_permissions(manage_channels=True)
@@ -99,7 +120,7 @@ class Counting(commands.Cog):
             return
         self.counting_data[guild_id]["enabled"] = False
         self.save_data()
-        await ctx.send(view=CV2("Counting", f"{STOP} Counting has been Disabled!"))
+        await ctx.send(view=CV2("Counting", f"{STOP} Le comptage a été désactivé !"))
 
     @counting.command(name="channel")
     @commands.has_permissions(manage_channels=True)
@@ -110,7 +131,11 @@ class Counting(commands.Cog):
             return
         self.counting_data[guild_id]["channel"] = channel.id
         self.save_data()
-        await ctx.send(view=CV2("Counting", f"{PIN} Counting channel set to {channel.mention}"))
+        await ctx.send(
+            view=CV2(
+                "Counting", f"{PIN} Salon de comptage défini sur {channel.mention}"
+            )
+        )
 
     @counting.command(name="config")
     @commands.has_permissions(manage_channels=True)
@@ -126,7 +151,7 @@ class Counting(commands.Cog):
             self.counting_data[guild_id]["reset_on_fail"] = False
             msg = f"{TICK} Counting will now continue on mistakes."
         else:
-            await ctx.send(f"{CROSS} Invalid mode! Use `reset` or `continue`.")
+            await ctx.send(f"{CROSS} Mode invalide ! Utilise `reset` ou `continue`.")
             return
         self.save_data()
         await ctx.send(view=CV2("Counting", msg))
@@ -140,7 +165,9 @@ class Counting(commands.Cog):
             return
         self.counting_data[guild_id]["count"] = 0
         self.save_data()
-        await ctx.send(view=CV2("Counting", f"{NEXT} Counting has been reset to 0!"))
+        await ctx.send(
+            view=CV2("Counting", f"{NEXT} Le comptage a été réinitialisé à 0 !")
+        )
 
     @counting.command(name="stats")
     async def stats(self, ctx):
@@ -150,14 +177,16 @@ class Counting(commands.Cog):
             return
         data = self.counting_data[guild_id]
         channel = ctx.guild.get_channel(data["channel"]) if data["channel"] else None
-        channel_str = channel.mention if channel else "Not Set"
-        reset_str = f"{TICK} Yes" if data["reset_on_fail"] else f"{CROSS} No"
-        await ctx.send(view=CV2(
-            f"{BOOK} Counting Stats",
-            f"**Current Count:** {data['count']}\n"
-            f"**Channel:** {channel_str}\n"
-            f"**Reset on Mistake:** {reset_str}"
-        ))
+        channel_str = channel.mention if channel else "Non défini"
+        reset_str = f"{TICK} Oui" if data["reset_on_fail"] else f"{CROSS} Non"
+        await ctx.send(
+            view=CV2(
+                f"{BOOK} Counting Stats",
+                f"**Current Count:** {data['count']}\n"
+                f"**Channel:** {channel_str}\n"
+                f"**Reset on Mistake:** {reset_str}",
+            )
+        )
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -178,7 +207,9 @@ class Counting(commands.Cog):
         content = message.content.strip()
 
         if not content.isdigit():
-            msg = await message.channel.send(f"{WARNING} Alphabet not allowed!")
+            msg = await message.channel.send(
+                f"{WARNING} Les lettres ne sont pas autorisées !"
+            )
             await asyncio.sleep(3)
             await msg.delete()
             await message.delete()
@@ -188,7 +219,9 @@ class Counting(commands.Cog):
         expected_number = data.get("count", 0) + 1
 
         if number != expected_number:
-            msg = await message.channel.send(f"{CROSS} Wrong number entered! Expected number is **{expected_number}**")
+            msg = await message.channel.send(
+                f"{CROSS} Mauvais nombre ! Le nombre attendu est **{expected_number}**"
+            )
             await asyncio.sleep(3)
             await msg.delete()
             await message.delete()
@@ -201,6 +234,7 @@ class Counting(commands.Cog):
         self.counting_data[guild_id]["count"] = number
         self.save_data()
         await message.add_reaction(TICK)
+
 
 def setup(bot):
     bot.add_cog(Counting(bot))

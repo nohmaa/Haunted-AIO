@@ -24,7 +24,7 @@ class SuccessView(LayoutView):
 
         self.add_item(
             build_container(
-                TextDisplay("**Message Sent**"),
+                TextDisplay("**Message envoyé**"),
                 Separator(visible=True),
                 TextDisplay(
                     f"✅ Your message has been successfully sent to **{member.name}**"
@@ -40,7 +40,7 @@ class ErrorView(LayoutView):
 
         self.add_item(
             build_container(
-                TextDisplay("**Delivery Failed**"),
+                TextDisplay("**Échec de l’envoi**"),
                 Separator(visible=True),
                 TextDisplay(
                     f"❌ Could not send the message. **{member.name}** may have their DMs disabled."
@@ -56,9 +56,9 @@ class GenericErrorView(LayoutView):
 
         self.add_item(
             build_container(
-                TextDisplay("**Error Occurred**"),
+                TextDisplay("**Erreur survenue**"),
                 Separator(visible=True),
-                TextDisplay(f"🤔 Something went wrong. Error: {error}"),
+                TextDisplay(f"🤔 Quelque chose a mal tourné. Erreur : {error}"),
             )
         )
 
@@ -69,9 +69,9 @@ class PermissionErrorView(LayoutView):
 
         self.add_item(
             build_container(
-                TextDisplay("**Permission Denied**"),
+                TextDisplay("**Permission refusée**"),
                 Separator(visible=True),
-                TextDisplay("❌ You do not have permission to use this command."),
+                TextDisplay("❌ Tu n’as pas la permission d’utiliser cette commande."),
             )
         )
 
@@ -89,11 +89,11 @@ class StaffDMCog(commands.Cog):
 
         try:
             embed = discord.Embed(
-                title="📢 A Message from the Staff Team",
+                title="📢 Un message de l’équipe du staff",
                 description=message,
                 color=0xFF0000,
             )
-            embed.set_footer(text=f"This message was sent by {ctx.author.name}.")
+            embed.set_footer(text=f"Ce message a été envoyé par {ctx.author.name}.")
 
             await member.send(embed=embed)
 

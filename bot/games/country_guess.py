@@ -114,7 +114,7 @@ class CountryGuesser:
 
     def get_embed(self) -> discord.Embed:
         embed = discord.Embed(
-            title="Guess that country!",
+            title="Devine ce pays !",
             description=f"```fix\n{self.get_blanks()}\n```",
             color=discord.Color.random(),
         )
@@ -166,14 +166,19 @@ class CountryGuesser:
         self.timeout = timeout
         self.embed_color = discord.Color.random()
         self.embed = self.get_embed()
-        self.embed.set_footer(text="send your guess within 100 seconds into the chat now!")
+        self.embed.set_footer(
+            text="Envoie ta réponse dans le chat dans les 100 secondes !"
+        )
 
         self.message = await ctx.send(embed=self.embed, file=file)
 
         self.accepted_length = None
         start_time = asyncio.get_event_loop().time()
 
-        while not ctx.bot.is_closed() and asyncio.get_event_loop().time() - start_time < self.timeout:
+        while (
+            not ctx.bot.is_closed()
+            and asyncio.get_event_loop().time() - start_time < self.timeout
+        ):
             try:
                 msg, response = await self.wait_for_response(ctx)
             except asyncio.TimeoutError:
@@ -184,7 +189,7 @@ class CountryGuesser:
             if response == self.country:
                 elapsed_time = round(asyncio.get_event_loop().time() - start_time, 2)
                 await msg.reply(
-                    f"That is correct! The country was `{self.country.title()}`"
+                    f"Bonne réponse ! Le pays était `{self.country.title()}`"
                 )
                 return await self.end_game(ctx, msg.author, elapsed_time)
             else:
@@ -192,17 +197,16 @@ class CountryGuesser:
 
                 if self.responses_count % 10 == 0 and self.hints:
                     hint = self.get_hint()
-                    await ctx.send(f"Hint: `{hint}`")
+                    await ctx.send(f"Indice : `{hint}`")
 
                 await msg.reply(
-                    f"That was incorrect! but you are `{acc}%` of the way there!",
+                    f"C’était incorrect ! Mais tu es à `{acc}%` du but !",
                     mention_author=False,
                 )
 
         # Check if the time has exceeded the timeout
-        #if asyncio.get_event_loop().time() - start_time > timeout:
-            #return await self.end_game(ctx)  # Call end_game when timeout occurs
-          
+        # if asyncio.get_event_loop().time() - start_time > timeout:
+        # return await self.end_game(ctx)  # Call end_game when timeout occurs
 
         return await self.end_game(ctx)
 
@@ -210,26 +214,25 @@ class CountryGuesser:
         self,
         ctx: commands.Context[commands.Bot],
         winner: Optional[discord.User] = None,
-        time_taken: Optional[float] = None, manual_end: bool = False
+        time_taken: Optional[float] = None,
+        manual_end: bool = False,
     ) -> discord.Message:
-        embed = discord.Embed(title="Game Over", color=self.embed_color)
+        embed = discord.Embed(title="Partie terminée", color=self.embed_color)
         if winner and time_taken:
             embed.add_field(
-                name="Winner",
+                name="Gagnant",
                 value=f"{winner.mention} ({winner.name})",
                 inline=False,
             )
-            embed.add_field(name="Time Taken", value=f"{time_taken} seconds", inline=False)
+            embed.add_field(
+                name="Temps écoulé", value=f"{time_taken} secondes", inline=False
+            )
         elif manual_end:
-            embed.description = "The game was manually ended."
+            embed.description = "La partie a été arrêtée manuellement."
         else:
-            embed.description = f"Time's up! No one guessed the country. The correct answer was `{self.country.title()}`."
-          
+            embed.description = f"Temps écoulé ! Personne n’a deviné le pays. La bonne réponse était `{self.country.title()}`."
+
         return await ctx.send(embed=embed)
 
-    
     async def end_game_manually(self, ctx: commands.Context):
         await self.end_game(ctx, manual_end=True)
-
-
-    
