@@ -43,17 +43,19 @@ from utils.config import *
 # OWNER_IDS and BOT_OWNER_IDS are imported from utils.config — edit .env to change them
 
 # Your custom bot badges, including Family and Developer
+# Public Twemoji PNGs (stable CDN, no auth) — replace with your own custom emoji
+# URLs if you upload badges to your Discord application
 BADGE_URLS = {
-    "owner": "https://cdn.discordapp.com/emojis/1448951721479901334.png?v=1&size=48&quality=lossless",
-    "staff": "https://cdn.discordapp.com/emojis/1448949616681812098.png?v=1&size=48&quality=lossless",
-    "partner": "https://cdn.discordapp.com/emojis/1448949605676093540.png?v=1&size=48&quality=lossless",
-    "sponsor": "https://cdn.discordapp.com/emojis/1448949571811282984.png?v=1&size=48&quality=lossless",
-    "friend": "https://cdn.discordapp.com/emojis/1448951509235531869.png?v=1&size=48&quality=lossless",
-    "early": "https://cdn.discordapp.com/emojis/1448949582573867039.png?v=1&size=48&quality=lossless",
-    "vip": "https://cdn.discordapp.com/emojis/1448951307707748395.png?v=1&size=48&quality=lossless",
-    "bug": "https://cdn.discordapp.com/emojis/1448949593923518485.png?v=1&size=48&quality=lossless",
-    "developer": "https://cdn.discordapp.com/emojis/1448951697853386826.png?v=1&size=48&quality=lossless",
-    "family": "https://cdn.discordapp.com/emojis/1448951456861519962.png?v=1&size=48&quality=lossless", # New Family Badge
+    "owner": "https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f451.png",      # 👑
+    "staff": "https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f6e1.png",      # 🛡️
+    "partner": "https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f91d.png",    # 🤝
+    "sponsor": "https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f48e.png",    # 💎
+    "friend": "https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f91f.png",     # 🤟
+    "early": "https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f381.png",      # 🎁
+    "vip": "https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/2b50.png",         # ⭐
+    "bug": "https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f41b.png",        # 🐛
+    "developer": "https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f4bb.png",  # 💻
+    "family": "https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f46a.png",     # 👪
 }
 
 BADGE_NAMES = {

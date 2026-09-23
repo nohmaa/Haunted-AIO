@@ -4,6 +4,12 @@
 > Objectifs actuels : (1) traduction en français, (2) nouvelle identité **Haunted**, (3) activation/désactivation des modules depuis le dashboard.
 > Mettre à jour ce fichier à chaque changement (date + fichiers + comportement).
 
+## 2026-09-23 — Audit complet emojis custom (commandes, UI, assets)
+- Recherche exhaustive `<a?:name:ID>` + URLs `cdn.discordapp.com/emojis` dans tout le code (`.py/.ts/.tsx/.json`) : **zéro emoji custom en dur** dans les cogs/dashboard — seuls les URLs construites dynamiquement (`steal.py`, `moderation.py` emoji-info) subsistent, elles sont correctes.
+- **Corrigés (URLs en dur de l'ancien app)** : `voice.py` (42× thumbnail 🎵), `welcome.py` (7× icône erreur ❌), `unmute.py` (1× ⚠️), `owner.py` `BADGE_URLS` (10 badges de la carte profil : owner/staff/partner/sponsor/friend/early/vip/bug/developer/family) → remplacés par des PNG Twemoji publics (CDN jsdelivr, sans auth). Commentaire laissé : remplaçables par vos propres emojis custom si vous en uploadez.
+- **BDD runtime (non suivi git, côté prod)** : `autoreact.db` contient 1 config avec `<:king:1448951721479901334>` et `ticket.db` un emoji `<:Ticket:1496002127779201184>` — ce sont des données créées par le bot en prod, pas du code. Les listeners gèrent déjà le cas (try/except NotFound) ; pour nettoyer : `!autoreact remove <trigger>` ou réajouter avec des emojis Unicode.
+- Vérifications : `compileall` OK, plus aucune URL d'emoji d'ancienne app en dur dans le code.
+
 ## 2026-09-23 — Emojis Unicode + backend conservé en anglais
 - Règle actée : le **backend reste en anglais** (identifiants, comparaisons logiques, codes d'erreur) — seule l'UI/UX est traduite. Vérifié : aucune comparaison logique (`== "active"`, etc.) n'a été traduite dans le diff de traduction.
 - **Problème emojis résolu** : toutes les constantes de `bot/utils/emoji.py` étaient des emojis custom `<:name:ID>` pointant vers l'application de l'ancien bot → invisibles, et l'EmojiSync ne pouvait ni les retélécharger (404 CDN) ni les uploader. Remplacés par des **emojis Unicode classiques** (✅ ⚠️ 🔨 🎵 …) qui s'affichent partout sans upload : 193 constantes, mêmes noms, mêmes dictionnaires/helpers/aliases → aucun import cassé (diff des constantes vs HEAD : aucune perte).

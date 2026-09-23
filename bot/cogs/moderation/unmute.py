@@ -178,7 +178,7 @@ class Unmute(commands.Cog):
         except discord.Forbidden:
             error = discord.Embed(color=self.color, description="I can't unmute a user with higher permissions!")
             error.set_footer(text=f"Requested by {ctx.author}", icon_url=self.get_user_avatar(ctx.author))
-            error.set_author(name="Error Unmuting User", icon_url="https://cdn.discordapp.com/emojis/1448949627712966717.png?v=1&size=48&quality=lossless")
+            error.set_author(name="Error Unmuting User", icon_url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/26a0.png")
             return await ctx.send(embed=error)
 
         embed = discord.Embed(

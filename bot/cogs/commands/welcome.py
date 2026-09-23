@@ -97,7 +97,7 @@ class Welcomer(commands.Cog):
         
         if row:
             error = discord.Embed(description=f"A welcome message has already been set in {ctx.guild.name}. Use `{ctx.prefix}greet reset` to reconfigure.", color=0xFF0000)
-            error.set_author(name="Error", icon_url="https://cdn.discordapp.com/emojis/1294218790082711553.png")
+            error.set_author(name="Error", icon_url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/274c.png")
             return await ctx.send(embed=error)
             
         options_view = View(timeout=600)
@@ -435,7 +435,7 @@ class Welcomer(commands.Cog):
 
         if not is_set_up: 
             error = discord.Embed(description=f"No welcome message has been set for {ctx.guild.name}! Please set a welcome message first using `{ctx.prefix}greet setup`", color=0xFF0000)
-            error.set_author(name="Greet is not configured!", icon_url="https://cdn.discordapp.com/emojis/1294218790082711553.png")
+            error.set_author(name="Greet is not configured!", icon_url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/274c.png")
             return await ctx.send(embed=error)
             
         embed = discord.Embed(
@@ -496,7 +496,7 @@ class Welcomer(commands.Cog):
 
         if not welcome_message:
             error = discord.Embed(description=f"No welcome message has been set for {ctx.guild.name}! Please set a welcome message first using `{ctx.prefix}greet setup`", color=0xFF0000)
-            error.set_author(name="Greet is not configured!", icon_url="https://cdn.discordapp.com/emojis/1294218790082711553.png")
+            error.set_author(name="Greet is not configured!", icon_url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/274c.png")
             await ctx.send(embed=error)
             return
 
@@ -584,7 +584,7 @@ class Welcomer(commands.Cog):
 
         if row is None:
             error = discord.Embed(description=f"No welcome message has been set for {ctx.guild.name}! Please set a welcome message first using `{ctx.prefix}greet setup`", color=0xFF0000)
-            error.set_author(name="Greet is not configured!", icon_url="https://cdn.discordapp.com/emojis/1294218790082711553.png")
+            error.set_author(name="Greet is not configured!", icon_url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/274c.png")
             await ctx.send(embed=error)
             return
 
@@ -593,7 +593,7 @@ class Welcomer(commands.Cog):
 
         if not welcome_channel:
             error2 = discord.Embed(description=f"Welcome channel not set or invalid. Use `{ctx.prefix}greet channel` to set one.", color=0xFF0000)
-            error2.set_author(name="Channel not set", icon_url="https://cdn.discordapp.com/emojis/1294218790082711553.png")
+            error2.set_author(name="Channel not set", icon_url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/274c.png")
             await ctx.send(embed=error2)
             return
 
@@ -717,7 +717,7 @@ class Welcomer(commands.Cog):
                 description=f"No welcome message has been set for {ctx.guild.name}! Please set a welcome message first using `{ctx.prefix}greet setup`",
                 color=0xFF0000
             )
-            error.set_author(name="Greet is not configured!", icon_url="https://cdn.discordapp.com/emojis/1294218790082711553.png")
+            error.set_author(name="Greet is not configured!", icon_url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/274c.png")
             await ctx.send(embed=error)
 
 
@@ -773,7 +773,7 @@ class Welcomer(commands.Cog):
 
         if row is None:
             error = discord.Embed(description=f"No welcome message has been set for {ctx.guild.name}! Please set a welcome message first using `{ctx.prefix}greet setup`", color=0xFF0000)
-            error.set_author(name="Greet is not configured!", icon_url="https://cdn.discordapp.com/emojis/1294218790082711553.png")
+            error.set_author(name="Greet is not configured!", icon_url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/274c.png")
             await ctx.send(embed=error)
             return
 

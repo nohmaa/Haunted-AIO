@@ -53,7 +53,7 @@ class Voice(commands.Cog):
                 color=self.color)
             embed.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-            embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+            embed.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
             return await ctx.reply(embed=embed)
         ch = member.voice.channel.mention
         await member.edit(voice_channel=None,
@@ -64,7 +64,7 @@ class Voice(commands.Cog):
             color=self.color)
         embed2.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-        embed2.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+        embed2.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
         return await ctx.reply(embed=embed2)
 
     @vc.command(name="kickall",
@@ -86,7 +86,7 @@ class Voice(commands.Cog):
                 color=self.color)
             embed.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-            embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+            embed.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
             return await ctx.reply(embed=embed)
         count = 0
         ch = ctx.author.voice.channel.mention
@@ -101,7 +101,7 @@ class Voice(commands.Cog):
             color=self.color)
         embed2.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-        embed2.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+        embed2.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
         return await ctx.reply(embed=embed2)
 
     @vc.command(name="mute",
@@ -177,7 +177,7 @@ class Voice(commands.Cog):
                 color=self.color)
             embed.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-            embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+            embed.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
             return await ctx.reply(embed=embed)
         if member.voice.mute == False:
             embed2 = discord.Embed(title=f"{CROSS} Error",
@@ -187,7 +187,7 @@ class Voice(commands.Cog):
                 color=self.color)
             embed2.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-            embed2.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+            embed2.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
             return await ctx.reply(embed=embed2)
         ch = member.voice.channel.mention
         embed3 = discord.Embed(title=f"{TICK}> Success",
@@ -196,7 +196,7 @@ class Voice(commands.Cog):
             color=self.color)
         embed3.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-        embed3.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+        embed3.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
         await member.edit(mute=False, reason=f"Unmuted by {str(ctx.author)}")
         return await ctx.reply(embed=embed3)
 
@@ -218,7 +218,7 @@ class Voice(commands.Cog):
                 color=self.color)
             embed.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-            embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+            embed.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
             return await ctx.reply(embed=embed)
         count = 0
         ch = ctx.author.voice.channel.mention
@@ -234,7 +234,7 @@ class Voice(commands.Cog):
                                color=self.color)
         embed2.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-        embed2.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+        embed2.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
         return await ctx.reply(embed=embed2)
 
     @vc.command(name="unmuteall",
@@ -255,7 +255,7 @@ class Voice(commands.Cog):
                 color=self.color)
             embed.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-            embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+            embed.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
             return await ctx.reply(embed=embed)
         count = 0
         ch = ctx.author.voice.channel.mention
@@ -271,7 +271,7 @@ class Voice(commands.Cog):
                                color=self.color)
         embed2.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-        embed2.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+        embed2.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
         return await ctx.reply(embed=embed2)
 
     @vc.command(name="deafen",
@@ -292,7 +292,7 @@ class Voice(commands.Cog):
                 color=self.color)
             embed.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-            embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+            embed.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
             return await ctx.reply(embed=embed)
         if member.voice.deaf == True:
             embed2 = discord.Embed(title=f"{CROSS} Error",
@@ -302,7 +302,7 @@ class Voice(commands.Cog):
                 color=self.color)
             embed2.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-            embed2.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+            embed2.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
             return await ctx.reply(embed=embed2)
         ch = member.voice.channel.mention
         embed3 = discord.Embed(title=f"{TICK}> Success",
@@ -311,7 +311,7 @@ class Voice(commands.Cog):
             color=self.color)
         embed3.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-        embed3.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+        embed3.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
         await member.edit(deafen=True, reason=f"Deafen by {str(ctx.author)}")
         return await ctx.reply(embed=embed3)
 
@@ -333,7 +333,7 @@ class Voice(commands.Cog):
                 color=self.color)
             embed.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-            embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+            embed.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
             return await ctx.reply(embed=embed)
         if member.voice.deaf == False:
             embed2 = discord.Embed(title=f"{CROSS} Error",
@@ -343,7 +343,7 @@ class Voice(commands.Cog):
                 color=self.color)
             embed2.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-            embed2.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+            embed2.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
             return await ctx.reply(embed=embed2)
         ch = member.voice.channel.mention
         embed3 = discord.Embed(title=f"{TICK}> Success",
@@ -352,7 +352,7 @@ class Voice(commands.Cog):
             color=self.color)
         embed3.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-        embed3.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+        embed3.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
         await member.edit(deafen=False,
                           reason=f"Undeafen by {str(ctx.author)}")
         return await ctx.reply(embed=embed3)
@@ -375,7 +375,7 @@ class Voice(commands.Cog):
                 color=self.color)
             embed.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-            embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+            embed.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
             return await ctx.reply(embed=embed)
         count = 0
         ch = ctx.author.voice.channel.mention
@@ -391,7 +391,7 @@ class Voice(commands.Cog):
                                color=self.color)
         embed2.set_footer(text=f"Requested by: {ctx.author}",
                            icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-        embed2.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+        embed2.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
         return await ctx.reply(embed=embed2)
 
     @vc.command(name="undeafenall",
@@ -412,7 +412,7 @@ class Voice(commands.Cog):
                 color=self.color)
             embed.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-            embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+            embed.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
             return await ctx.reply(embed=embed)
         count = 0
         ch = ctx.author.voice.channel.mention
@@ -429,7 +429,7 @@ class Voice(commands.Cog):
             color=self.color)
         embed2.set_footer(text=f"Requested by: {ctx.author}",
                            icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-        embed2.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+        embed2.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
         return await ctx.reply(embed=embed2)
 
     @vc.command(name="moveall",
@@ -450,7 +450,7 @@ class Voice(commands.Cog):
                 color=self.color)
             embed.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-            embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+            embed.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
             return await ctx.reply(embed=embed)
         try:
             ch = ctx.author.voice.channel.mention
@@ -468,7 +468,7 @@ class Voice(commands.Cog):
                 color=self.color)
             embed2.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-            embed2.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+            embed2.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
             await ctx.reply(embed=embed2)
         except:
             embed3 = discord.Embed(title=f"{CROSS} Error",
@@ -477,7 +477,7 @@ class Voice(commands.Cog):
                 color=self.color)
             embed3.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-            embed3.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+            embed3.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
             await ctx.reply(embed=embed3)
 
     
@@ -500,7 +500,7 @@ class Voice(commands.Cog):
                 color=self.color)
             embed.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-            embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+            embed.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
             return await ctx.reply(embed=embed)
         count = 0
         for vc in ctx.guild.voice_channels:
@@ -518,7 +518,7 @@ class Voice(commands.Cog):
                                color=self.color)
         embed2.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-        embed2.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+        embed2.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
         return await ctx.reply(embed=embed2)
 
 
@@ -540,7 +540,7 @@ class Voice(commands.Cog):
                 color=self.color)
             embed.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-            embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+            embed.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
             return await ctx.reply(embed=embed)
         if channel == member.voice.channel:
             embed = discord.Embed(title=f"{CROSS} Error",
@@ -550,7 +550,7 @@ class Voice(commands.Cog):
                 color=self.color)
             embed.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-            embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+            embed.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
             return await ctx.reply(embed=embed)
         await member.edit(voice_channel=channel,
                           reason=f"Moved by {str(ctx.author)}")
@@ -560,7 +560,7 @@ class Voice(commands.Cog):
             color=self.color)
         embed2.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-        embed2.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+        embed2.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
         return await ctx.reply(embed=embed2)
         
 
@@ -582,7 +582,7 @@ class Voice(commands.Cog):
                 color=self.color)
             embed.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-            embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+            embed.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
             return await ctx.reply(embed=embed)
         if member.voice is None:
             embed = discord.Embed(title=f"{CROSS} Error",
@@ -592,7 +592,7 @@ class Voice(commands.Cog):
                 color=self.color)
             embed.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-            embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+            embed.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
             return await ctx.reply(embed=embed)
         if member.voice.channel == ctx.author.voice.channel:
             embed = discord.Embed(title=f"{CROSS} Error",
@@ -602,7 +602,7 @@ class Voice(commands.Cog):
                 color=self.color)
             embed.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-            embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+            embed.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
             return await ctx.reply(embed=embed)
         await member.edit(voice_channel=ctx.author.voice.channel,
                           reason=f"Pulled by {str(ctx.author)}")
@@ -612,7 +612,7 @@ class Voice(commands.Cog):
             color=self.color)
         embed2.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-        embed2.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+        embed2.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
         return await ctx.reply(embed=embed2)
 
     @vc.command(name="lock",
@@ -633,7 +633,7 @@ class Voice(commands.Cog):
                 color=self.color)
             embed.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-            embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+            embed.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
             return await ctx.reply(embed=embed)
         ch = ctx.author.voice.channel.mention
         await ctx.author.voice.channel.set_permissions(ctx.guild.default_role,
@@ -645,7 +645,7 @@ class Voice(commands.Cog):
             color=self.color)
         embed2.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-        embed2.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+        embed2.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
         return await ctx.reply(embed=embed2)
 
     @vc.command(name="unlock",
@@ -666,7 +666,7 @@ class Voice(commands.Cog):
                 color=self.color)
             embed.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-            embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+            embed.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
             return await ctx.reply(embed=embed)
         ch = ctx.author.voice.channel.mention
         await ctx.author.voice.channel.set_permissions(ctx.guild.default_role,
@@ -678,7 +678,7 @@ class Voice(commands.Cog):
             color=self.color)
         embed2.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-        embed2.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+        embed2.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
         return await ctx.reply(embed=embed2)
 
     @vc.command(name="private",
@@ -699,7 +699,7 @@ class Voice(commands.Cog):
                 color=self.color)
             embed.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-            embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+            embed.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
             return await ctx.reply(embed=embed)
         ch = ctx.author.voice.channel.mention
         await ctx.author.voice.channel.set_permissions(ctx.guild.default_role,
@@ -712,7 +712,7 @@ class Voice(commands.Cog):
             color=self.color)
         embed2.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-        embed2.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+        embed2.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
         return await ctx.reply(embed=embed2)
 
     @vc.command(name="unprivate",
@@ -733,7 +733,7 @@ class Voice(commands.Cog):
                 color=self.color)
             embed.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-            embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+            embed.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
             return await ctx.reply(embed=embed)
         ch = ctx.author.voice.channel.mention
         await ctx.author.voice.channel.set_permissions(ctx.guild.default_role,
@@ -746,7 +746,7 @@ class Voice(commands.Cog):
             color=self.color)
         embed2.set_footer(text=f"Requested by: {ctx.author}",
                                icon_url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)
-        embed2.set_thumbnail(url="https://cdn.discordapp.com/emojis/1279464563150032991.png")
+        embed2.set_thumbnail(url="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/1f3b5.png")
         return await ctx.reply(embed=embed2)
 
  
