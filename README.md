@@ -361,9 +361,15 @@ Depuis le dashboard, page **Modules** d'un serveur : chaque module possède un i
 
 ---
 
-## ✦ Tunnel HTTPS (Cloudflare)
+## ✦ Tunnel HTTPS (Cloudflare) — pas à pas
 
-Le bot utilise **pycloudflared** — le binaire `cloudflared` est téléchargé automatiquement au premier lancement. Aucune installation système, aucun paquet — fonctionne sur Pterodactyl et tout hébergeur Python.
+Rôle dans l'architecture :
+
+```
+Vous → Dashboard (Vercel) → https://api.votredomaine.com (tunnel) → Bot (Pterodactyl, port 8000)
+```
+
+Le bot n'a pas d'IP publique : le tunnel Cloudflare expose son API FastAPI (port 8000) sur une URL HTTPS permanente. Le dashboard ne parle au bot que via cette URL. Le bot utilise **pycloudflared** — le binaire `cloudflared` est téléchargé automatiquement au premier lancement, sans rien installer sur Pterodactyl.
 
 **Pourquoi Cloudflare plutôt que ngrok :**
 - ✅ Bande passante & requêtes illimitées — sans plafonds mensuels
@@ -371,28 +377,43 @@ Le bot utilise **pycloudflared** — le binaire `cloudflared` est téléchargé 
 - ✅ Gratuit — aucun abonnement requis
 - ✅ Zéro installation système — binaire téléchargé via Python
 
-**Configuration (navigateur uniquement, pas de CLI) :**
+**Prérequis : un domaine géré par Cloudflare.** Si `votredomaine.com` n'y est pas encore : créez un compte sur [dash.cloudflare.com](https://dash.cloudflare.com) → Add domain → Cloudflare vous donne 2 nameservers à renseigner chez votre registrar (OVH, Cloudflare Registrar…). Attendez que le domaine passe en `Active`.
 
-1. Allez sur [one.dash.cloudflare.com](https://one.dash.cloudflare.com) → **Networks → Tunnels → Create a tunnel**
-2. Choisissez **Cloudflared**, donnez-lui un nom (ex. `haunted-api`), enregistrez
-3. À l'étape **Install connector**, copiez le token depuis la commande affichée :
+**Création du tunnel (navigateur uniquement, pas de CLI) :**
+
+1. Allez sur [one.dash.cloudflare.com](https://one.dash.cloudflare.com) → **Networks → Tunnels → Create a tunnel**.
+2. Choisissez **Cloudflared**, nommez-le (ex. `haunted-api`) → Save.
+3. À l'étape **Install connector**, copiez le token depuis la commande affichée (tout ce qui suit `--token `) :
    ```
    cloudflared tunnel run --token <COPIEZ_CECI>
    ```
-4. Onglet **Public Hostname** → ajoutez un nom d'hôte :
-   - Subdomain : `api` · Domain : `votredomaine.com` · Service : `http://localhost:8000`
-5. Ajoutez dans `bot/.env` :
+   👉 C'est la valeur de `CF_TUNNEL_TOKEN` dans le `.env` du bot.
+4. Onglet **Public Hostname** → **Add a public hostname**, remplissez exactement :
+   | Champ | Valeur |
+   |---|---|
+   | Subdomain | `api` |
+   | Domain | `votredomaine.com` (sélectionnez votre domaine dans la liste) |
+   | Path | _(laissez vide)_ |
+   | Service Type | `HTTP` |
+   | Service URL | `localhost:8000` |
+   
+   👉 L'URL publique est donc `https://api.votredomaine.com` : c'est la valeur de `CF_TUNNEL_URL` dans le `.env` du bot.
+5. Dans `bot/.env` :
    ```env
-   CF_TUNNEL_TOKEN = "eyJhIjoiXXXX..."
-   CF_TUNNEL_URL   = "https://api.votredomaine.com"
+   TUNNEL_ENABLED     = "true"
+   CF_TUNNEL_TOKEN    = "eyJhIjoiXXXX..."          # étape 3
+   CF_TUNNEL_URL      = "https://api.votredomaine.com"  # étape 4
    ```
 
-À chaque démarrage, la console affiche :
+**Vérification :** à chaque démarrage, la console du bot affiche :
 ```
 ◈ Tunnel: cloudflared binary ready — starting tunnel on port 8000…
 ◈ Tunnel: API is live at  https://api.votredomaine.com
   ↳ NEXT_PUBLIC_API_URL = https://api.votredomaine.com/api/v1
 ```
+👉 La 3ᵉ ligne (`…/api/v1`, **avec** `/api/v1` au bout) est la valeur exacte de `NEXT_PUBLIC_API_URL` côté dashboard. Testez-la dans un navigateur : `https://api.votredomaine.com/api/v1/bot/info` doit répondre du JSON (erreur 401/403 sans clé = normal, ça prouve que le tunnel répond).
+
+**Si le tunnel ne démarre pas :** `CF_TUNNEL_TOKEN` invalide (reprenez l'étape 3), `TUNNEL_ENABLED` à `"false"`, ou `API_ENABLED` à `"false"` (rien n'écoute sur le 8000). Mettez `TUNNEL_ENABLED=false` pour repasser en HTTP local le temps de déboguer (`http://localhost:8000/api/v1`).
 
 ---
 
@@ -445,27 +466,44 @@ Le bot affiche cette ligne dans la console quand il est connecté — le panel p
 
 > Le dashboard Next.js ne tourne pas sur cette image Python : lancez-le en local (`npm run dev`) ou hébergez-le (Vercel ci-dessous, ou toute machine avec Node.js 22+), en pointant `NEXT_PUBLIC_API_URL` vers l'URL du tunnel du bot.
 
-### 🌐 Dashboard — Vercel
+### 🌐 Dashboard — Vercel (pas à pas)
 
-1. Sur [vercel.com](https://vercel.com) → **Add New → Project** → importez `Haunted-AIO` → **Root Directory** : `dashboard` (le preset Next.js est détecté automatiquement).
-2. Dans **Settings → Environment Variables**, ajoutez :
-   ```env
-   NEXT_PUBLIC_API_URL=https://haunted-api.votredomaine.com/api/v1
-   NEXT_PUBLIC_DASHBOARD_API_KEY=le_meme_secret_que_cote_bot
-   NEXTAUTH_URL=https://votre-app.vercel.app
-   NEXTAUTH_SECRET=<openssl rand -base64 32>
-   DISCORD_CLIENT_ID=...
-   DISCORD_CLIENT_SECRET=...
-   NEXT_PUBLIC_ADMIN_IDS=votre_id_discord
-   NEXT_PUBLIC_BRAND_NAME="Haunted"
-   NEXT_PUBLIC_BRAND_NAME_WORD="H"
-   ```
-3. **Deploy** → notez l'URL (ex. `https://votre-app.vercel.app`).
-4. Si l'URL diffère de `NEXTAUTH_URL`, mettez à jour la variable → **Redeploy** (les variables `NEXT_PUBLIC_*` sont figées au build : tout changement impose un redeploy).
+> Prérequis : le bot tourne sur Pterodactyl avec le tunnel actif (section précédente), et vous avez noté `NEXT_PUBLIC_API_URL` + la clé `DASHBOARD_API_KEY`.
+
+1. Sur [vercel.com](https://vercel.com) → **Add New → Project** → importez `Haunted-AIO`.
+2. Dans **Configure Project**, réglez exactement :
+   | Réglage | Valeur |
+   |---|---|
+   | Framework Preset | **Next.js** (détecté automatiquement) |
+   | Root Directory | **`dashboard`** → Edit → `dashboard` |
+   | Build Command | _(vide, défaut)_ |
+   | **Output Directory** | **_(vide — surtout pas `public`, sinon échec `No Output Directory named "public"`)_** |
+   | Install Command | _(vide, défaut)_ |
+3. Dépliez **Environment Variables** et ajoutez (toutes obligatoires) :
+   | Variable | Quoi mettre |
+   |---|---|
+   | `NEXT_PUBLIC_API_URL` | La ligne `…/api/v1` affichée par le bot (ex. `https://api.votredomaine.com/api/v1`) |
+   | `NEXT_PUBLIC_DASHBOARD_API_KEY` | **Recopie exacte** de `DASHBOARD_API_KEY` du `.env` du bot |
+   | `NEXTAUTH_URL` | L'URL Vercel finale, ex. `https://haunted-dashboard.vercel.app` (voir étape 4 si inconnue) |
+   | `NEXTAUTH_SECRET` | Sortie de `openssl rand -base64 32` |
+   | `DISCORD_CLIENT_ID` / `DISCORD_CLIENT_SECRET` | Portail Discord → votre application → **OAuth2** (la même que le bot) |
+   | `NEXT_PUBLIC_ADMIN_IDS` | Votre ID Discord (mode développeur → clic droit → Copier l'identifiant) |
+   | `NEXT_PUBLIC_BRAND_NAME` / `NEXT_PUBLIC_BRAND_NAME_WORD` | `"Haunted"` / `"H"` |
+4. **Deploy** → notez l'URL produite (ex. `https://haunted-dashboard.vercel.app`).
+   - Si elle diffère de `NEXTAUTH_URL` : mettez à jour la variable → onglet **Deployments** → **···** → **Redeploy**.
+   - ⚠️ Les variables `NEXT_PUBLIC_*` sont figées dans le build : **tout changement impose un Redeploy**.
 5. Dans le portail Discord → votre application → **OAuth2 → Redirects**, ajoutez :
    ```
-   https://votre-app.vercel.app/api/auth/callback/discord
+   https://haunted-dashboard.vercel.app/api/auth/callback/discord
    ```
+   (remplacez par votre vraie URL). Sans ça : erreur d'auth au login.
+6. Côté bot, autorisez le dashboard : dans `bot/.env`, ajoutez votre URL Vercel aux origines CORS puis **Restart** :
+   ```env
+   CORS_ORIGINS = "https://haunted-dashboard.vercel.app"
+   ```
+   Sans ça : le navigateur bloque les appels API (`CORS errors`).
+
+✅ **Ça marche si** : la page d'accueil s'ouvre, le login Discord aboutit, et vos serveurs s'affichent avec leurs modules.
 
 ### 🌐 Dashboard — Node.js manuel
 

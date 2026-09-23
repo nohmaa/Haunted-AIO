@@ -139,10 +139,18 @@ Le dashboard ne tourne pas sur l'image Python de Pterodactyl (réservée au bot)
 
 ### Option A — Vercel (recommandé)
 
-1. Sur [vercel.com](https://vercel.com) → **Add New → Project** → importez `Haunted-AIO` → **Root Directory** : `dashboard`.
-2. Dans **Settings → Environment Variables**, ajoutez toutes les clés du tableau « Référence des variables » (avec les valeurs de production ci-dessous).
+> Prérequis : bot en ligne avec tunnel actif. Notez `NEXT_PUBLIC_API_URL` (ligne `…/api/v1` de sa console) et `DASHBOARD_API_KEY`.
+
+1. Sur [vercel.com](https://vercel.com) → **Add New → Project** → importez `Haunted-AIO`, avec :
+   | Réglage | Valeur |
+   |---|---|
+   | Framework Preset | **Next.js** |
+   | Root Directory | **`dashboard`** |
+   | Build / Output / Install | _(vides, défauts — surtout pas Output = `public`)_ |
+2. Dans **Settings → Environment Variables**, ajoutez toutes les clés du tableau « Référence des variables » (valeurs de production ci-dessous).
 3. **Deploy** → notez l'URL. Si elle diffère de `NEXTAUTH_URL`, mettez à jour puis **Redeploy** (les `NEXT_PUBLIC_*` sont figées au build).
 4. Dans Discord → votre application → **OAuth2 → Redirects**, ajoutez `https://votre-app.vercel.app/api/auth/callback/discord`.
+5. Côté bot, autorisez le dashboard (sinon `CORS errors` dans le navigateur) : dans `bot/.env`, `CORS_ORIGINS = "https://votre-app.vercel.app"`, puis **Restart** du bot.
 
 ### Option B — Node.js manuel
 

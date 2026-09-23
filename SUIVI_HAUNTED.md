@@ -4,6 +4,10 @@
 > Objectifs actuels : (1) traduction en français, (2) nouvelle identité **Haunted**, (3) activation/désactivation des modules depuis le dashboard.
 > Mettre à jour ce fichier à chaque changement (date + fichiers + comportement).
 
+## 2026-09-23 — Déploiement dashboard + Cloudflare détaillés
+- `README.md` : section Tunnel réécrite en pas-à-pas (domaine sur Cloudflare, création du tunnel, tableau Public Hostname, correspondance token/URL → `.env`, test navigateur, dépannage). Section Vercel détaillée (tableau des réglages dont Output vide, tableau des variables avec « où trouver », redirect OAuth, `CORS_ORIGINS` côté bot, checklist finale) + schéma d'architecture.
+- `dashboard/README.md` : réglages Vercel tabulés + étape CORS.
+
 ## 2026-09-23 — Échec Vercel « No Output Directory named public »
 - Diagnostic : le build Next réussit (compile + types + 30 routes), les erreurs `Dynamic server usage` au prerender sont bénignes (pages `ƒ` dynamiques, identiques en local). Le vrai échec est le réglage projet : **Output Directory = `public`** (ou Framework Preset ≠ Next.js).
 - Correctif côté dashboard Vercel (aucun changement de code) : Settings → General → Root Directory `dashboard`, Framework Preset **Next.js**, Build Command vide (défaut), **Output Directory vide**, Install Command vide → Redeploy.
