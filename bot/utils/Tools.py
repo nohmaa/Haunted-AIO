@@ -29,7 +29,28 @@ async def setup_db():
         await db.commit()
 
 
-asyncio.run(setup_db())
+def _ensure_prefix_db() -> None:
+    """Prepare la base des prefixes des l'import du module.
+
+    Le dossier `db/` est cree au besoin : sans lui, sqlite echoue et tout
+    l'import du bot tombe, ce qui rendait le demarrage dependant du contenu du
+    disque. Si une boucle asyncio tourne deja (import tardif depuis un cog ou
+    l'API), on cree la table de facon synchrone au lieu de relancer une boucle.
+    """
+    os.makedirs("db", exist_ok=True)
+    try:
+        asyncio.run(setup_db())
+    except RuntimeError:
+        import sqlite3
+
+        with sqlite3.connect("db/prefix.db") as db:
+            db.execute(
+                "CREATE TABLE IF NOT EXISTS prefixes ("
+                "guild_id INTEGER PRIMARY KEY, prefix TEXT NOT NULL)"
+            )
+
+
+_ensure_prefix_db()
 
 
 async def is_topcheck_enabled(guild_id: int):

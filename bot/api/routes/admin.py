@@ -62,30 +62,33 @@ async def get_admin_stats(bot: "zyrox" = Depends(get_bot)):
     total_commands = len(bot.commands)
     loaded_cogs = len(bot.cogs or {})
 
-    # Node Healths
+    # Etat des noeuds : derive de mesures reelles uniquement (aucun statut
+    # code en dur). Les valeurs de `status` sont des codes stables (anglais)
+    # que le dashboard traduit a l'affichage.
+    latency_ms = round(bot.latency * 1000)
     nodes = [
         AdminNodeStatus(
-            name="Primary API Cluster", 
-            status="Healthy", 
-            load=f"CPU: {cpu_usage}% | RAM: {ram_mb:.1f}MB", 
+            name="Processus API",
+            status="healthy" if cpu_usage < 95 else "warning",
+            load=f"CPU {cpu_usage}% | RAM {ram_mb:.1f} MB",
             icon="Globe"
         ),
         AdminNodeStatus(
-            name="Database Shards", 
-            status="Healthy" if db_count > 0 else "Warning", 
-            load=f"{db_count} SQLite DBs | {db_size_str}", 
+            name="Base de donnees",
+            status="healthy" if db_count > 0 else "warning",
+            load=f"{db_count} bases SQLite | {db_size_str}",
             icon="Database"
         ),
         AdminNodeStatus(
-            name="Bot Microservices", 
-            status="Healthy" if bot.is_ready() else "Booting", 
-            load=f"{loaded_cogs} Modules", 
+            name="Modules du bot",
+            status="healthy" if bot.is_ready() else "booting",
+            load=f"{loaded_cogs} modules charges | {total_commands} commandes",
             icon="Cpu"
         ),
         AdminNodeStatus(
-            name="Auth Sockets", 
-            status="Healthy", 
-            load=f"Shard: {bot.shard_count} | Latency: {round(bot.latency * 1000)}ms", 
+            name="Passerelle Discord",
+            status="healthy" if (bot.is_ready() and latency_ms < 1000) else "warning",
+            load=f"Latence {latency_ms} ms | {bot.shard_count} shard(s)",
             icon="Lock"
         )
     ]
@@ -93,7 +96,7 @@ async def get_admin_stats(bot: "zyrox" = Depends(get_bot)):
     total_members = sum(g.member_count or 0 for g in bot.guilds)
 
     return AdminStats(
-        total_users=str(total_members),
+        total_members=str(total_members),
         active_servers=str(len(bot.guilds)),
         api_latency=f"{round(bot.latency * 1000, 2)}ms",
         db_size=db_size_str,

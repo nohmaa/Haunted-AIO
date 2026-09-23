@@ -398,8 +398,16 @@ class Music(commands.Cog):
         `https://lava.exemple.fr`. L'ancien code produisait une URI invalide
         (`https://https://...`) quand LAVALINK_HOST contenait déjà le schéma,
         ce qui faisait échouer la connexion en silence.
+
+        Aucun hôte par défaut n'est fourni : les noeuds publics utilisés
+        auparavant ne parlaient pas le protocole v4 attendu par wavelink, ce
+        qui produisait un `InvalidNodeException` sur toutes les commandes
+        musique. Mieux vaut refuser de se connecter que de viser un noeud
+        inutilisable.
         """
-        raw_host = (os.getenv("LAVALINK_HOST") or "lava-v4.ajieblogs.eu.org").strip()
+        raw_host = (os.getenv("LAVALINK_HOST") or "").strip()
+        if not raw_host:
+            raise RuntimeError("LAVALINK_HOST n'est pas configuré")
         port = (os.getenv("LAVALINK_PORT") or "").strip()
         secure = (os.getenv("LAVALINK_SECURE") or "true").strip().lower() != "false"
 
@@ -423,9 +431,21 @@ class Music(commands.Cog):
         Avant, la tâche mourait en silence à la première erreur et toutes les
         commandes musique échouaient en `InvalidNodeException` sans explication.
         """
-        password = os.getenv("LAVALINK_PASSWORD") or "https://dsc.gg/ajidevserver"
+        password = os.getenv("LAVALINK_PASSWORD") or ""
+        if not (os.getenv("LAVALINK_HOST") or "").strip() or not password:
+            print(
+                "[MUSIC] Lavalink non configuré : renseignez LAVALINK_HOST et "
+                "LAVALINK_PASSWORD (noeud Lavalink v4) dans le .env puis "
+                "redémarrez le bot. Les commandes musique restent indisponibles."
+            )
+            return
+
         while True:
-            uri = self._lavalink_uri()
+            try:
+                uri = self._lavalink_uri()
+            except RuntimeError as exc:
+                print(f"[MUSIC] Configuration Lavalink incomplète : {exc}")
+                return
             try:
                 nodes = [wavelink.Node(uri=uri, password=password)]
                 # wavelink ne lève pas d'exception ici : il journalise l'erreur

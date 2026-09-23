@@ -348,7 +348,9 @@ class AdminNodeStatus(BaseModel):
     icon: str # Icon identifier
 
 class AdminStats(BaseModel):
-    total_users: str
+    # Somme des membres de chaque serveur (un membre présent sur deux serveurs
+    # compte deux fois) : ce ne sont pas des utilisateurs uniques.
+    total_members: str
     active_servers: str
     api_latency: str
     db_size: str
