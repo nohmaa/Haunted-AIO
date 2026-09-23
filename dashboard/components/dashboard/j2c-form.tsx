@@ -57,9 +57,9 @@ export function J2CForm({ initialConfig, channels, guildId }: J2CFormProps) {
     const promise = api.updateJ2C(guildId, payload);
 
     toast.promise(promise, {
-      loading: 'Saving Join to Create configuration...',
-      success: 'Join to Create settings saved successfully!',
-      error: 'Failed to update Join to Create config',
+      loading: 'Enregistrement de la configuration Join to Create...',
+      success: 'Paramètres Join to Create enregistrés avec succès !',
+      error: 'Échec de la mise à jour de la configuration Join to Create',
     });
 
     try {
@@ -82,15 +82,15 @@ export function J2CForm({ initialConfig, channels, guildId }: J2CFormProps) {
                 <Power className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-lg font-black text-white">System Status</h3>
-                <p className="text-sm text-slate-400 mt-1">Enable or disable the Join to Create module.</p>
+                <h3 className="text-lg font-black text-white">État du système</h3>
+                <p className="text-sm text-slate-400 mt-1">Activer ou désactiver le module Join to Create.</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
               <div className="px-4 py-2 rounded-full bg-slate-900 border border-slate-800 flex items-center gap-2">
                 <div className={cn("w-2 h-2 rounded-full", isEnabled ? 'bg-emerald-500 animate-pulse' : 'bg-red-500')} />
                 <span className="text-xs font-bold uppercase track-wider text-slate-300">
-                  {isEnabled ? 'Active' : 'Inactive'}
+                  {isEnabled ? 'Actif' : 'Inactif'}
                 </span>
               </div>
               <Switch 
@@ -108,8 +108,8 @@ export function J2CForm({ initialConfig, channels, guildId }: J2CFormProps) {
                   <Mic className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-white">Join Channel</h4>
-                  <p className="text-xs text-slate-400 mt-1">Voice channel users join to trigger creation</p>
+                  <h4 className="font-bold text-white">Salon d’arrivée</h4>
+                  <p className="text-xs text-slate-400 mt-1">Salon vocal que les utilisateurs rejoignent pour créer un salon</p>
                 </div>
               </div>
               
@@ -118,10 +118,10 @@ export function J2CForm({ initialConfig, channels, guildId }: J2CFormProps) {
                 onValueChange={(val) => setConfig({ ...config, join_channel_id: val === "none" ? null : val })}
               >
                 <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 font-medium">
-                  <SelectValue placeholder="Select a voice channel..." />
+                  <SelectValue placeholder="Choisir un salon vocal..." />
                 </SelectTrigger>
                 <SelectContent className="bg-slate-900 border-slate-800 max-h-[300px]">
-                  <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Not Set</SelectItem>
+                  <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Non défini</SelectItem>
                   {voiceChannels.map((c) => (
                     <SelectItem key={c.id} value={c.id.toString()} className="focus:bg-slate-800">
                       {c.name}
@@ -137,8 +137,8 @@ export function J2CForm({ initialConfig, channels, guildId }: J2CFormProps) {
                   <Headset className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-white">Control Panel Channel</h4>
-                  <p className="text-xs text-slate-400 mt-1">Channel where users manage their private VCs</p>
+                  <h4 className="font-bold text-white">Salon du panneau de contrôle</h4>
+                  <p className="text-xs text-slate-400 mt-1">Salon où les utilisateurs gèrent leurs salons privés</p>
                 </div>
               </div>
               
@@ -147,10 +147,10 @@ export function J2CForm({ initialConfig, channels, guildId }: J2CFormProps) {
                 onValueChange={(val) => setConfig({ ...config, control_channel_id: val === "none" ? null : val })}
               >
                 <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 font-medium">
-                  <SelectValue placeholder="Select a text channel..." />
+                  <SelectValue placeholder="Choisir un salon textuel..." />
                 </SelectTrigger>
                 <SelectContent className="bg-slate-900 border-slate-800 max-h-[300px]">
-                  <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Not Set</SelectItem>
+                  <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Non défini</SelectItem>
                   {textChannels.map((c) => (
                     <SelectItem key={c.id} value={c.id.toString()} className="focus:bg-slate-800">
                       {c.name}
@@ -166,8 +166,8 @@ export function J2CForm({ initialConfig, channels, guildId }: J2CFormProps) {
                   <Settings2 className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-white">Target Category</h4>
-                  <p className="text-xs text-slate-400 mt-1">Category where temporary voice channels are created</p>
+                  <h4 className="font-bold text-white">Catégorie cible</h4>
+                  <p className="text-xs text-slate-400 mt-1">Catégorie où les salons vocaux temporaires sont créés</p>
                 </div>
               </div>
               
@@ -176,10 +176,10 @@ export function J2CForm({ initialConfig, channels, guildId }: J2CFormProps) {
                 onValueChange={(val) => setConfig({ ...config, category_id: val === "none" ? null : val })}
               >
                 <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 font-medium">
-                  <SelectValue placeholder="Automatic (Same as Join Channel)..." />
+                  <SelectValue placeholder="Automatique (Identique au salon d’arrivée)..." />
                 </SelectTrigger>
                 <SelectContent className="bg-slate-900 border-slate-800 max-h-[300px]">
-                  <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Automatic (Same as Join Channel)</SelectItem>
+                  <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Automatique (Identique au salon d’arrivée)</SelectItem>
                   {categoryChannels.map((c) => (
                     <SelectItem key={c.id} value={c.id.toString()} className="focus:bg-slate-800">
                       {c.name}
@@ -196,7 +196,7 @@ export function J2CForm({ initialConfig, channels, guildId }: J2CFormProps) {
             className="w-full h-14 text-base font-bold gap-2"
           >
             {saving ? <RefreshCcw className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
-            {isEnabled && !config.join_channel_id ? 'Select a channel to save' : 'Save Configuration'}
+            {isEnabled && !config.join_channel_id ? 'Sélectionnez un salon pour enregistrer' : 'Enregistrer la configuration'}
           </Button>
         </div>
       </div>
@@ -206,14 +206,14 @@ export function J2CForm({ initialConfig, channels, guildId }: J2CFormProps) {
           <div className="absolute -right-4 -top-4 opacity-[0.03] group-hover:scale-110 transition-transform">
             <Headset className="h-32 w-32 text-primary" />
           </div>
-          <h3 className="text-sm font-bold text-primary mb-2">How It Works</h3>
+          <h3 className="text-sm font-bold text-primary mb-2">Comment ça fonctionne</h3>
           <p className="text-xs text-slate-400 leading-relaxed mb-4">
-            Join to Create instantly creates a private, temporary voice channel for any user who connects to the master Join Channel.
+            Join to Create crée instantanément un salon vocal privé et temporaire pour tout utilisateur qui rejoint le salon d’arrivée principal.
           </p>
           <ul className="text-xs text-slate-500 space-y-2">
-             <li>• The voice channel is owned by the creator.</li>
-             <li>• When the last person leaves, the channel is automatically deleted.</li>
-             <li>• The Control Panel allows owners to lock, unlock, limit members, and kick users.</li>
+             <li>• Le salon vocal appartient à son créateur.</li>
+             <li>• Quand la dernière personne part, le salon est automatiquement supprimé.</li>
+             <li>• Le panneau de contrôle permet aux propriétaires de verrouiller, déverrouiller, limiter les membres et exclure des utilisateurs.</li>
           </ul>
         </div>
       </div>

@@ -46,9 +46,9 @@ export function SettingsForm({ initialPrefix, guildId }: SettingsFormProps) {
     const promise = api.updatePrefix(guildId, prefix);
 
     toast.promise(promise, {
-      loading: 'Updating prefix...',
-      success: 'Prefix updated successfully!',
-      error: (err) => err.message || 'Failed to update prefix',
+      loading: 'Mise à jour du préfixe...',
+      success: 'Préfixe mis à jour avec succès !',
+      error: (err) => err.message || 'Échec de la mise à jour du préfixe',
     });
 
     try {

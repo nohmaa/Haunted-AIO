@@ -497,11 +497,11 @@ Le bot affiche cette ligne dans la console quand il est connecté — le panel p
    https://haunted-dashboard.vercel.app/api/auth/callback/discord
    ```
    (remplacez par votre vraie URL). Sans ça : erreur d'auth au login.
-6. Côté bot, autorisez le dashboard : dans `bot/.env`, ajoutez votre URL Vercel aux origines CORS puis **Restart** :
+6. Côté bot, autorisez le dashboard : dans `bot/.env`, ajoutez votre URL Vercel aux origines CORS (**apex ET www**, ex. `"https://haunted-mind.site,https://www.haunted-mind.site"`) puis **Restart** :
    ```env
-   CORS_ORIGINS = "https://haunted-dashboard.vercel.app"
+   CORS_ORIGINS = "https://haunted-mind.site,https://www.haunted-mind.site"
    ```
-   Sans ça : le navigateur bloque les appels API (`CORS errors`).
+   Sans ça : le navigateur bloque les appels API (`CORS errors`). Note : depuis cette version, le bot ajoute automatiquement la variante www/apex de chaque origine — renseigner l'une suffit, mettre les deux reste recommandé.
 
 ✅ **Ça marche si** : la page d'accueil s'ouvre, le login Discord aboutit, et vos serveurs s'affichent avec leurs modules.
 

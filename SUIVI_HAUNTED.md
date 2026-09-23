@@ -12,6 +12,11 @@
 - Topologie retenue : API bot → `https://api.haunted-mind.site` (tunnel `haunted-api`) ; dashboard → URL Vercel (domaine custom `dashboard.haunted-mind.site` optionnel plus tard).
 - Guide détaillé donné en chat (domaine → tunnel → Vercel → OAuth → CORS).
 
+## 2026-09-23 — CORS : origine www bloquée + variantes auto
+- Log prod : dashboard sur `https://www.haunted-mind.site` bloqué car seul l'apex était en `CORS_ORIGINS`. Action côté serveur : `CORS_ORIGINS="https://haunted-mind.site,https://www.haunted-mind.site"` + Restart.
+- Code : `_expand_cors_origins()` dans `api/server.py` ajoute auto. la variante www/apex (+ ports préservés, `localhost` exclu). Test logique OK.
+- Docs : étape CORS précisée (apex + www).
+
 ## 2026-09-23 — Déploiement dashboard + Cloudflare détaillés
 - `README.md` : section Tunnel réécrite en pas-à-pas (domaine sur Cloudflare, création du tunnel, tableau Public Hostname, correspondance token/URL → `.env`, test navigateur, dépannage). Section Vercel détaillée (tableau des réglages dont Output vide, tableau des variables avec « où trouver », redirect OAuth, `CORS_ORIGINS` côté bot, checklist finale) + schéma d'architecture.
 - `dashboard/README.md` : réglages Vercel tabulés + étape CORS.

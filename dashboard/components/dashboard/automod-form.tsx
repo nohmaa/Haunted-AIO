@@ -35,19 +35,19 @@ import { cn } from "@/lib/utils";
 import { AutomodConfig } from "@/types/api";
 
 const PUNISHMENT_OPTIONS = [
-  { value: "delete", label: "Delete Message" },
-  { value: "warn", label: "Warn User" },
-  { value: "mute", label: "Mute User" },
-  { value: "kick", label: "Kick User" },
-  { value: "ban", label: "Ban User" },
+  { value: "delete", label: "Supprimer le message" },
+  { value: "warn", label: "Avertir l'utilisateur" },
+  { value: "mute", label: "Rendre l'utilisateur muet" },
+  { value: "kick", label: "Expulser l'utilisateur" },
+  { value: "ban", label: "Bannir l'utilisateur" },
 ];
 
 const RULES = [
-  { id: 'anti_spam', name: 'Anti Spam', desc: 'Detects and removes repetitive messages or rapid firing.', icon: Zap },
-  { id: 'anti_caps', name: 'Anti Caps', desc: 'Prevents excessive use of uppercase letters.', icon: Type },
-  { id: 'anti_links', name: 'Anti Links', desc: 'Blocks unauthorized external links in channels.', icon: LinkIcon },
-  { id: 'anti_invites', name: 'Anti Invites', desc: 'Automatically removes Discord server invite links.', icon: MessageSquare },
-  { id: 'anti_mentions', name: 'Anti Mass Mention', desc: 'Protects against mentioned spam (@everyone, @here).', icon: UserMinus },
+  { id: 'anti_spam', name: 'Anti-Spam', desc: 'Détecte et supprime les messages répétitifs ou envoyés en rafale.', icon: Zap },
+  { id: 'anti_caps', name: 'Anti-Majuscules', desc: 'Empêche l’utilisation excessive de majuscules.', icon: Type },
+  { id: 'anti_links', name: 'Anti-Liens', desc: 'Bloque les liens externes non autorisés dans les salons.', icon: LinkIcon },
+  { id: 'anti_invites', name: 'Anti-Invitations', desc: 'Supprime automatiquement les liens d’invitation Discord.', icon: MessageSquare },
+  { id: 'anti_mentions', name: 'Anti-Mentions massives', desc: 'Protège contre le spam de mentions (@everyone, @here).', icon: UserMinus },
 ];
 
 interface AutomodFormProps {
@@ -81,9 +81,9 @@ export function AutomodForm({ initialConfig, guildId }: AutomodFormProps) {
     });
 
     toast.promise(promise, {
-      loading: 'Saving configuration...',
-      success: 'Configuration saved successfully!',
-      error: (err) => err.message || 'Failed to update settings',
+      loading: 'Enregistrement de la configuration...',
+      success: 'Configuration enregistrée avec succès !',
+      error: (err) => err.message || 'Échec de la mise à jour des paramètres',
     });
 
     try {
@@ -101,7 +101,7 @@ export function AutomodForm({ initialConfig, guildId }: AutomodFormProps) {
         <div className="bg-[#141B2D] border border-slate-800 rounded-3xl overflow-hidden shadow-xl">
           <div className="p-8 space-y-6">
             <div className="flex items-center justify-between mb-4">
-               <h3 className="text-sm font-black uppercase text-slate-500 tracking-widest">Master Control</h3>
+               <h3 className="text-sm font-black uppercase text-slate-500 tracking-widest">Contrôle principal</h3>
                <Switch 
                   checked={config.enabled} 
                   onCheckedChange={() => handleToggle('master')}
@@ -172,7 +172,7 @@ export function AutomodForm({ initialConfig, guildId }: AutomodFormProps) {
               className="w-full h-14 text-base font-bold gap-2"
             >
               {saving ? <RefreshCcw className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
-              Save Moderation Rules
+              Enregistrer les règles de modération
             </Button>
           </div>
         </div>
@@ -180,13 +180,13 @@ export function AutomodForm({ initialConfig, guildId }: AutomodFormProps) {
 
       <div className="space-y-6">
          <div className="bg-[#141B2D] border border-slate-800 rounded-3xl p-6">
-            <h3 className="text-sm font-black uppercase text-slate-500 tracking-widest mb-4">Logging Level</h3>
+            <h3 className="text-sm font-black uppercase text-slate-500 tracking-widest mb-4">Niveau des logs</h3>
             <div className="space-y-3">
                <div className="p-3 bg-slate-900/50 rounded-xl border border-white/5 flex items-center justify-between">
-                  <span className="text-sm text-slate-400">Log Channel</span>
-                  <span className="text-xs font-mono text-primary">#{config.logging_channel || 'None'}</span>
+                  <span className="text-sm text-slate-400">Salon de logs</span>
+                  <span className="text-xs font-mono text-primary">#{config.logging_channel || 'Aucun'}</span>
                </div>
-               <p className="text-[10px] text-slate-500 italic text-center">Mod logs are automatically sent to the configured channel.</p>
+               <p className="text-[10px] text-slate-500 italic text-center">Les logs de modération sont automatiquement envoyés dans le salon configuré.</p>
             </div>
          </div>
 
@@ -194,8 +194,8 @@ export function AutomodForm({ initialConfig, guildId }: AutomodFormProps) {
             <div className="absolute -right-4 -top-4 opacity-[0.03] group-hover:scale-110 transition-transform">
               <ShieldAlert className="h-32 w-32 text-white" />
             </div>
-            <h3 className="text-sm font-bold text-white mb-2">Automod AI</h3>
-            <p className="text-xs text-slate-400 leading-relaxed mb-4">Our neural network analyzes message context to prevent false positives.</p>
+            <h3 className="text-sm font-bold text-white mb-2">Automod IA</h3>
+            <p className="text-xs text-slate-400 leading-relaxed mb-4">Notre réseau de neurones analyse le contexte des messages pour éviter les faux positifs.</p>
             <div className="flex items-center gap-2">
               <div className="h-2 w-2 rounded-full bg-primary" />
               <span className="text-[10px] font-black uppercase text-primary">V2 Active</span>

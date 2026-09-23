@@ -54,9 +54,9 @@ export function LevelingForm({ initialConfig, guildId }: LevelingFormProps) {
     });
 
     toast.promise(promise, {
-      loading: 'Saving leveling settings...',
-      success: 'Leveling settings updated successfully!',
-      error: 'Failed to update leveling settings',
+      loading: 'Enregistrement des paramètres de niveaux...',
+      success: 'Paramètres de niveaux mis à jour avec succès !',
+      error: 'Échec de la mise à jour des paramètres de niveaux',
     });
 
     try {

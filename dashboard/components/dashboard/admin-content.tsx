@@ -43,7 +43,7 @@ export function AdminContent() {
       setNotification(configData.global_notification || "");
     } catch (err) {
       console.error("Failed to fetch admin data:", err);
-      toast.error("Failed to load real-time data");
+      toast.error("Échec du chargement des données en temps réel");
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -63,9 +63,9 @@ export function AdminContent() {
       const newStatus = !config.maintenance_mode;
       await api.updateAdminConfig({ maintenance_mode: newStatus });
       setConfig({ ...config, maintenance_mode: newStatus });
-      toast.success(`Maintenance mode ${newStatus ? 'enabled' : 'disabled'}`);
+      toast.success(`Mode maintenance ${newStatus ? 'activé' : 'désactivé'}`);
     } catch (err) {
-      toast.error("Failed to update maintenance mode");
+      toast.error("Échec de la mise à jour du mode maintenance");
     } finally {
       setSaving(false);
     }
@@ -76,9 +76,9 @@ export function AdminContent() {
     try {
       await api.updateAdminConfig({ global_notification: notification });
       if (config) setConfig({ ...config, global_notification: notification });
-      toast.success("Broadcast message updated");
+      toast.success("Message de diffusion mis à jour");
     } catch (err) {
-      toast.error("Failed to update broadcast message");
+      toast.error("Échec de la mise à jour du message de diffusion");
     } finally {
       setSaving(false);
     }
@@ -93,10 +93,10 @@ export function AdminContent() {
   }
 
   const statItems = [
-    { name: "Total Users", value: stats?.total_users || "0", icon: Users, color: "text-blue-500" },
-    { name: "Active Servers", value: stats?.active_servers || "0", icon: Server, color: "text-emerald-500" },
-    { name: "API Latency", value: stats?.api_latency || "0ms", icon: Activity, color: "text-amber-500" },
-    { name: "Database Size", value: stats?.db_size || "0 MB", icon: Database, color: "text-purple-500" },
+    { name: "Utilisateurs totaux", value: stats?.total_users || "0", icon: Users, color: "text-blue-500" },
+    { name: "Serveurs actifs", value: stats?.active_servers || "0", icon: Server, color: "text-emerald-500" },
+    { name: "Latence API", value: stats?.api_latency || "0ms", icon: Activity, color: "text-amber-500" },
+    { name: "Taille de la base de données", value: stats?.db_size || "0 MB", icon: Database, color: "text-purple-500" },
   ];
 
   return (
@@ -110,8 +110,8 @@ export function AdminContent() {
               <Shield className="h-8 w-8 text-red-500" />
             </div>
             <div>
-              <h1 className="text-4xl font-black text-white tracking-tight font-outfit">Admin Control Panel</h1>
-              <p className="text-slate-400 mt-2 font-medium">Restricted access for ZyroX administrators only.</p>
+              <h1 className="text-4xl font-black text-white tracking-tight font-outfit">Panneau de contrôle admin</h1>
+              <p className="text-slate-400 mt-2 font-medium">Accès restreint aux administrateurs ZyroX uniquement.</p>
             </div>
           </div>
           <button 
@@ -120,7 +120,7 @@ export function AdminContent() {
           >
             <RefreshCw className={cn("h-4 w-4 text-red-500 transition-all", refreshing && "animate-spin")} />
             <span className="text-xs font-black uppercase tracking-widest text-red-500">
-              {refreshing ? "Refreshing..." : "Real-time Mode"}
+              {refreshing ? "Actualisation..." : "Mode temps réel"}
             </span>
           </button>
         </div>
@@ -135,7 +135,7 @@ export function AdminContent() {
                 <stat.icon className="h-6 w-6" />
               </div>
               <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded-lg">
-                Live
+                En direct
               </span>
             </div>
             <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">{stat.name}</p>
@@ -151,9 +151,9 @@ export function AdminContent() {
           <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
             <div className="flex items-center gap-4">
               <Activity className="h-5 w-5 text-red-500" />
-              <h3 className="text-lg font-bold text-white">System Nodes Status</h3>
+              <h3 className="text-lg font-bold text-white">État des nœuds système</h3>
             </div>
-            <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Auto-Polling Active</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Sondage auto actif</span>
           </div>
           <div className="p-8 space-y-6">
             {stats?.nodes.map((node) => {
@@ -167,7 +167,7 @@ export function AdminContent() {
                     </div>
                     <div>
                       <h4 className="text-sm font-bold text-white">{node.name}</h4>
-                      <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Load: {node.load}</p>
+                      <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Charge : {node.load}</p>
                     </div>
                   </div>
                   <div className={cn(
@@ -189,11 +189,11 @@ export function AdminContent() {
         <div className="glass border border-white/5 rounded-[2.5rem] overflow-hidden flex flex-col">
           <div className="p-8 border-b border-white/5 flex items-center gap-4 bg-white/[0.01]">
             <Settings className="h-5 w-5 text-indigo-500" />
-            <h3 className="text-lg font-bold text-white">Global Settings</h3>
+            <h3 className="text-lg font-bold text-white">Paramètres globaux</h3>
           </div>
           <div className="p-8 flex-1 space-y-6">
             <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 pl-1">Maintenance Mode</label>
+              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 pl-1">Mode maintenance</label>
               <button 
                 onClick={handleToggleMaintenance}
                 disabled={saving}
@@ -205,7 +205,7 @@ export function AdminContent() {
                 )}
               >
                 <span className="text-sm font-medium">
-                  {config?.maintenance_mode ? "Restricting Access" : "Standard Operations"}
+                  {config?.maintenance_mode ? "Accès restreint" : "Fonctionnement standard"}
                 </span>
                 <div className={cn(
                   "h-6 w-11 rounded-full relative transition-colors duration-300",
@@ -220,12 +220,12 @@ export function AdminContent() {
             </div>
             
             <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 pl-1">Global Notification</label>
+              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 pl-1">Notification globale</label>
               <textarea 
                 value={notification}
                 onChange={(e) => setNotification(e.target.value)}
                 className="w-full h-32 bg-white/[0.03] border border-white/5 rounded-2xl p-4 text-xs font-medium text-slate-300 focus:outline-none focus:ring-1 focus:ring-red-500/30 transition-all placeholder:text-slate-600"
-                placeholder="Message to display across all dashboards..."
+                placeholder="Message à afficher sur tous les tableaux de bord..."
               />
             </div>
 
@@ -234,7 +234,7 @@ export function AdminContent() {
               disabled={saving}
               className="w-full py-4 bg-primary rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-primary/20 hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-50"
             >
-              {saving ? "Processing..." : "Broadcast Message"}
+              {saving ? "Traitement..." : "Diffuser le message"}
             </button>
           </div>
         </div>

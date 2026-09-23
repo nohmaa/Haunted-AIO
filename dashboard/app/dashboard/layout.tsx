@@ -89,7 +89,7 @@ export default function DashboardLayout({
             <span className="font-black text-white italic text-xl">{process.env.NEXT_PUBLIC_BRAND_NAME_WORD || "H"}</span>
           </div>
           <p className="text-slate-400 font-bold tracking-widest uppercase text-xs">
-            Authenticating...
+            Authentification...
           </p>
         </div>
       </div>
@@ -102,46 +102,46 @@ export default function DashboardLayout({
   // Base sidebar items – will be filtered if we are inside a guild
   const allSidebarItems = currentGuildId
     ? [
-        { name: "Overview", href: `/dashboard/guild/${currentGuildId}`, icon: LayoutDashboard },
+        { name: "Vue d'ensemble", href: `/dashboard/guild/${currentGuildId}`, icon: LayoutDashboard },
         {
-          name: "Security",
+          name: "Sécurité",
           items: [
             { name: "Anti-Nuke", href: `/dashboard/guild/${currentGuildId}/antinuke`, icon: ShieldCheck },
             { name: "Automod", href: `/dashboard/guild/${currentGuildId}/automod`, icon: ShieldCheck },
-            { name: "Verification", href: `/dashboard/guild/${currentGuildId}/verification`, icon: User },
+            { name: "Vérification", href: `/dashboard/guild/${currentGuildId}/verification`, icon: User },
           ],
         },
         {
           name: "Engagement",
           items: [
-            { name: "Welcome", href: `/dashboard/guild/${currentGuildId}/welcome`, icon: Bell },
-            { name: "Leveling", href: `/dashboard/guild/${currentGuildId}/leveling`, icon: BarChart4 },
-            { name: "Vanity Roles", href: `/dashboard/guild/${currentGuildId}/vanityroles`, icon: Star },
-            { name: "Auto Role", href: `/dashboard/guild/${currentGuildId}/autorole`, icon: Search },
-            { name: "Auto React", href: `/dashboard/guild/${currentGuildId}/autoreact`, icon: Settings },
-            { name: "Reaction Roles", href: `/dashboard/guild/${currentGuildId}/reactionroles`, icon: Search },
-            { name: "Join DM", href: `/dashboard/guild/${currentGuildId}/joindm`, icon: User },
-            { name: "Invites", href: `/dashboard/guild/${currentGuildId}/invites`, icon: Search },
-            { name: "Tracking", href: `/dashboard/guild/${currentGuildId}/tracking`, icon: BarChart4 },
+            { name: "Bienvenue", href: `/dashboard/guild/${currentGuildId}/welcome`, icon: Bell },
+            { name: "Niveaux", href: `/dashboard/guild/${currentGuildId}/leveling`, icon: BarChart4 },
+            { name: "Rôles Vanity", href: `/dashboard/guild/${currentGuildId}/vanityroles`, icon: Star },
+            { name: "Rôle automatique", href: `/dashboard/guild/${currentGuildId}/autorole`, icon: Search },
+            { name: "Réactions auto", href: `/dashboard/guild/${currentGuildId}/autoreact`, icon: Settings },
+            { name: "Rôles à réactions", href: `/dashboard/guild/${currentGuildId}/reactionroles`, icon: Search },
+            { name: "MP de bienvenue", href: `/dashboard/guild/${currentGuildId}/joindm`, icon: User },
+            { name: "Invitations", href: `/dashboard/guild/${currentGuildId}/invites`, icon: Search },
+            { name: "Suivi", href: `/dashboard/guild/${currentGuildId}/tracking`, icon: BarChart4 },
           ],
         },
         {
-          name: "Utility",
+          name: "Utilitaires",
           items: [
             { name: "Tickets", href: `/dashboard/guild/${currentGuildId}/tickets`, icon: Ticket },
-            { name: "Join to Create", href: `/dashboard/guild/${currentGuildId}/j2c`, icon: Menu },
-            { name: "Custom Roles", href: `/dashboard/guild/${currentGuildId}/customroles`, icon: ShieldCheck },
-            { name: "Voice Role", href: `/dashboard/guild/${currentGuildId}/invcrole`, icon: Settings },
+            { name: "Rejoindre pour créer", href: `/dashboard/guild/${currentGuildId}/j2c`, icon: Menu },
+            { name: "Rôles personnalisés", href: `/dashboard/guild/${currentGuildId}/customroles`, icon: ShieldCheck },
+            { name: "Rôle vocal", href: `/dashboard/guild/${currentGuildId}/invcrole`, icon: Settings },
           ],
         },
-        { name: "Settings", href: `/dashboard/guild/${currentGuildId}/settings`, icon: Settings },
-        { name: "Back to Servers", href: "/dashboard/guilds", icon: Server },
+        { name: "Paramètres", href: `/dashboard/guild/${currentGuildId}/settings`, icon: Settings },
+        { name: "Retour aux serveurs", href: "/dashboard/guilds", icon: Server },
       ]
     : [
-        { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-        { name: "Servers", href: "/dashboard/guilds", icon: Server },
+        { name: "Tableau de bord", href: "/dashboard", icon: LayoutDashboard },
+        { name: "Serveurs", href: "/dashboard/guilds", icon: Server },
         ...(isAdmin(session?.user?.id) 
-            ? [{ name: "Admin Panel", href: "/dashboard/admin", icon: Shield }] 
+            ? [{ name: "Panneau admin", href: "/dashboard/admin", icon: Shield }] 
             : []),
       ];
 
@@ -151,9 +151,9 @@ export default function DashboardLayout({
 
   if (currentGuildId) {
     mainSidebarItems = allSidebarItems.filter(
-      (item) => !(item.name === "Back to Servers")
+      (item) => !(item.name === "Retour aux serveurs")
     );
-    backLinkItem = allSidebarItems.find((item) => item.name === "Back to Servers");
+    backLinkItem = allSidebarItems.find((item) => item.name === "Retour aux serveurs");
   }
 
   const BackLinkIcon = backLinkItem?.icon || Server;
@@ -192,7 +192,7 @@ export default function DashboardLayout({
                 {process.env.NEXT_PUBLIC_BRAND_NAME || "Haunted"}
               </h1>
               <span className="text-[9px] font-black uppercase tracking-[0.2em] text-red-500/80 mt-1">
-                Dashboard
+                Tableau de bord
               </span>
             </div>
           </div>
@@ -314,7 +314,7 @@ export default function DashboardLayout({
               {session?.user?.image ? (
                 <img
                   src={session.user.image}
-                  alt="User Avatar"
+                  alt="Avatar utilisateur"
                   className="h-full w-full object-cover opacity-80"
                 />
               ) : (
@@ -323,10 +323,10 @@ export default function DashboardLayout({
             </div>
             <div className="overflow-hidden">
               <p className="text-sm font-bold text-white truncate font-outfit">
-                {session?.user?.name || "Administrator"}
+                {session?.user?.name || "Administrateur"}
               </p>
               <p className="text-[10px] font-black uppercase text-red-500/60 truncate tracking-widest">
-                User
+                Utilisateur
               </p>
             </div>
           </div>
@@ -348,7 +348,7 @@ export default function DashboardLayout({
             <Search className="absolute left-4 h-4 w-4 text-slate-500 group-focus-within:text-red-500 transition-colors" />
             <input
               type="text"
-              placeholder="Query neural network..."
+              placeholder="Rechercher dans le réseau neuronal..."
               className="w-full bg-white/[0.03] border border-white/5 rounded-2xl py-2.5 pl-12 pr-4 text-xs font-bold text-slate-300 focus:outline-none focus:ring-1 focus:ring-red-500/30 focus:bg-white/[0.05] transition-all placeholder:text-slate-600"
             />
           </div>
@@ -368,12 +368,12 @@ export default function DashboardLayout({
               {isNotificationsOpen && (
                 <div className="absolute right-0 mt-3 w-80 bg-[#0a0f1e]/90 backdrop-blur-3xl border border-white/5 rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-4 z-20 animate-in fade-in zoom-in-95 duration-300 origin-top-right">
                     <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-2">
-                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Broadcast Metrics</p>
+                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Diffusions</p>
                       <button 
                         onClick={() => setGlobalNotification(null)}
                         className="text-[10px] font-bold text-red-500/60 hover:text-red-500 transition-colors uppercase"
                       >
-                        Clear
+                        Effacer
                       </button>
                     </div>
                     
@@ -381,7 +381,7 @@ export default function DashboardLayout({
                       <div className="bg-red-500/5 border border-red-500/10 rounded-2xl p-4">
                         <div className="flex items-center gap-2 mb-2">
                           <Sparkles className="h-3 w-3 text-red-500" />
-                          <span className="text-[10px] font-black uppercase text-red-500 tracking-widest">System Broadcast</span>
+                          <span className="text-[10px] font-black uppercase text-red-500 tracking-widest">Annonce système</span>
                         </div>
                         <p className="text-xs font-medium text-slate-300 leading-relaxed">
                           {globalNotification}
@@ -392,8 +392,8 @@ export default function DashboardLayout({
                         <div className="h-10 w-10 rounded-full bg-slate-800 flex items-center justify-center mb-3">
                           <Bell className="h-5 w-5 text-slate-600" />
                         </div>
-                        <p className="text-xs font-bold text-slate-500">No active broadcasts</p>
-                        <p className="text-[10px] font-medium text-slate-600 mt-1 uppercase tracking-widest">Everything is operating normally</p>
+                        <p className="text-xs font-bold text-slate-500">Aucune annonce active</p>
+                        <p className="text-[10px] font-medium text-slate-600 mt-1 uppercase tracking-widest">Tout fonctionne normalement</p>
                       </div>
                     )}
                   </div>
@@ -409,7 +409,7 @@ export default function DashboardLayout({
               >
                 <div className="h-9 w-9 rounded-full bg-red-500/10 flex items-center justify-center overflow-hidden border border-red-500/20 ring-2 ring-transparent group-hover:ring-red-500/30 transition-all">
                   {session?.user?.image ? (
-                    <img src={session.user.image} alt="User Avatar" className="h-full w-full object-cover opacity-80" />
+                    <img src={session.user.image} alt="Avatar utilisateur" className="h-full w-full object-cover opacity-80" />
                   ) : (
                     <User className="h-5 w-5 text-red-500/50" />
                   )}
@@ -418,7 +418,7 @@ export default function DashboardLayout({
                   <span className="text-xs font-bold text-slate-200 group-hover:text-white transition-colors">
                     {session?.user?.name?.split(' ')[0] || "Admin"}
                   </span>
-                  <span className="text-[9px] font-black uppercase text-red-500/60 tracking-widest">Active</span>
+                  <span className="text-[9px] font-black uppercase text-red-500/60 tracking-widest">Actif</span>
                 </div>
                 <ChevronDown
                   className={cn("h-4 w-4 text-slate-600 transition-transform hidden sm:block", isProfileOpen && "rotate-180")}
@@ -428,13 +428,13 @@ export default function DashboardLayout({
               {isProfileOpen && (
                 <div className="absolute right-0 mt-3 w-56 bg-[#0a0f1e]/90 backdrop-blur-3xl border border-white/5 rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-2 z-20 animate-in fade-in zoom-in-95 duration-300 origin-top-right">
                     <div className="px-4 py-3 border-b border-white/5 mb-2">
-                      <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Authenticated As</p>
-                      <p className="text-sm font-bold text-white truncate">{session?.user?.name || "Administrator"}</p>
+                      <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Connecté en tant que</p>
+                      <p className="text-sm font-bold text-white truncate">{session?.user?.name || "Administrateur"}</p>
                     </div>
 
                     <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all group/item">
                       <LifeBuoy className="h-4 w-4 text-slate-600 group-hover/item:text-red-500 transition-colors" />
-                      Support Matrix
+                      Assistance
                     </button>
 
                     <button
@@ -442,7 +442,7 @@ export default function DashboardLayout({
                       className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-red-500/80 hover:bg-red-500/10 hover:text-red-500 transition-all group/item"
                     >
                       <LogOut className="h-4 w-4" />
-                      Deauthorize
+                      Déconnexion
                     </button>
                   </div>
               )}

@@ -58,12 +58,12 @@ export const ServerCard = ({
               </div>
             )}
             {isActive && (
-              <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-emerald-500 border-4 border-[#141B2D] shadow-lg animate-pulse" title="Online" />
+              <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-emerald-500 border-4 border-[#141B2D] shadow-lg animate-pulse" title="En ligne" />
             )}
           </div>
           
           <div className="flex flex-col items-end text-right">
-            <span className="text-[10px] uppercase font-black text-slate-500 tracking-[0.2em] mb-1 opacity-50">ID Reference</span>
+            <span className="text-[10px] uppercase font-black text-slate-500 tracking-[0.2em] mb-1 opacity-50">Référence ID</span>
             <span className="text-[11px] font-mono font-bold text-slate-400 bg-black/20 px-3 py-1.5 rounded-xl border border-white/5 truncate max-w-[140px]">
               {id}
             </span>
@@ -84,7 +84,7 @@ export const ServerCard = ({
             <div className="flex items-center gap-2 bg-slate-800/50 px-4 py-2 rounded-2xl border border-white/5">
               <Hash className="h-4 w-4 text-slate-500" />
               <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                Managed
+                Géré
               </span>
             </div>
           </div>
@@ -94,7 +94,7 @@ export const ServerCard = ({
       <div className="px-8 py-6 bg-slate-900/40 border-t border-slate-800/50 group-hover:bg-primary/5 transition-all">
         <Link href={`/dashboard/guild/${id}`} className="block">
           <Button className="w-full justify-between group/btn py-7 rounded-2xl border-slate-700 font-black uppercase tracking-tighter text-xs" variant="secondary">
-            <span>Access Dashboard</span>
+            <span>Accéder au tableau de bord</span>
             <ChevronRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
           </Button>
         </Link>

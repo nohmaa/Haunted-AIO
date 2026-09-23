@@ -41,9 +41,9 @@ export function VerificationForm({ initialConfig, channels, roles, guildId }: Ve
     const promise = api.updateVerification(guildId, config);
 
     toast.promise(promise, {
-      loading: 'Saving Verification configuration...',
-      success: 'Verification settings saved successfully!',
-      error: 'Failed to update Verification config',
+      loading: 'Enregistrement de la configuration de vérification...',
+      success: 'Paramètres de vérification enregistrés avec succès !',
+      error: 'Échec de la mise à jour de la configuration de vérification',
     });
 
     try {
@@ -63,8 +63,8 @@ export function VerificationForm({ initialConfig, channels, roles, guildId }: Ve
           {/* Main Toggle */}
           <div className="flex items-center justify-between p-6 bg-slate-900/40 rounded-2xl border border-slate-800">
             <div>
-              <h3 className="text-lg font-black text-white">Verification System</h3>
-              <p className="text-sm text-slate-400 mt-1">Enable or disable server verification.</p>
+              <h3 className="text-lg font-black text-white">Système de vérification</h3>
+              <p className="text-sm text-slate-400 mt-1">Activer ou désactiver la vérification du serveur.</p>
             </div>
             <Switch 
               checked={config.enabled} 
@@ -80,17 +80,17 @@ export function VerificationForm({ initialConfig, channels, roles, guildId }: Ve
               <div className="space-y-3">
                 <label className="text-sm font-bold text-slate-300 flex items-center gap-2">
                   <Hash className="h-4 w-4 text-slate-400" />
-                  Verification Channel
+                  Salon de vérification
                 </label>
                 <Select
                   value={config.verification_channel_id || "none"}
                   onValueChange={(val) => setConfig({ ...config, verification_channel_id: val === "none" ? null : val })}
                 >
                   <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 font-medium">
-                    <SelectValue placeholder="Select a channel..." />
+                    <SelectValue placeholder="Choisir un salon..." />
                   </SelectTrigger>
                   <SelectContent className="bg-slate-900 border-slate-800">
-                    <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Not Set</SelectItem>
+                    <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Non défini</SelectItem>
                     {textChannels.map((c) => (
                       <SelectItem key={c.id} value={c.id.toString()} className="focus:bg-slate-800">
                         # {c.name}
@@ -98,23 +98,23 @@ export function VerificationForm({ initialConfig, channels, roles, guildId }: Ve
                     ))}
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-slate-500">The channel where verifying users will use the command/buttons.</p>
+                <p className="text-xs text-slate-500">Le salon où les utilisateurs en cours de vérification utiliseront la commande ou les boutons.</p>
               </div>
 
               <div className="space-y-3">
                 <label className="text-sm font-bold text-slate-300 flex items-center gap-2">
                   <Hash className="h-4 w-4 text-slate-400" />
-                  Log Channel
+                  Salon de logs
                 </label>
                 <Select
                   value={config.log_channel_id || "none"}
                   onValueChange={(val) => setConfig({ ...config, log_channel_id: val === "none" ? null : val })}
                 >
                   <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 font-medium">
-                    <SelectValue placeholder="Select log channel..." />
+                    <SelectValue placeholder="Choisir le salon de logs..." />
                   </SelectTrigger>
                   <SelectContent className="bg-slate-900 border-slate-800">
-                    <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Not Set</SelectItem>
+                    <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Non défini</SelectItem>
                     {textChannels.map((c) => (
                       <SelectItem key={c.id} value={c.id.toString()} className="focus:bg-slate-800">
                         # {c.name}
@@ -122,7 +122,7 @@ export function VerificationForm({ initialConfig, channels, roles, guildId }: Ve
                     ))}
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-slate-500">Channel to send verification success/fail logs.</p>
+                <p className="text-xs text-slate-500">Salon où seront envoyés les logs de vérification réussie ou échouée.</p>
               </div>
 
             </div>
@@ -133,17 +133,17 @@ export function VerificationForm({ initialConfig, channels, roles, guildId }: Ve
               <div className="space-y-3">
                 <label className="text-sm font-bold text-slate-300 flex items-center gap-2">
                   <User className="h-4 w-4 text-slate-400" />
-                  Verified Role
+                  Rôle vérifié
                 </label>
                 <Select
                   value={config.verified_role_id || "none"}
                   onValueChange={(val) => setConfig({ ...config, verified_role_id: val === "none" ? null : val })}
                 >
                   <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 font-medium">
-                    <SelectValue placeholder="Select verified role..." />
+                    <SelectValue placeholder="Choisir le rôle vérifié..." />
                   </SelectTrigger>
                   <SelectContent className="bg-slate-900 border-slate-800">
-                    <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Not Set</SelectItem>
+                    <SelectItem value="none" className="text-slate-400 focus:bg-slate-800">Non défini</SelectItem>
                     {roles.map((r) => (
                       <SelectItem key={r.id} value={r.id.toString()} className="focus:bg-slate-800">
                         <div className="flex items-center gap-2">
@@ -154,28 +154,28 @@ export function VerificationForm({ initialConfig, channels, roles, guildId }: Ve
                     ))}
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-slate-500">The role given upon successful verification.</p>
+                <p className="text-xs text-slate-500">Le rôle attribué après une vérification réussie.</p>
               </div>
 
               <div className="space-y-3">
                 <label className="text-sm font-bold text-slate-300 flex items-center gap-2">
                   <Settings className="h-4 w-4 text-slate-400" />
-                  Verification Method
+                  Méthode de vérification
                 </label>
                 <Select
                   value={config.verification_method || "both"}
                   onValueChange={(val) => setConfig({ ...config, verification_method: val })}
                 >
                   <SelectTrigger className="w-full h-12 bg-slate-900 border-slate-800 font-medium">
-                    <SelectValue placeholder="Select method..." />
+                    <SelectValue placeholder="Choisir une méthode..." />
                   </SelectTrigger>
                   <SelectContent className="bg-slate-900 border-slate-800">
-                    <SelectItem value="captcha" className="focus:bg-slate-800">CAPTCHA Only</SelectItem>
-                    <SelectItem value="button" className="focus:bg-slate-800">Button Click Only</SelectItem>
-                    <SelectItem value="both" className="focus:bg-slate-800">Both Choices Setup</SelectItem>
+                    <SelectItem value="captcha" className="focus:bg-slate-800">CAPTCHA uniquement</SelectItem>
+                    <SelectItem value="button" className="focus:bg-slate-800">Bouton uniquement</SelectItem>
+                    <SelectItem value="both" className="focus:bg-slate-800">Les deux choix</SelectItem>
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-slate-500">Select how users will be verified.</p>
+                <p className="text-xs text-slate-500">Choisissez comment les utilisateurs seront vérifiés.</p>
               </div>
 
             </div>
@@ -188,7 +188,7 @@ export function VerificationForm({ initialConfig, channels, roles, guildId }: Ve
             className="w-full h-14 text-base font-bold gap-2"
           >
             {saving ? <RefreshCcw className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
-            Save Configuration
+            Enregistrer la configuration
           </Button>
         </div>
       </div>
@@ -198,15 +198,15 @@ export function VerificationForm({ initialConfig, channels, roles, guildId }: Ve
           <div className="absolute -right-4 -top-4 opacity-[0.03] group-hover:scale-110 transition-transform">
             <ShieldCheck className="h-32 w-32 text-primary" />
           </div>
-          <h3 className="text-sm font-bold text-primary mb-2">How It Works</h3>
+          <h3 className="text-sm font-bold text-primary mb-2">Comment ça fonctionne</h3>
           <p className="text-xs text-slate-400 leading-relaxed mb-4">
-            Haunted Verification ensures that no unauthorized bots or malicious users enter your server unverified.
+            La vérification Haunted garantit qu’aucun bot non autorisé ni utilisateur malveillant n’entre sur votre serveur sans vérification.
           </p>
           <ul className="text-xs text-slate-500 space-y-2">
-             <li>• The bot will create a panel in your Verification Channel.</li>
-             <li>• Unverified members must click &quot;Verify&quot;.</li>
-             <li>• Captcha presents a unique image sequence.</li>
-             <li>• Upon success, role is assigned.</li>
+             <li>• Le bot créera un panneau dans votre salon de vérification.</li>
+             <li>• Les membres non vérifiés doivent cliquer sur « Vérifier ».</li>
+             <li>• Le captcha présente une séquence d’images unique.</li>
+             <li>• En cas de succès, le rôle est attribué.</li>
           </ul>
         </div>
       </div>

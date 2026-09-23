@@ -35,12 +35,12 @@ import { cn } from "@/lib/utils";
 import { LoggingConfig, DiscordChannel } from "@/types/api";
 
 const LOG_CATEGORIES = [
-  { id: "message_events", name: "Message Events", icon: MessageSquare, description: "Log message deletions, edits, and bulk removals." },
-  { id: "join_leave_events", name: "Join & Leave Events", icon: UserPlus, description: "Track when members join or leave the server." },
-  { id: "member_moderation", name: "Moderation Events", icon: ShieldAlert, description: "Log kicks, bans, and timeout updates." },
-  { id: "voice_events", name: "Voice Events", icon: Mic, description: "Track members joining, leaving, or moving voice channels." },
-  { id: "role_events", name: "Role Changes", icon: Settings, description: "Log role creation, deletion, and permission updates." },
-  { id: "channel_events", name: "Channel Changes", icon: Hash, description: "Track channel creation, deletion, and settings updates." },
+  { id: "message_events", name: "Messages", icon: MessageSquare, description: "Journalise les suppressions, modifications et suppressions groupées de messages." },
+  { id: "join_leave_events", name: "Arrivées & Départs", icon: UserPlus, description: "Suit les arrivées et les départs des membres du serveur." },
+  { id: "member_moderation", name: "Modération", icon: ShieldAlert, description: "Journalise les expulsions, bannissements et exclusions temporaires." },
+  { id: "voice_events", name: "Événements vocaux", icon: Mic, description: "Suit les connexions, déconnexions et déplacements dans les salons vocaux." },
+  { id: "role_events", name: "Changements de rôles", icon: Settings, description: "Journalise la création, la suppression et la modification des rôles." },
+  { id: "channel_events", name: "Changements de salons", icon: Hash, description: "Suit la création, la suppression et la modification des salons." },
 ];
 
 interface LoggingFormProps {
@@ -62,10 +62,10 @@ export function LoggingForm({ initialConfig, channels, guildId }: LoggingFormPro
       await api.updateLogging(guildId, {
         log_enabled: { [categoryId]: enabled }
       });
-      toast.success(`${enabled ? 'Enabled' : 'Disabled'} ${categoryId.replace('_', ' ')} logging`);
+      toast.success(`Journalisation ${categoryId.replace('_', ' ')} ${enabled ? 'activée' : 'désactivée'}`);
     } catch (err: any) {
       setConfig(config);
-      toast.error("Failed to update logging setting.");
+      toast.error("Échec de la mise à jour du paramètre de journalisation.");
     }
   };
 
@@ -80,9 +80,9 @@ export function LoggingForm({ initialConfig, channels, guildId }: LoggingFormPro
     });
 
     toast.promise(promise, {
-      loading: 'Updating log channel...',
-      success: 'Log channel updated successfully',
-      error: 'Failed to update log channel',
+      loading: 'Mise à jour du salon de logs...',
+      success: 'Salon de logs mis à jour avec succès',
+      error: 'Échec de la mise à jour du salon de logs',
     });
 
     try {
@@ -124,7 +124,7 @@ export function LoggingForm({ initialConfig, channels, guildId }: LoggingFormPro
                           value={config.log_channels[cat.id]?.toString() || ""}
                           onValueChange={(val) => handleChannelChange(cat.id, val)}
                           options={channelOptions}
-                          placeholder="Select channel..."
+                          placeholder="Sélectionner un salon..."
                           className="bg-black/20 border-slate-800 rounded-xl"
                         />
                      </div>
@@ -135,7 +135,7 @@ export function LoggingForm({ initialConfig, channels, guildId }: LoggingFormPro
                              "text-[10px] font-black uppercase tracking-widest",
                              config.log_enabled[cat.id] ? "text-emerald-500" : "text-slate-600"
                            )}>
-                             {config.log_enabled[cat.id] ? "Active" : "Silent"}
+                             {config.log_enabled[cat.id] ? "Actif" : "Silencieux"}
                            </span>
                         </div>
                         <Switch 
@@ -156,31 +156,31 @@ export function LoggingForm({ initialConfig, channels, guildId }: LoggingFormPro
             </div>
             <div className="flex items-center gap-2 mb-6">
               <Info className="h-5 w-5 text-primary" />
-              <h3 className="font-bold text-white text-lg tracking-tight">Logging Engine</h3>
+              <h3 className="font-bold text-white text-lg tracking-tight">Moteur de logs</h3>
             </div>
             <div className="space-y-4 relative z-10">
                <div className="p-4 bg-black/20 rounded-2xl border border-white/5 space-y-2">
-                  <p className="text-[10px] uppercase font-bold text-slate-500">Intelligent Routing</p>
-                  <p className="text-xs text-slate-300 leading-relaxed font-medium">Assign specific channels to different event types for better organization.</p>
+                  <p className="text-[10px] uppercase font-bold text-slate-500">Routage intelligent</p>
+                  <p className="text-xs text-slate-300 leading-relaxed font-medium">Assignez des salons spécifiques aux différents types d'événements pour une meilleure organisation.</p>
                </div>
                <div className="p-4 bg-black/20 rounded-2xl border border-white/5 space-y-2">
                   <p className="text-[10px] uppercase font-bold text-slate-500">Webhooks</p>
-                  <p className="text-xs text-slate-300 leading-relaxed font-medium">Coming soon: Export audit logs to external webhooks and elastic systems.</p>
+                  <p className="text-xs text-slate-300 leading-relaxed font-medium">Bientôt disponible : exportez les logs d'audit vers des webhooks externes.</p>
                </div>
             </div>
             <Button variant="secondary" className="w-full mt-8 py-6 rounded-[24px] font-black uppercase tracking-tighter text-xs">
-               Save Global Config
+               Enregistrer la configuration globale
             </Button>
          </section>
 
          <div className="bg-[#141B2D] border border-slate-800 rounded-[40px] p-8 shadow-xl">
            <h3 className="text-xs font-black uppercase text-slate-500 tracking-[0.15em] mb-6 flex items-center gap-2">
              <ShieldAlert className="h-4 w-4 text-amber-500" />
-             Audit Protection
+             Protection d'audit
            </h3>
            <div className="space-y-4">
               <div className="flex items-center justify-between p-3 bg-slate-900/40 rounded-xl border border-slate-800 hover:border-slate-700 transition-colors">
-                 <span className="text-xs font-bold text-slate-400">Protect Roles</span>
+                 <span className="text-xs font-bold text-slate-400">Rôles protégés</span>
                  <span className="bg-slate-800 text-slate-300 px-2 py-1 rounded-md text-[10px] font-black">{config.ignore_roles.length}</span>
               </div>
               <div className="flex items-center justify-between p-3 bg-slate-900/40 rounded-xl border border-slate-800 hover:border-slate-700 transition-colors">

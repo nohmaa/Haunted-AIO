@@ -36,9 +36,9 @@ export default function DashboardError({
         <AlertTriangle className="h-10 w-10 text-red-500" />
       </div>
       
-      <h2 className="text-2xl font-black text-white mb-2 tracking-tight">System Fault Detected</h2>
+      <h2 className="text-2xl font-black text-white mb-2 tracking-tight">Défaillance système détectée</h2>
       <p className="text-slate-400 max-w-md mb-8">
-        The neural link experienced an unexpected interruption. This could be due to a connection timeout or an internal API failure.
+        La liaison neuronale a subi une interruption inattendue. Cela peut être dû à un délai de connexion dépassé ou à une défaillance interne de l'API.
       </p>
 
       <div className="flex flex-col sm:flex-row gap-4 w-full max-w-xs">
@@ -47,7 +47,7 @@ export default function DashboardError({
           className="flex-1 gap-2 h-12 font-bold"
         >
           <RefreshCw className="h-4 w-4" />
-          Retry Connection
+          Réessayer la connexion
         </Button>
         <Link href="/dashboard" className="flex-1">
           <Button 
@@ -55,7 +55,7 @@ export default function DashboardError({
             className="w-full gap-2 h-12 font-bold border-slate-800"
           >
             <Home className="h-4 w-4" />
-            Go Home
+            Retour à l'accueil
           </Button>
         </Link>
       </div>

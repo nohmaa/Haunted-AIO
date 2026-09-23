@@ -42,6 +42,38 @@ async def lifespan(app: FastAPI):
     # Shutdown: Close all shared database connections
     await db_manager.close_all()
 
+def _expand_cors_origins(origins: list) -> list:
+    """Ajoute automatiquement la variante www/apex de chaque origine.
+
+    Évite l'erreur classique : dashboard sur `www.domaine.com` alors que
+    seule `https://domaine.com` est dans CORS_ORIGINS (ou l'inverse).
+    """
+    from urllib.parse import urlsplit, urlunsplit
+
+    expanded: list = []
+    for origin in origins:
+        origin = (origin or "").strip().rstrip("/")
+        if not origin or origin in expanded:
+            continue
+        expanded.append(origin)
+        try:
+            parts = urlsplit(origin)
+            host = parts.hostname or ""
+            port = f":{parts.port}" if parts.port else ""
+            if host.startswith("www."):
+                alt_host = host[4:]
+            elif host and "." in host and host != "localhost":
+                alt_host = "www." + host
+            else:
+                alt_host = None
+            if alt_host:
+                alt = urlunsplit((parts.scheme, alt_host + port, "", "", ""))
+                if alt not in expanded:
+                    expanded.append(alt)
+        except Exception:
+            continue
+    return expanded
+
 def create_app() -> FastAPI:
     """
     Initializes the FastAPI application for the Haunted Bot Dashboard.
@@ -85,12 +117,12 @@ def create_app() -> FastAPI:
         for o in os.getenv("CORS_ORIGINS", "").split(",")
         if o.strip()
     ]
-    _allowed_origins = list(dict.fromkeys([
+    _allowed_origins = _expand_cors_origins([
         "http://localhost:3000",
         "https://localhost:3000",
         "https://dashboard.votredomaine.com",
         *_extra_origins,
-    ]))
+    ])
 
     # Enable CORS for Next.js dashboard
     app.add_middleware(

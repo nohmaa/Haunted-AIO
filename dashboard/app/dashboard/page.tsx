@@ -34,7 +34,7 @@ export default async function DashboardPage() {
     botInfo = await api.getBotInfo();
   } catch (err: any) {
     console.error("Failed to fetch bot info:", err);
-    error = err.message || "Failed to connect to the bot API.";
+    error = err.message || "Échec de connexion à l'API du bot.";
     // Fallback data for UI structure if API fails
     botInfo = {
       name: "Haunted Bot",
@@ -46,19 +46,19 @@ export default async function DashboardPage() {
   }
 
   const stats = [
-    { name: "Total Guilds", value: botInfo.guilds.toLocaleString(), icon: ServerIcon },
-    { name: "Total Users", value: botInfo.users.toLocaleString(), icon: Users },
-    { name: "System Uptime", value: "99.9%", icon: Activity },
-    { name: "API Latency", value: botInfo.latency, icon: Activity },
+    { name: "Serveurs totaux", value: botInfo.guilds.toLocaleString(), icon: ServerIcon },
+    { name: "Utilisateurs totaux", value: botInfo.users.toLocaleString(), icon: Users },
+    { name: "Disponibilité système", value: "99.9%", icon: Activity },
+    { name: "Latence API", value: botInfo.latency, icon: Activity },
   ];
 
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-2">
         <div>
-          <h1 className="text-4xl md:text-5xl font-bold text-white font-outfit tracking-tight">System <span className="text-red-500 italic">Core.</span></h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-white font-outfit tracking-tight">Système <span className="text-red-500 italic">Core.</span></h1>
           <p className="text-slate-400 mt-3 font-medium flex items-center gap-2">
-            Status and live metrics for <span className="text-red-500 font-bold px-2 py-0.5 rounded-lg bg-red-500/10 border border-red-500/20">{botInfo.name}</span>
+            Statut et métriques en direct pour <span className="text-red-500 font-bold px-2 py-0.5 rounded-lg bg-red-500/10 border border-red-500/20">{botInfo.name}</span>
           </p>
         </div>
         
@@ -98,19 +98,19 @@ export default async function DashboardPage() {
           <div className="absolute inset-0 bg-gradient-to-br from-red-500/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
           
           <div className="flex items-center justify-between mb-8 relative z-10">
-            <h2 className="text-2xl font-bold text-white font-outfit tracking-tight">Quick Actions</h2>
+            <h2 className="text-2xl font-bold text-white font-outfit tracking-tight">Actions rapides</h2>
             <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20">
                <Zap className="h-3 w-3 text-red-500" />
-               <span className="text-[10px] font-black text-red-500 uppercase tracking-widest">Efficiency</span>
+               <span className="text-[10px] font-black text-red-500 uppercase tracking-widest">Efficacité</span>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
             {[
-              { title: "Manage Servers", desc: "View and configure your Discord guilds.", icon: ServerIcon, href: "/dashboard/guilds" },
-              { title: "Global Settings", desc: "Adjust your personal dashboard preferences.", icon: Settings, href: "/dashboard" },
-              { title: "Support Matrix", desc: "Get help from our neural support team.", icon: LifeBuoy, href: "#" },
-              { title: "Documentation", desc: "Learn how to master the Haunted engine.", icon: FileText, href: "#" },
+              { title: "Gérer les serveurs", desc: "Voir et configurer vos serveurs Discord.", icon: ServerIcon, href: "/dashboard/guilds" },
+              { title: "Paramètres globaux", desc: "Ajustez vos préférences personnelles du tableau de bord.", icon: Settings, href: "/dashboard" },
+              { title: "Assistance", desc: "Obtenez de l'aide de notre équipe d'assistance.", icon: LifeBuoy, href: "#" },
+              { title: "Documentation", desc: "Apprenez à maîtriser le moteur Haunted.", icon: FileText, href: "#" },
             ].map((item) => (
               <a key={item.title} href={item.href} className="flex items-center gap-5 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.03] group/item hover:bg-white/[0.05] hover:border-red-500/20 transition-all">
                 <div className="h-12 w-12 rounded-2xl bg-red-500/5 border border-red-500/10 flex items-center justify-center group-hover/item:bg-red-500/10 transition-colors">
@@ -129,14 +129,14 @@ export default async function DashboardPage() {
           <div className="absolute inset-0 bg-gradient-to-bl from-red-500/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
           
           <div className="relative z-10">
-            <h2 className="text-2xl font-bold text-white mb-3 font-outfit">Module Status</h2>
-            <p className="text-slate-500 text-sm mb-10 font-medium">Global operational health of ZyroX core.</p>
+            <h2 className="text-2xl font-bold text-white mb-3 font-outfit">État des modules</h2>
+            <p className="text-slate-500 text-sm mb-10 font-medium">Santé opérationnelle globale du cœur ZyroX.</p>
             
             <div className="space-y-4">
               {[
-                { name: 'Neural Gateway', status: 'Optimal' },
-                { name: 'Database Cluster', status: 'Synchronized' },
-                { name: 'Edge Shards', status: 'Operational' }
+                { name: 'Passerelle neuronale', status: 'Optimal' },
+                { name: 'Cluster de base de données', status: 'Synchronisé' },
+                { name: 'Shards périphériques', status: 'Opérationnel' }
               ].map((service) => (
                 <div key={service.name} className="flex items-center justify-between p-4 bg-white/[0.02] rounded-2xl border border-white/[0.05] hover:border-red-500/20 transition-colors">
                   <span className="text-xs font-bold text-slate-300">{service.name}</span>
@@ -150,7 +150,7 @@ export default async function DashboardPage() {
           </div>
           
           <button className="mt-12 w-full py-4 glass-red hover:bg-red-500/10 text-red-500 rounded-[20px] text-[11px] font-black uppercase tracking-[0.2em] transition-all border border-red-500/20 relative z-10">
-            System Diagnostics
+            Diagnostic système
           </button>
           {/* Abstract Design Element */}
           <div className="absolute -bottom-10 -right-10 h-32 w-32 bg-red-500/10 blur-3xl rounded-full" />

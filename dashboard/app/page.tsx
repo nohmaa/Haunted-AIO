@@ -63,15 +63,15 @@ export default function LandingPage() {
             </div>
             <div className="flex flex-col">
               <h1 className="text-lg font-bold tracking-tight text-white font-outfit leading-none">{process.env.NEXT_PUBLIC_BRAND_NAME || "Haunted"}</h1>
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-red-500/80 mt-1">Dashboard</span>
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-red-500/80 mt-1">Tableau de bord</span>
             </div>
           </div>
 
           <div className="hidden lg:flex items-center gap-10 text-[11px] font-black uppercase tracking-widest text-slate-500">
-            <Link href="#features" className="hover:text-red-500 transition-colors">Features</Link>
+            <Link href="#features" className="hover:text-red-500 transition-colors">Fonctionnalités</Link>
             <Link href="#architecture" className="hover:text-red-500 transition-colors">Architecture</Link>
             <Link href="#modules" className="hover:text-red-500 transition-colors">Modules</Link>
-            <Link href="#network" className="hover:text-red-500 transition-colors">Network</Link>
+            <Link href="#network" className="hover:text-red-500 transition-colors">Réseau</Link>
           </div>
 
           <div className="flex items-center gap-4">
@@ -80,7 +80,7 @@ export default function LandingPage() {
               className="rounded-xl px-7 h-11 font-black uppercase tracking-widest text-[10px] gap-2.5 shadow-2xl shadow-red-500/20 hover:scale-[1.05] active:scale-95 transition-all bg-gradient-to-r from-red-500 to-red-700 border-none"
             >
               <LogIn className="h-3.5 w-3.5" />
-              Initialize Console
+              Initialiser la console
             </Button>
           </div>
         </div>
@@ -94,17 +94,17 @@ export default function LandingPage() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
             </span>
-            Neural Core v2 Active • Global Shard 07
+            Neural Core v2 actif • Shard mondial 07
           </div>
           
           <h1 className="text-6xl sm:text-8xl md:text-[10rem] font-bold text-white tracking-tighter leading-[0.8] mb-12 font-outfit animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-100 uppercase">
-            Evolution <br />
-            <span className="bg-gradient-to-r from-red-500 via-red-400 to-orange-500 bg-clip-text text-transparent italic font-black">Moderated.</span>
+            Évolution <br />
+            <span className="bg-gradient-to-r from-red-500 via-red-400 to-orange-500 bg-clip-text text-transparent italic font-black">Modérée.</span>
           </h1>
 
           <p className="text-lg md:text-2xl text-slate-500 max-w-3xl mx-auto leading-relaxed mb-20 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-200 font-medium">
-            The hyper-performance Discord engine. 
-            Automated security, cinematic leveling, and precision tools for the world&apos;s most elite communities.
+            Le moteur Discord hyper-performant.
+            Sécurité automatisée, niveaux cinématiques et outils de précision pour les communautés les plus exigeantes.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-300">
@@ -113,10 +113,10 @@ export default function LandingPage() {
               className="w-full sm:w-auto rounded-2xl px-14 py-9 text-lg font-black uppercase gap-4 group shadow-[0_0_50px_rgba(239,68,68,0.2)] bg-red-600 text-white hover:bg-red-500 border-none transition-all hover:scale-105"
             >
               <LayoutDashboard className="h-6 w-6 group-hover:rotate-12 transition-transform" />
-              Open Dashboard
+              Ouvrir le tableau de bord
             </Button>
             <Button variant="outline" className="w-full sm:w-auto rounded-2xl px-14 py-9 text-lg font-bold border-white/5 bg-white/[0.02] backdrop-blur-3xl hover:bg-white/[0.05] gap-3 text-white transition-all">
-              Add to Server
+              Ajouter au serveur
               <ChevronRight className="h-5 w-5 opacity-40 group-hover:translate-x-1 transition-transform" />
             </Button>
           </div>
@@ -170,17 +170,17 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-32 gap-12 px-4">
             <div className="max-w-3xl">
-              <h2 className="text-6xl md:text-8xl font-bold text-white tracking-tighter font-outfit mb-8 uppercase italic leading-none">High-Scale <br /><span className="text-red-500 not-italic">Infrastructure.</span></h2>
-              <p className="text-2xl text-slate-500 font-medium leading-relaxed">Global redundancy delivers sub-millisecond dispatch times across 20+ edge regions. Zero lag, zero downtime.</p>
+              <h2 className="text-6xl md:text-8xl font-bold text-white tracking-tighter font-outfit mb-8 uppercase italic leading-none">Infrastructure <br /><span className="text-red-500 not-italic">à grande échelle.</span></h2>
+              <p className="text-2xl text-slate-500 font-medium leading-relaxed">Une redondance mondiale pour une exécution en moins d&apos;une milliseconde sur plus de 20 régions edge. Zéro latence, zéro interruption.</p>
             </div>
             <div className="flex items-center gap-10 pb-4">
                <div className="text-right">
-                 <p className="text-[10px] font-black uppercase text-slate-600 tracking-[0.3em] mb-3">Ping Latency</p>
+                 <p className="text-[10px] font-black uppercase text-slate-600 tracking-[0.3em] mb-3">Latence</p>
                  <p className="text-5xl font-black text-red-500 font-outfit">12ms</p>
                </div>
                <div className="h-16 w-[1px] bg-white/5" />
                <div className="text-right">
-                 <p className="text-[10px] font-black uppercase text-slate-600 tracking-[0.3em] mb-3">Global Uptime</p>
+                 <p className="text-[10px] font-black uppercase text-slate-600 tracking-[0.3em] mb-3">Disponibilité mondiale</p>
                  <p className="text-5xl font-black text-white font-outfit">99.9<span className="text-slate-700">9</span>%</p>
                </div>
             </div>
@@ -189,38 +189,38 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               { 
-                title: "Neuro-Security", 
-                desc: "Contextual AI analysis detects raids and token-logging attempts in real-time.", 
+                title: "Neuro-sécurité", 
+                desc: "L'analyse IA contextuelle détecte les raids et les tentatives de vol de tokens en temps réel.", 
                 icon: ShieldCheck,
                 color: "bg-red-500/10 border-red-500/20 text-red-500"
               },
               { 
-                title: "Edge Dispatch", 
-                desc: "Distributed command execution ensuring your commands work everywhere, instantly.", 
+                title: "Exécution Edge", 
+                desc: "Exécution distribuée des commandes pour une réponse instantanée, partout.", 
                 icon: Zap,
                 color: "bg-orange-500/10 border-orange-500/20 text-orange-500"
               },
               { 
-                title: "Leveling Engine", 
-                desc: "Premium rendered rewards with 4K rank card generation and multi-role hierarchies.", 
+                title: "Moteur de niveaux", 
+                desc: "Récompenses premium avec cartes de rang 4K et hiérarchies multi-rôles.", 
                 icon: BarChart4,
                 color: "bg-red-600/10 border-red-600/20 text-red-600"
               },
               { 
-                title: "Threaded Support", 
-                desc: "High-volume ticket systems with enterprise encryption and lifetime transcripts.", 
+                title: "Support par tickets", 
+                desc: "Système de tickets à haut volume avec chiffrement renforcé et transcriptions conservées.", 
                 icon: MessageSquare,
                 color: "bg-slate-500/10 border-slate-500/20 text-slate-400"
               },
               { 
-                title: "Real-time Flux", 
-                desc: "Watch server events live with zero-latency WebSocket data streaming.", 
+                title: "Flux en temps réel", 
+                desc: "Suivez les événements du serveur en direct grâce au streaming WebSocket sans latence.", 
                 icon: History,
                 color: "bg-red-800/10 border-red-800/20 text-red-700"
               },
               { 
-                title: "Cloud Integrity", 
-                desc: "Encrypted backups of all server configurations stored in off-site neural vaults.", 
+                title: "Intégrité cloud", 
+                desc: "Sauvegardes chiffrées de toutes les configurations, stockées dans des coffres neuronaux externes.", 
                 icon: Layers,
                 color: "bg-white/10 border-white/20 text-white"
               }
@@ -246,18 +246,18 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
            <div className="space-y-12">
               <div className="inline-flex px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] font-black uppercase tracking-[0.3em]">
-                 The Stack
+                 La stack
               </div>
-              <h2 className="text-6xl md:text-7xl font-bold text-white tracking-tighter font-outfit uppercase">Neural Core <br /><span className="text-slate-600 italic">Technology.</span></h2>
+              <h2 className="text-6xl md:text-7xl font-bold text-white tracking-tighter font-outfit uppercase">Neural Core <br /><span className="text-slate-600 italic">Technologie.</span></h2>
               <p className="text-xl text-slate-500 leading-relaxed font-medium">
-                Our proprietary engine is built on a custom Rust-based microkernel that handles millions of events with a footprint smaller than a typical Discord bot.
+                Notre moteur propriétaire repose sur un micro-noyau Rust sur mesure qui traite des millions d&apos;événements avec une empreinte plus légère qu&apos;un bot Discord classique.
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-8">
                  {[
-                   { icon: Terminal, title: "Custom DSL", desc: "Write advanced logic with our intuitive ZyroX scripting language." },
-                   { icon: Cpu, title: "FPGA Ready", desc: "Hardware-accelerated pattern matching for instant response." },
-                   { icon: Lock, title: "Zero Trust", desc: "Every command execution is sandboxed and cryptographically verified." },
-                   { icon: Radio, title: "Low Entropy", desc: "Optimized for minimal CPU jitter and maximum reliability." }
+                   { icon: Terminal, title: "DSL personnalisé", desc: "Écrivez des logiques avancées avec notre langage de script ZyroX intuitif." },
+                   { icon: Cpu, title: "Prêt pour FPGA", desc: "Reconnaissance de motifs accélérée par le matériel pour une réponse instantanée." },
+                   { icon: Lock, title: "Zéro confiance", desc: "Chaque exécution de commande est isolée et vérifiée cryptographiquement." },
+                   { icon: Radio, title: "Faible entropie", desc: "Optimisé pour une gigue CPU minimale et une fiabilité maximale." }
                  ].map((item, i) => (
                    <div key={i} className="space-y-4 p-6 rounded-[30px] border border-white/[0.03] hover:bg-white/[0.02] transition-colors">
                       <item.icon className="h-6 w-6 text-red-500" />
@@ -286,24 +286,24 @@ export default function LandingPage() {
       <section id="modules" className="py-48 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-32 space-y-6">
-             <h2 className="text-6xl md:text-8xl font-bold text-white tracking-tighter font-outfit uppercase">The Matrix <br /><span className="bg-gradient-to-r from-red-600 to-red-400 bg-clip-text text-transparent italic">Complete.</span></h2>
-             <p className="text-2xl text-slate-500 max-w-3xl mx-auto font-medium lowercase">Every module you need. Redefined for the modern era.</p>
+             <h2 className="text-6xl md:text-8xl font-bold text-white tracking-tighter font-outfit uppercase">La Matrice <br /><span className="bg-gradient-to-r from-red-600 to-red-400 bg-clip-text text-transparent italic">Au complet.</span></h2>
+             <p className="text-2xl text-slate-500 max-w-3xl mx-auto font-medium lowercase">Tous les modules dont vous avez besoin. Repensés pour l&apos;ère moderne.</p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {[
-              { name: "Anti-Nuke", desc: "Absolute server lockdown.", icon: ShieldAlert },
-              { name: "Verification", desc: "Bot-free onboarding.", icon: CheckCircle2 },
-              { name: "Welcome", desc: "Cinematic entries.", icon: Sparkles },
-              { name: "Vanity Roles", desc: "Custom server identity.", icon: Gamepad2 },
-              { name: "Auto Role", desc: "Instant rank assignment.", icon: User },
-              { name: "Join to Create", desc: "Self-service voice channels.", icon: Music4 },
-              { name: "Tracking", desc: "Predictive user metrics.", icon: Activity },
-              { name: "Invites", desc: "Advanced growth tracking.", icon: Globe },
-              { name: "Custom Roles", desc: "User-defined permissions.", icon: Lock },
-              { name: "Reaction Roles", desc: "Interactive role menus.", icon: Layers },
-              { name: "Tickets", desc: "Support at lightspeed.", icon: MessageSquare },
-              { name: "Join DM", desc: "Personalized welcomes.", icon: MessageSquare }
+              { name: "Anti-Nuke", desc: "Verrouillage absolu du serveur.", icon: ShieldAlert },
+              { name: "Vérification", desc: "Accueil sans bots.", icon: CheckCircle2 },
+              { name: "Bienvenue", desc: "Arrivées cinématiques.", icon: Sparkles },
+              { name: "Rôles vanity", desc: "Identité de serveur personnalisée.", icon: Gamepad2 },
+              { name: "Rôle auto", desc: "Attribution instantanée des rôles.", icon: User },
+              { name: "Salons temporaires", desc: "Salons vocaux à la demande.", icon: Music4 },
+              { name: "Suivi", desc: "Statistiques utilisateurs prédictives.", icon: Activity },
+              { name: "Invitations", desc: "Suivi avancé de la croissance.", icon: Globe },
+              { name: "Rôles sur mesure", desc: "Permissions définies par les utilisateurs.", icon: Lock },
+              { name: "Rôles par réaction", desc: "Menus de rôles interactifs.", icon: Layers },
+              { name: "Tickets", desc: "Un support à la vitesse de la lumière.", icon: MessageSquare },
+              { name: "MP de bienvenue", desc: "Messages de bienvenue personnalisés.", icon: MessageSquare }
             ].map((mod, i) => (
               <div key={i} className="group p-8 rounded-[40px] bg-white/[0.01] border border-white/[0.03] hover:bg-red-500/[0.02] hover:border-red-500/20 transition-all duration-500">
                  <div className="h-14 w-14 rounded-2xl bg-white/[0.03] flex items-center justify-center mb-6 group-hover:bg-red-500/10 transition-colors">
@@ -322,15 +322,15 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto relative z-10">
            <div className="flex flex-col lg:flex-row items-center gap-24">
               <div className="flex-1 space-y-12">
-                 <h2 className="text-6xl md:text-8xl font-bold text-white tracking-tighter font-outfit uppercase">Global <br /><span className="text-red-500">Reach.</span></h2>
+                 <h2 className="text-6xl md:text-8xl font-bold text-white tracking-tighter font-outfit uppercase">Mondiale <br /><span className="text-red-500">Portée.</span></h2>
                   <p className="text-2xl text-slate-500 leading-relaxed font-medium">
-                    Powering servers with over 12 million combined users. Our network spans every continent, bringing your community closer together.
+                    Au service de serveurs réunissant plus de 12 millions d&apos;utilisateurs. Notre réseau s&apos;étend sur tous les continents pour rapprocher votre communauté.
                   </p>
                  <div className="space-y-8">
                     {[
-                      { stat: "12M+", label: "Users Protected" },
-                      { stat: "24", label: "Edge Clusters" },
-                      { stat: "5.2K", label: "Verified Communities" }
+                      { stat: "12M+", label: "Utilisateurs protégés" },
+                      { stat: "24", label: "Clusters edge" },
+                      { stat: "5.2K", label: "Communautés vérifiées" }
                     ].map((item, i) => (
                       <div key={i} className="flex items-center gap-8">
                          <div className="text-5xl font-black text-white font-outfit">{item.stat}</div>
@@ -360,15 +360,15 @@ export default function LandingPage() {
       <section className="py-48 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-24">
-             <h2 className="text-5xl md:text-6xl font-black text-white font-outfit tracking-tighter uppercase mb-6">Knowledge Base</h2>
-             <p className="text-slate-600 font-bold uppercase tracking-widest text-xs">Frequently Asked Questions</p>
+             <h2 className="text-5xl md:text-6xl font-black text-white font-outfit tracking-tighter uppercase mb-6">Base de connaissances</h2>
+             <p className="text-slate-600 font-bold uppercase tracking-widest text-xs">Questions fréquentes</p>
           </div>
           <div className="space-y-6">
             {[
-              { q: "Is the Haunted Engine free to use?", a: "The core engine is 100% free for all communities. We offer premium clusters for ultra-high-scale enterprise servers." },
-              { q: "How secure is my server data?", a: "Every byte of configuration data is AES-256 encrypted at rest. We never store personal user data beyond Discord's standard requirements." },
-              { q: "Can I migrate from other bots?", a: "Yes, our Migration Matrix tool allows you to import leveling and configuration data from most popular bots in minutes." },
-              { q: "What is the 'Neural Core'?", a: "It's our advanced event-processing architecture that uses predictive analysis to moderate raids before they escalate." }
+              { q: "Haunted Engine est-il gratuit ?", a: "Le moteur de base est 100 % gratuit pour toutes les communautés. Nous proposons des clusters premium pour les serveurs entreprise à très grande échelle." },
+              { q: "Mes données de serveur sont-elles en sécurité ?", a: "Chaque octet de configuration est chiffré en AES-256 au repos. Nous ne stockons aucune donnée personnelle au-delà des exigences standard de Discord." },
+              { q: "Puis-je migrer depuis d'autres bots ?", a: "Oui, notre outil Migration Matrix permet d'importer les niveaux et les configurations depuis la plupart des bots populaires en quelques minutes." },
+              { q: "Qu'est-ce que le « Neural Core » ?", a: "C'est notre architecture avancée de traitement d'événements qui utilise l'analyse prédictive pour modérer les raids avant qu'ils ne dégénèrent." }
             ].map((item, i) => (
               <div key={i} className="p-10 rounded-[40px] border border-white/[0.03] hover:border-white/10 transition-all bg-white/[0.01] group">
                  <h4 className="text-xl font-bold text-white mb-6 font-outfit uppercase tracking-tight flex items-center gap-4">
@@ -387,18 +387,18 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto relative rounded-[80px] p-24 md:p-32 overflow-hidden bg-gradient-to-br from-red-600 to-red-900 text-center shadow-[0_40px_100px_rgba(0,0,0,0.6)]">
            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
            <div className="relative z-10">
-              <h2 className="text-7xl md:text-[9rem] font-bold text-white tracking-tighter font-outfit mb-12 uppercase leading-[0.8] italic">Ready to <br />Evolve?</h2>
-              <p className="text-2xl text-white/70 max-w-3xl mx-auto mb-20 font-medium">Join 5,000+ communities scaling their automation with the Haunted Engine. Setup takes less than 30 seconds.</p>
+              <h2 className="text-7xl md:text-[9rem] font-bold text-white tracking-tighter font-outfit mb-12 uppercase leading-[0.8] italic">Prêt à <br />Évoluer ?</h2>
+              <p className="text-2xl text-white/70 max-w-3xl mx-auto mb-20 font-medium">Rejoignez plus de 5 000 communautés qui automatisent avec Haunted Engine. Installation en moins de 30 secondes.</p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-8 tracking-widest uppercase text-xs font-black">
                 <Button 
                   onClick={() => signIn('discord', { callbackUrl: '/dashboard' })}
                   className="w-full sm:w-auto rounded-3xl px-16 py-10 bg-white text-black hover:bg-slate-100 border-none shadow-[0_20px_50px_rgba(0,0,0,0.4)] font-black text-lg transition-transform hover:scale-105 active:scale-95"
                 >
-                  Get Started Free
+                  Commencer gratuitement
                 </Button>
                 <div className="flex items-center gap-3 text-white">
                    <div className="h-3 w-3 rounded-full bg-white animate-pulse" />
-                   Neural Uplink: Stable
+                   Liaison neurale : stable
                 </div>
               </div>
            </div>
@@ -414,21 +414,21 @@ export default function LandingPage() {
                 <span className="text-3xl font-bold text-white font-outfit uppercase tracking-tighter">{process.env.NEXT_PUBLIC_BRAND_NAME || "Haunted"} Engine</span>
               </div>
               <p className="text-slate-600 max-w-sm font-bold leading-relaxed uppercase text-xs tracking-widest">
-                The high-performance Discord engine for communities that demand excellence. Open-source, secure, and infinitely scalable.
+                Le moteur Discord haute performance pour les communautés exigeantes. Open source, sécurisé et infiniment scalable.
               </p>
             </div>
             <div className="space-y-8">
-               <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white opacity-40">System</h4>
+               <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white opacity-40">Système</h4>
                <ul className="space-y-5 text-[11px] font-black uppercase tracking-widest text-slate-500">
-                  <li><Link href="#" className="hover:text-red-500 transition-colors">GitHub Repository</Link></li>
+                  <li><Link href="#" className="hover:text-red-500 transition-colors">Dépôt GitHub</Link></li>
                   <li><Link href="/docs" className="hover:text-red-500 transition-colors">Documentation</Link></li>
-                  <li><Link href="#" className="hover:text-red-500 transition-colors">API References</Link></li>
+                  <li><Link href="#" className="hover:text-red-500 transition-colors">Références API</Link></li>
                </ul>
             </div>
             <div className="space-y-8">
-               <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white opacity-40">Identity</h4>
+               <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white opacity-40">Identité</h4>
                <ul className="space-y-5 text-[11px] font-black uppercase tracking-widest text-slate-500">
-                  <li><Link href="/privacy" className="hover:text-red-500 transition-colors">Privacy Shield</Link></li>
+                  <li><Link href="/privacy" className="hover:text-red-500 transition-colors">Bouclier confidentialité</Link></li>
                   <li><Link href="/terms" className="hover:text-red-500 transition-colors">Terms of Service</Link></li>
                   <li><Link href="#" className="hover:text-red-500 transition-colors">Discord Server</Link></li>
                </ul>

@@ -23,8 +23,8 @@ export default function DashboardLoading() {
         <RefreshCcw className="h-16 w-16 text-primary animate-spin absolute top-0 left-0" />
       </div>
       <div className="space-y-2 text-center">
-        <h3 className="text-white font-bold text-lg">Initializing System</h3>
-        <p className="text-slate-500 text-sm animate-pulse">Fetching parameters from edge cortex...</p>
+        <h3 className="text-white font-bold text-lg">Initialisation du système</h3>
+        <p className="text-slate-500 text-sm animate-pulse">Récupération des paramètres depuis le cortex périphérique...</p>
       </div>
     </div>
   );

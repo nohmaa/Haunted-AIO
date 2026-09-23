@@ -43,9 +43,9 @@ export function AutoRoleForm({ initialConfig, roles, guildId }: AutoRoleFormProp
     const promise = api.updateAutoRole(guildId, data);
 
     toast.promise(promise, {
-      loading: 'Saving AutoRole configuration...',
-      success: 'Settings saved successfully!',
-      error: 'Failed to update AutoRole config',
+      loading: 'Enregistrement de la configuration AutoRole...',
+      success: 'Paramètres enregistrés avec succès !',
+      error: 'Échec de la mise à jour de la configuration AutoRole',
     });
 
     try {
@@ -60,7 +60,7 @@ export function AutoRoleForm({ initialConfig, roles, guildId }: AutoRoleFormProp
   const addRole = (type: "humans" | "bots", roleId: string) => {
     if (config[type].includes(roleId)) return;
     if (config[type].length >= 10) {
-      toast.error(`You can only add up to 10 roles for ${type === "humans" ? "Members" : "Bots"}.`);
+      toast.error(`Vous ne pouvez ajouter que 10 rôles maximum pour les ${type === "humans" ? "membres" : "bots"}.`);
       return;
     }
     setConfig({ ...config, [type]: [...config[type], roleId] });
@@ -76,7 +76,7 @@ export function AutoRoleForm({ initialConfig, roles, guildId }: AutoRoleFormProp
   };
 
   const renderRoleList = (type: "humans" | "bots") => {
-    const title = type === "humans" ? "Member Roles" : "Bot Roles";
+    const title = type === "humans" ? "Rôles des membres" : "Rôles des bots";
     const Icon = type === "humans" ? User : Bot;
     const accentColor = type === "humans" ? "text-primary" : "text-blue-400";
     const bgColor = type === "humans" ? "bg-primary/10" : "bg-blue-400/10";
@@ -89,13 +89,13 @@ export function AutoRoleForm({ initialConfig, roles, guildId }: AutoRoleFormProp
           </div>
           <div>
             <h4 className="font-bold text-white text-base">{title}</h4>
-            <p className="text-xs text-slate-400">Roles given to newly joined {type}.</p>
+            <p className="text-xs text-slate-400">Rôles attribués aux nouveaux {type === "humans" ? "membres" : "bots"}.</p>
           </div>
         </div>
         
         <Select value="" onValueChange={(val) => addRole(type, val)}>
           <SelectTrigger className="w-full h-12 bg-slate-900/50 border-slate-800 hover:border-slate-700 transition-all">
-            <SelectValue placeholder={`Add a ${type === "humans" ? "member" : "bot"} role...`} />
+            <SelectValue placeholder={`Ajouter un rôle ${type === "humans" ? "membre" : "bot"}...`} />
           </SelectTrigger>
           <SelectContent className="bg-slate-900 border-slate-800 max-h-[300px]">
             {roles
@@ -119,7 +119,7 @@ export function AutoRoleForm({ initialConfig, roles, guildId }: AutoRoleFormProp
           {config[type].length === 0 ? (
             <div className="absolute inset-0 flex flex-col items-center justify-center opacity-20">
               <ShieldCheck className="h-8 w-8 mb-2" />
-              <span className="text-xs font-medium">No roles selected</span>
+              <span className="text-xs font-medium">Aucun rôle sélectionné</span>
             </div>
           ) : (
             <div className="flex flex-wrap gap-2 relative z-10">
@@ -135,7 +135,7 @@ export function AutoRoleForm({ initialConfig, roles, guildId }: AutoRoleFormProp
                       className="w-2 h-2 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)]" 
                       style={{ backgroundColor: color }}
                     />
-                    <span className="text-slate-200 font-medium">{role ? role.name : `Unknown (${roleId})`}</span>
+                    <span className="text-slate-200 font-medium">{role ? role.name : `Inconnu (${roleId})`}</span>
                     <button 
                       onClick={() => removeRole(type, roleId)}
                       className="ml-1 text-slate-500 hover:text-red-400 transition-colors p-0.5 rounded-md hover:bg-red-400/10"
@@ -169,7 +169,7 @@ export function AutoRoleForm({ initialConfig, roles, guildId }: AutoRoleFormProp
               className="w-full h-14 text-base font-bold gap-3 shadow-lg shadow-primary/20 hover:shadow-primary/30 active:scale-[0.98] transition-all"
             >
               {saving ? <RefreshCcw className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
-              Save AutoRole Settings
+              Enregistrer les paramètres AutoRole
             </Button>
           </div>
 
@@ -184,30 +184,30 @@ export function AutoRoleForm({ initialConfig, roles, guildId }: AutoRoleFormProp
           
           <div className="flex items-center gap-2 mb-4">
             <Info className="h-4 w-4 text-primary" />
-            <h3 className="text-sm font-bold text-white">Guidelines</h3>
+            <h3 className="text-sm font-bold text-white">Recommandations</h3>
           </div>
           
           <p className="text-xs text-slate-400 leading-relaxed mb-6">
-            AutoRole ensures every new member is welcomed with the right sets of roles immediately upon joining.
+            AutoRole garantit que chaque nouveau membre reçoit immédiatement les bons rôles dès son arrivée.
           </p>
           
           <div className="space-y-4">
             <div className="flex gap-3">
               <div className="h-1.5 w-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
               <p className="text-[11px] text-slate-400 leading-relaxed">
-                <span className="text-slate-200 font-bold">Hierarchy Matter:</span> Ensure Haunted&apos;s top role is <span className="text-primary italic">higher</span> than any role you select here.
+                <span className="text-slate-200 font-bold">Hiérarchie :</span> Assurez-vous que le rôle le plus haut de Haunted est <span className="text-primary italic">au-dessus</span> de tous les rôles sélectionnés ici.
               </p>
             </div>
             <div className="flex gap-3">
               <div className="h-1.5 w-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
               <p className="text-[11px] text-slate-400 leading-relaxed">
-                <span className="text-slate-200 font-bold">Bot Detection:</span> We automatically separate bots from human members for precise role assignment.
+                <span className="text-slate-200 font-bold">Détection des bots :</span> Nous séparons automatiquement les bots des membres humains pour une attribution précise des rôles.
               </p>
             </div>
             <div className="flex gap-3">
               <div className="h-1.5 w-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
               <p className="text-[11px] text-slate-400 leading-relaxed">
-                <span className="text-slate-200 font-bold">Limits:</span> We has limits on roles. We support up to 10 roles per category for stability.
+                <span className="text-slate-200 font-bold">Limites :</span> Nous supportons jusqu’à 10 rôles par catégorie pour garantir la stabilité.
               </p>
             </div>
           </div>

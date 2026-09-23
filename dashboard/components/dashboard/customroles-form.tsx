@@ -47,9 +47,9 @@ export function CustomRolesForm({ initialConfig, roles, guildId }: CustomRolesFo
     const promise = api.updateCustomRoles(guildId, config);
 
     toast.promise(promise, {
-      loading: 'Saving Custom Roles configuration...',
-      success: 'Custom Roles settings saved successfully!',
-      error: 'Failed to update Custom Roles config',
+      loading: 'Enregistrement de la configuration des rôles personnalisés...',
+      success: 'Rôles personnalisés enregistrés avec succès !',
+      error: 'Échec de la mise à jour des rôles personnalisés',
     });
 
     try {

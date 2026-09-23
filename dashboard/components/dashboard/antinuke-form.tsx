@@ -36,10 +36,10 @@ import { cn } from "@/lib/utils";
 import { AntiNukeConfig } from "@/types/api";
 
 const FEATURES = [
-  { id: 'anti_ban_kick', name: 'Anti Ban & Kick', desc: 'Auto bans rogue admins', icon: User },
-  { id: 'anti_server_edit', name: 'Anti Server Edit', desc: 'Secures icon, name & regions', icon: Server },
-  { id: 'anti_role_modifier', name: 'Anti Role Modifier', desc: 'Protects all roles & perms', icon: Settings },
-  { id: 'anti_channel_nukes', name: 'Anti Channel Nukes', desc: 'Prevents channel wipes', icon: MessageSquare },
+  { id: 'anti_ban_kick', name: 'Anti-Ban & Anti-Kick', desc: 'Bannit automatiquement les admins malveillants', icon: User },
+  { id: 'anti_server_edit', name: 'Anti-Modification du serveur', desc: 'Protège l’icône, le nom et la région', icon: Server },
+  { id: 'anti_role_modifier', name: 'Anti-Modification des rôles', desc: 'Protège tous les rôles et permissions', icon: Settings },
+  { id: 'anti_channel_nukes', name: 'Anti-Suppression de salons', desc: 'Empêche la suppression massive des salons', icon: MessageSquare },
 ];
 
 interface AntiNukeFormProps {
@@ -58,9 +58,9 @@ export function AntiNukeForm({ initialConfig, guildId }: AntiNukeFormProps) {
     const promise = api.updateAntiNuke(guildId, config);
 
     toast.promise(promise, {
-      loading: 'Saving Anti-Nuke configuration...',
-      success: 'Anti-Nuke settings saved successfully!',
-      error: 'Failed to update Anti-Nuke settings',
+      loading: 'Enregistrement de la configuration Anti-Nuke...',
+      success: 'Paramètres Anti-Nuke enregistrés avec succès !',
+      error: 'Échec de la mise à jour des paramètres Anti-Nuke',
     });
 
     try {
@@ -74,11 +74,11 @@ export function AntiNukeForm({ initialConfig, guildId }: AntiNukeFormProps) {
 
   const handleAddWhitelist = async () => {
     if (!wlInput.trim() || isNaN(Number(wlInput))) {
-      toast.error('Please enter a valid User ID');
+      toast.error('Veuillez saisir un ID d’utilisateur valide');
       return;
     }
     if (whitelistedUsers.includes(wlInput.trim())) {
-      toast.error('User is already whitelisted');
+      toast.error('Cet utilisateur est déjà whitelisté');
       return;
     }
 
@@ -87,9 +87,9 @@ export function AntiNukeForm({ initialConfig, guildId }: AntiNukeFormProps) {
       await api.updateAntiNuke(guildId, { status: config.status, add_whitelist: wlInput.trim() });
       setWhitelistedUsers([...whitelistedUsers, wlInput.trim()]);
       setWlInput('');
-      toast.success('User whitelisted successfully');
+      toast.success('Utilisateur ajouté à la whitelist avec succès');
     } catch (err: any) {
-      toast.error('Failed to whitelist user');
+      toast.error('Échec de l’ajout à la whitelist');
       console.error(err);
     } finally {
       setSaving(false);
