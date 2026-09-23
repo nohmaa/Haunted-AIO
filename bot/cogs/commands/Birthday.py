@@ -45,7 +45,7 @@ def write_db(filename, data):
         json.dump(data, f, indent=4)
 
 
-class Anniversaires(commands.Cog):
+class Birthdays(commands.Cog):
     """Handle birthday notifications and setup."""
 
     def __init__(self, client: commands.Bot):
@@ -250,4 +250,4 @@ class Anniversaires(commands.Cog):
 
 
 async def setup(client: commands.Bot):
-    await client.add_cog(Anniversaires(client))
+    await client.add_cog(Birthdays(client))
