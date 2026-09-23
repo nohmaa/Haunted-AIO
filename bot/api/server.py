@@ -28,8 +28,11 @@ from api.dependencies import verify_api_key, limiter
 from api.db_manager import db_manager
 
 # Configure logging
+# propagate=False: some cogs call logging.basicConfig() at import time, which adds
+# a root handler — without this, every API request line is printed twice.
 logger = logging.getLogger("api_request_logs")
 logger.setLevel(logging.INFO)
+logger.propagate = False
 if not logger.handlers:
     handler = logging.StreamHandler()
     handler.setFormatter(logging.Formatter('%(message)s'))
