@@ -313,6 +313,39 @@ Repo d'origine : https://github.com/nohmaa/ZyroX-CV2-AIO-With-Dashboard
 - Chargement réel de tous les cogs (`_async_setup_hook` + `setup_hook`, `wait_until_ready` neutralisé) : 141 cogs, 0 échec.
 - Dashboard : `npm run build` **OK**, toutes les routes en `ƒ` (dynamique). `npx eslint` : les erreurs restantes sont **préexistantes** (`no-explicit-any` sur les formulaires, apostrophes non échappées) et sans lien avec ces changements.
 
+### 5 bis. Incident « fetch failed » (2026-09-23, apres le push) — cause = DNS
+Diagnostic : la page `/dashboard` **rendue par Vercel** contient `fetch failed` et des mesures à `—`
+(`X-Vercel-Cache: MISS`, `Age: 0` → rendu à la demande, ce n'est pas un prérendu figé), alors que
+l'API répond 200 depuis la France **et** depuis un service US (`r.jina.ai`). Le problème est la
+résolution DNS, pas le code :
+
+| Adresse de `api.haunted-mind.site` | Résultat |
+|---|---|
+| `216.198.79.1` / `216.198.79.65` (anycast Vercel, AS16509) | `curl --resolve` → **exit 35, échec de poignée de main TLS** |
+| `188.114.96.6` / `188.114.97.6` (Cloudflare) | **200** |
+| `2a06:98c1:3121::c` (route de tunnel Cloudflare, IPv6) | **200** |
+
+`api` porte donc des enregistrements A **résiduels pointant vers Vercel** en plus de la route de
+tunnel Cloudflare. Cloudflare DoH et Google DoH ne renvoient que la paire cassée ; le résolveur du
+FAI de test renvoyait la paire Cloudflare — d'où un comportement « qui marche / qui ne marche plus »
+selon le résolveur, et un échec **systématique depuis Vercel** (les fonctions serverless n'ont pas
+d'IPv6 et ne peuvent donc pas emprunter la route IPv6 saine).
+
+**Correction à faire côté Cloudflare DNS (aucun code ne peut contourner durablement ça) :**
+1. Supprimer les enregistrements **A** de `api` valant `216.198.79.1` et `216.198.79.65`
+   (adresses anycast d'un autre hébergeur, restes d'une migration DNS).
+2. Garder **un seul** enregistrement : celui de la route de tunnel publiée
+   (`api` → `<id-du-tunnel>.cfargotunnel.com`, proxy **activé** / nuage orange).
+3. Vérifier : `curl -s https://api.haunted-mind.site/health` doit répondre `{"status":"ok"}`
+   **après `ipconfig /flushdns`** (ou depuis un autre réseau).
+
+**Filet de sécurité appliqué en attendant** (`dashboard/lib/api.ts`) :
+- message d'erreur actionnable (hôte visé + cause) au lieu du seul `fetch failed` brut ;
+- hôte de secours optionnel via `NEXT_PUBLIC_API_URL_FALLBACK` (bascule automatique sur échec
+  **réseau** uniquement, avec avertissement en console). Testé en local : bascule effective et message
+  explicite vérifiés en rendant `/dashboard` avec un hôte primaire inexistant.
+- Le prérequis DNS reste le vrai correctif.
+
 ### 6. Reste à faire (non bloquant, classé par valeur)
 1. **Sécurité (le plus important)** : passer les appels du dashboard par un proxy serveur (`app/api/bot/[...path]/route.ts`) avec une clé **non publique** (`DASHBOARD_API_KEY`), puis supprimer `NEXT_PUBLIC_DASHBOARD_API_KEY`. Aujourd'hui la clé est dans le bundle navigateur et `/admin/*` n'est pas vérifié côté bot.
 2. `maintenance_mode` : l'interrupteur admin enregistre un état que **personne ne lit** (aucun effet). À câbler (refus des commandes non-owner) ou à retirer de l'UI.

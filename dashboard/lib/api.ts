@@ -37,7 +37,30 @@ import {
 } from "@/types/api";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+/**
+ * Hôte de secours optionnel (`NEXT_PUBLIC_API_URL_FALLBACK`).
+ *
+ * Utile quand le nom d'hôte principal résout vers une adresse morte : un
+ * sous-domaine `api` peut cohabiter avec d'anciens enregistrements A (par
+ * exemple l'adresse anycast d'un autre hébergeur) et certains résolveurs ne
+ * renvoient alors que l'adresse cassée — le client n'a alors aucun moyen de
+ * joindre l'API. Voir SUIVI_HAUNTED.md (section « fetch failed »).
+ */
+const FALLBACK_URL = (process.env.NEXT_PUBLIC_API_URL_FALLBACK || "").replace(/\/$/, "");
 const API_KEY = process.env.NEXT_PUBLIC_DASHBOARD_API_KEY;
+
+function apiHost(url: string): string {
+  try {
+    return new URL(url).host;
+  } catch {
+    return url;
+  }
+}
+
+/** Hôtes à essayer, dans l'ordre : principal puis secours (si différent). */
+function apiBases(): string[] {
+  return FALLBACK_URL && FALLBACK_URL !== BASE_URL ? [BASE_URL, FALLBACK_URL] : [BASE_URL];
+}
 
 class ApiError extends Error {
   constructor(public status: number, message: string) {
@@ -50,14 +73,6 @@ async function request<T>(
   endpoint: string,
   options: RequestInit & { next?: NextFetchRequestConfig } = {}
 ): Promise<T> {
-  const url = `${BASE_URL}${endpoint}`;
-  
-  const headers = new Headers(options.headers);
-  if (API_KEY) {
-    headers.set("Authorization", `Bearer ${API_KEY}`);
-  }
-  headers.set("Content-Type", "application/json");
-
   // The bot API sits behind a Cloudflare tunnel that can briefly drop
   // connections (HTTP 530 / "fetch failed") between the Vercel function and
   // the bot. Retry transient NETWORK failures only — HTTP errors (401, 404,
@@ -65,58 +80,82 @@ async function request<T>(
   // safe here: configs are idempotent and a dropped tunnel means the request
   // never reached the bot.
   const MAX_ATTEMPTS = 3;
+  const bases = apiBases();
   let lastNetworkError: unknown;
 
-  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-    try {
-      const response = await fetch(url, {
-        ...options,
-        headers,
-        // Fail fast instead of hanging for the default timeout when the
-        // tunnel is down — the failure then hits the retry loop.
-        signal: options.signal ?? AbortSignal.timeout(15000),
-        // CRITICAL: Never cache mutation responses. For GETs, use revalidate: 0
-        // to always fetch fresh data from the bot API. Caching was causing
-        // saved data to "disappear" on reload because Next.js served stale cache.
-        next: options.next || { revalidate: 0 },
-      });
+  for (const [baseIndex, base] of bases.entries()) {
+    const url = `${base}${endpoint}`;
+    const isLastBase = baseIndex === bases.length - 1;
 
-      if (!response.ok) {
-        let errorData;
-        try {
-          errorData = await response.json();
-        } catch {
-          errorData = { detail: "An unknown error occurred" };
+    const headers = new Headers(options.headers);
+    if (API_KEY) {
+      headers.set("Authorization", `Bearer ${API_KEY}`);
+    }
+    headers.set("Content-Type", "application/json");
+
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+      try {
+        const response = await fetch(url, {
+          ...options,
+          headers,
+          // Fail fast instead of hanging for the default timeout when the
+          // tunnel is down — the failure then hits the retry loop.
+          signal: options.signal ?? AbortSignal.timeout(15000),
+          // CRITICAL: Never cache mutation responses. For GETs, use revalidate: 0
+          // to always fetch fresh data from the bot API. Caching was causing
+          // saved data to "disappear" on reload because Next.js served stale cache.
+          next: options.next || { revalidate: 0 },
+        });
+
+        if (!response.ok) {
+          let errorData;
+          try {
+            errorData = await response.json();
+          } catch {
+            errorData = { detail: "An unknown error occurred" };
+          }
+          console.error(`[API HTTP Error] Status ${response.status} for ${url}:`, errorData);
+          throw new ApiError(response.status, errorData.detail || response.statusText);
         }
-        console.error(`[API HTTP Error] Status ${response.status} for ${url}:`, errorData);
-        throw new ApiError(response.status, errorData.detail || response.statusText);
+
+        return (await response.json()) as T;
+      } catch (error) {
+        // ApiError = the API answered with an error status: bubble up as-is.
+        if (error instanceof ApiError) throw error;
+        // Next.js control-flow signals during prerender (DYNAMIC_SERVER_USAGE,
+        // etc.) must bubble up untouched — retrying them is useless and can
+        // swallow the signal that switches a route to dynamic rendering.
+        const digest = (error as { digest?: string })?.digest;
+        if (
+          digest === "DYNAMIC_SERVER_USAGE" ||
+          digest === "NEXT_REDIRECT" ||
+          (typeof digest === "string" && digest.startsWith("NEXT_"))
+        ) {
+          throw error;
+        }
+        lastNetworkError = error;
+        console.error(
+          `[API Network/Fetch Error] (attempt ${attempt}/${MAX_ATTEMPTS} sur ${apiHost(base)}) Failed to fetch ${url}:`,
+          error
+        );
+        if (attempt < MAX_ATTEMPTS) {
+          await new Promise((resolve) => setTimeout(resolve, 400 * attempt));
+          continue;
+        }
       }
 
-      return (await response.json()) as T;
-    } catch (error) {
-      // ApiError = the API answered with an error status: bubble up as-is.
-      if (error instanceof ApiError) throw error;
-      // Next.js control-flow signals during prerender (DYNAMIC_SERVER_USAGE,
-      // etc.) must bubble up untouched — retrying them is useless and can
-      // swallow the signal that switches a route to dynamic rendering.
-      const digest = (error as { digest?: string })?.digest;
-      if (
-        digest === "DYNAMIC_SERVER_USAGE" ||
-        digest === "NEXT_REDIRECT" ||
-        (typeof digest === "string" && digest.startsWith("NEXT_"))
-      ) {
-        throw error;
+      if (isLastBase) {
+        // Message actionnable plutôt que le seul « fetch failed » brut, qui
+        // n'indique ni l'hôte visé ni la famille de cause (DNS, tunnel, TLS).
+        const cause = (lastNetworkError as { message?: string })?.message || "échec réseau";
+        throw new Error(
+          `API du bot injoignable sur ${apiHost(base)} (${cause}). Vérifiez la résolution DNS de l'hôte et l'état du tunnel Cloudflare.`
+        );
       }
-      lastNetworkError = error;
-      console.error(
-        `[API Network/Fetch Error] (attempt ${attempt}/${MAX_ATTEMPTS}) Failed to fetch ${url}:`,
-        error
+
+      console.warn(
+        `[API] ${apiHost(base)} injoignable, bascule sur ${apiHost(bases[baseIndex + 1])}`
       );
-      if (attempt < MAX_ATTEMPTS) {
-        await new Promise((resolve) => setTimeout(resolve, 400 * attempt));
-        continue;
-      }
-      throw error;
     }
   }
 
