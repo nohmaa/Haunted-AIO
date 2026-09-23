@@ -5,8 +5,8 @@
 > Mettre à jour ce fichier à chaque changement (date + fichiers + comportement).
 
 ## 2026-09-23 — Infra prod (domaine haunted-mind.com)
-- Domaine constaté hors Cloudflare (NXDOMAIN, aucune délégation NS le 2026-09-23).
-- Topologie retenue : API bot → `https://api.haunted-mind.com` (tunnel `haunted-api`) ; dashboard → URL Vercel (domaine custom `dashboard.haunted-mind.com` optionnel plus tard).
+- Domaine : `haunted-mind.com` abandonné au profit de **`haunted-mind.site`** (acheté chez Hostinger, hors Cloudflare au 2026-09-23).
+- Topologie retenue : API bot → `https://api.haunted-mind.site` (tunnel `haunted-api`) ; dashboard → URL Vercel (domaine custom `dashboard.haunted-mind.site` optionnel plus tard).
 - Guide détaillé donné en chat (domaine → tunnel → Vercel → OAuth → CORS).
 
 ## 2026-09-23 — Déploiement dashboard + Cloudflare détaillés
