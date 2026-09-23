@@ -79,11 +79,13 @@ def create_app() -> FastAPI:
     Initializes the FastAPI application for the Haunted Bot Dashboard.
     The bot instance will be attached to app.state.bot in haunted.py at runtime.
     """
+    # NOTE: auth moved from app-level to per-router so that / and /health stay
+    # public — a health check must be reachable without a key to monitor the API
+    # and distinguish "tunnel down" from "API broken".
     app = FastAPI(
         title=f"{BRAND_NAME} Bot API",
         description=f"REST API to manage the {BRAND_NAME} Discord Bot features",
         version="1.0",
-        dependencies=[Depends(verify_api_key)],
         lifespan=lifespan
     )
 
@@ -133,11 +135,12 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-    # Register Routers
-    app.include_router(bot.router, prefix="/api/v1/bot", tags=["Bot"])
-    app.include_router(guilds.router, prefix="/api/v1/guilds", tags=["Guilds"])
-    app.include_router(modules.router, prefix="/api/v1/guilds", tags=["Modules"])
-    app.include_router(admin.router, prefix="/api/v1/admin", tags=["Admin"])
+    # Register Routers (all require the Bearer API key)
+    _auth = [Depends(verify_api_key)]
+    app.include_router(bot.router, prefix="/api/v1/bot", tags=["Bot"], dependencies=_auth)
+    app.include_router(guilds.router, prefix="/api/v1/guilds", tags=["Guilds"], dependencies=_auth)
+    app.include_router(modules.router, prefix="/api/v1/guilds", tags=["Modules"], dependencies=_auth)
+    app.include_router(admin.router, prefix="/api/v1/admin", tags=["Admin"], dependencies=_auth)
 
     @app.get("/", summary="API Root", description="Returns basic API information and online status.")
     async def root():
