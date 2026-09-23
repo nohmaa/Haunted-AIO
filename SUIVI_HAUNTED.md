@@ -10,6 +10,11 @@
 - **BDD runtime (non suivi git, côté prod)** : `autoreact.db` contient 1 config avec `<:king:1448951721479901334>` et `ticket.db` un emoji `<:Ticket:1496002127779201184>` — ce sont des données créées par le bot en prod, pas du code. Les listeners gèrent déjà le cas (try/except NotFound) ; pour nettoyer : `!autoreact remove <trigger>` ou réajouter avec des emojis Unicode.
 - Vérifications : `compileall` OK, plus aucune URL d'emoji d'ancienne app en dur dans le code.
 
+## 2026-09-23 — ✅ Incident « dashboard ne récupère plus les données » : RÉSOLU et validé en prod
+- Chaîne complète vérifiée : bot `Loaded & Online!` (264 cmd + 89 slash), tunnel reconnecté, toutes requêtes dashboard → API en 200, page Serveurs listant les serveurs sans erreur. Confirmation utilisateur : « ça fonctionne nickel ».
+- Récap des causes empilées : (1) tunnel Cloudflare down (530) pendant ~25 min ; (2) pages dashboard prérendues statiques avec FETCH FAILED figé (DYNAMIC_SERVER_USAGE avalé) — corrigé par `force-dynamic` ; (3) pas de retry réseau côté Vercel — corrigé. Plus les durcissements : `/health` public, tunnel en `http2`, logs API dédoublonnés.
+- Restent open (non bloquants) : monitoring externe sur `/health`, message d'erreur UI plus explicite, URLs d'avatar de l'ancien bot (19×, pré-existantes), dernières chaînes EN côté UI.
+
 ## 2026-09-23 — DYNAMIC_SERVER_USAGE : pages dashboard prérendues avec erreur figée (corrigé)
 - **Symptôme** (log de build Vercel) : `Route /dashboard couldn't be rendered statically because it used revalidate: 0` avec `digest: DYNAMIC_SERVER_USAGE`. Le retry ajouté retentait 3× ces erreurs de contrôle Next (inutile).
 - **Cause profonde découverte** : 23 pages serveur dashboard (page.tsx/layout.tsx) appelaient l'API sans `export const dynamic = "force-dynamic"`. Au build, Next tentait le prérendu statique ; le fetch `revalidate: 0` levait `DYNAMIC_SERVER_USAGE` (signal pour basculer en dynamique)… que les `try/catch` des composants **avalaient** → page prérendue **statique avec le message d'erreur figé** (« FETCH FAILED » persistant même API saine, une fois la fenêtre tunnel passée). La page `/dashboard` du log utilisateur en était victime.
