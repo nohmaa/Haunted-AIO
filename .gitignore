@@ -64,6 +64,7 @@ bot/jsondb/*.json
 # Ignore node_modules
 node_modules/
 package-lock.json
+!dashboard/package-lock.json
 
 # Ignore Next.js build output
 .next/

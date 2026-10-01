@@ -36,6 +36,7 @@
 - Grep du bundle client `.next/static`: aucune occurrence `NEXT_PUBLIC_DASHBOARD_API_KEY`, `NEXT_PUBLIC_ADMIN_IDS`, `NEXT_PUBLIC_API_URL` après build.
 - `git diff --check`: un blanc EOF dans `dashboard/lib/utils.ts` a été corrigé ; avertissements CRLF/LF de Git liés à l'environnement.
 - CI ajoutée (`.github/workflows/ci.yml`) pour typecheck/build/npm audit + tests de signature Python; lint observé mais non bloquant jusqu'au traitement de la dette.
+- Première CI distante échouait avant les étapes npm : le `dashboard/package-lock.json` déjà présent localement était ignoré par une règle globale dans `.gitignore`. Correction : exception `!dashboard/package-lock.json`; le lockfile a été ajouté dans le commit de correctif dédié.
 - La suite complète bot n'a pas été relancée après ajout de ses dépendances CI ; l'exécution locale précédente échoue sur l'absence de `fastapi`/`discord.py` dans Python.
 
 ### Déploiement progressif requis (aucune rotation prod effectuée)
