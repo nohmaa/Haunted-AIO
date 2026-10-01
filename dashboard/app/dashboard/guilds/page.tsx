@@ -16,23 +16,24 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Users, ShieldCheck, ChevronRight, Bot } from "lucide-react";
-import { api } from "@/lib/api";
+import { api } from "@/lib/api-server";
 import { Button } from "@/components/ui/button";
 import { RetryButton } from "@/components/dashboard/retry-button";
 
 import { GuildSummary } from "@/types/api";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
-import { getManageableGuildIds } from "@/lib/discord";
+import { getManageableGuilds } from "@/lib/discord";
+import { serverAuthOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export default async function GuildsPage() {
-  const session = await getServerSession(authOptions);
-  
-  if (!session || !session.accessToken) {
+  const session = await getServerSession(serverAuthOptions);
+  const accessToken = (session as typeof session & { accessToken?: string } | null)?.accessToken;
+
+  if (!session || !accessToken || session.error) {
     redirect("/");
   }
 
@@ -40,24 +41,37 @@ export default async function GuildsPage() {
   let userDiscordError: string | null = null;
   let botError: string | null = null;
 
-  try {
-    botGuilds = await api.listGuilds();
-  } catch (err: any) {
-    console.error("Failed to fetch bot guilds:", err);
-    botError = err.message || "Échec du chargement des serveurs du bot.";
-  }
-
-  // Droits vérifiés côté serveur à partir du jeton Discord de l'utilisateur :
-  // seuls les serveurs qu'il peut réellement gérer sont listés.
-  const manageableGuildIds = await getManageableGuildIds(session.accessToken as string);
-  if (manageableGuildIds === null) {
+  // Requêtes serveur : vérifie la session + les droits guild dans le proxy,
+  // puis filtre la liste avant qu'elle soit rendue au navigateur.
+  const manageableGuilds = await getManageableGuilds(accessToken);
+  if (manageableGuilds === null) {
     userDiscordError =
       "Discord n'a pas répondu : vos droits de gestion n'ont pas pu être vérifiés.";
   }
 
-  const guilds = manageableGuildIds
-    ? botGuilds.filter((guild) => manageableGuildIds.has(String(guild.id)))
-    : [];
+  try {
+    botGuilds = await api.listGuilds();
+  } catch (err: unknown) {
+    console.error("Failed to fetch bot guilds:", err);
+    botError = err instanceof Error ? err.message : "Échec du chargement des serveurs du bot.";
+  }
+
+  const botGuildById = new Map(botGuilds.map((guild) => [String(guild.id), guild]));
+  const guilds = (manageableGuilds ?? []).map((discordGuild) => {
+    const botGuild = botGuildById.get(String(discordGuild.id));
+    const icon = discordGuild.icon
+      ? `https://cdn.discordapp.com/icons/${discordGuild.id}/${discordGuild.icon}.png?size=128`
+      : null;
+    return {
+      id: String(discordGuild.id),
+      name: discordGuild.name,
+      icon_url: botGuild?.icon_url || icon,
+      owner_id: "",
+      member_count: botGuild?.member_count ?? null,
+      botPresent: Boolean(botGuild),
+    };
+  });
+  const botMissingCount = guilds.filter((guild) => !guild.botPresent).length;
   const error = botError || userDiscordError;
 
 
@@ -71,9 +85,15 @@ export default async function GuildsPage() {
           </p>
         </div>
         <div className="text-sm font-medium px-4 py-2 bg-white/[0.02] rounded-xl border border-white/[0.06] text-slate-300">
-          <span className="text-white">{guilds.length}</span> serveur(s) gérable(s)
+          <span className="text-white">{guilds.filter((guild) => guild.botPresent).length}</span> serveur(s) configurables
         </div>
       </div>
+
+      {botMissingCount > 0 && (
+        <p className="text-sm text-amber-200/90" role="status">
+          {botMissingCount} serveur(s) que vous gérez n&apos;ont pas Haunted. Ils apparaissent ici uniquement pour distinguer l&apos;absence du bot ; aucune configuration n&apos;est disponible.
+        </p>
+      )}
 
       {error ? (
         <div className="bg-red-500/10 border border-red-500/20 p-8 rounded-2xl text-center">
@@ -91,9 +111,7 @@ export default async function GuildsPage() {
           </div>
           <h3 className="text-white font-bold text-xl">Aucun serveur gérable</h3>
           <p className="text-slate-400 mt-2 max-w-md mx-auto">
-            Aucun des serveurs où {process.env.NEXT_PUBLIC_BRAND_NAME || "le bot"} est présent ne vous
-            donne la permission « Gérer le serveur ». Demandez à un administrateur de ces serveurs
-            de vous l&apos;accorder.
+            Aucun serveur où vous avez la permission « Gérer le serveur » ou « Administrateur » n&apos;a été trouvé.
           </p>
         </div>
       ) : (
@@ -119,7 +137,7 @@ export default async function GuildsPage() {
                         {guild.name.charAt(0)}
                       </div>
                     )}
-                    <div className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full bg-teal-300 border-2 border-haunted-crypt" title="Bot présent sur ce serveur" />
+                    <div className={`absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-haunted-crypt ${guild.botPresent ? "bg-teal-300" : "bg-amber-400"}`} title={guild.botPresent ? "Bot présent sur ce serveur" : "Bot absent de ce serveur"} />
                   </div>
                   
                   <div className="flex flex-col items-end text-right">
@@ -137,23 +155,27 @@ export default async function GuildsPage() {
                   <div className="flex items-center gap-4 mt-4 text-slate-400">
                     <div className="flex items-center gap-1.5 bg-white/[0.04] px-3 py-1.5 rounded-xl border border-white/5">
                       <Users className="h-4 w-4 text-slate-500" />
-                      <span className="text-sm font-semibold text-slate-300">{guild.member_count.toLocaleString()}</span>
+                      <span className="text-sm font-semibold text-slate-300">{guild.member_count === null ? "—" : guild.member_count.toLocaleString()}</span>
                     </div>
                     <div className="flex items-center gap-1.5 bg-white/[0.04] px-3 py-1.5 rounded-xl border border-white/5">
                       <Bot className="h-4 w-4 text-slate-500" />
-                      <span className="text-sm font-semibold text-slate-300">Bot présent</span>
+                      <span className="text-sm font-semibold text-slate-300">{guild.botPresent ? "Bot présent" : "Bot absent"}</span>
                     </div>
                   </div>
                 </div>
               </div>
 
               <div className="px-6 py-4 bg-white/[0.02] border-t border-white/[0.06] group-hover:bg-primary/5 transition-colors">
+                {guild.botPresent ? (
                 <Button className="w-full justify-between group/btn py-6" variant="secondary" asChild>
                   <Link href={`/dashboard/guild/${guild.id}`}>
                     <span>Gérer le serveur</span>
                     <ChevronRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
                   </Link>
                 </Button>
+                ) : (
+                  <p className="py-2 text-center text-sm text-amber-300">Ajoutez Haunted à ce serveur pour ouvrir sa configuration.</p>
+                )}
               </div>
 
             </div>

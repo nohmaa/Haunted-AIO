@@ -37,7 +37,7 @@ const DOCS_NAV: { title: string; items: DocPage[] }[] = [
         description: "Ce que fait le bot.",
         intro: `${BRAND} est un bot Discord accompagné de son propre tableau de bord. Le bot applique la configuration, le dashboard la pilote.`,
         bullets: [
-          "Le bot tourne en Python (discord.py) et expose une API FastAPI protégée par clé.",
+          "Le bot tourne en Python (discord.py) et expose une API FastAPI accessible au dashboard par un proxy serveur signé.",
           "Le dashboard (Next.js) appelle cette API côté serveur : il n'expose jamais la clé dans le navigateur.",
           "Les configurations sont stockées dans les bases SQLite du bot, sur son hébergement.",
         ],
@@ -58,7 +58,7 @@ const DOCS_NAV: { title: string; items: DocPage[] }[] = [
         intro: "La même maison, trois pièces reliées par une API REST.",
         bullets: [
           "Bot : connexion Discord, commandes préfixe et slash, modules d'événements.",
-          "API : FastAPI exposée via un tunnel Cloudflare, authentifiée par une clé Bearer.",
+          "API : FastAPI derrière un tunnel Cloudflare ; le serveur dashboard signe chaque requête après vérification de session et d'autorisation. La documentation détaillée n'est pas exposée publiquement.",
           "Dashboard : rendu côté serveur, donc les données affichées viennent directement de l'API du bot.",
           "Musique : lecture via Lavalink v4 (wavelink).",
         ],

@@ -17,6 +17,7 @@ import aiohttp
 import json
 import jishaku
 import asyncio
+import time
 import typing
 from typing import List
 import aiosqlite
@@ -33,6 +34,32 @@ init(autoreset=True)
 extensions: List[str] = [
     "cogs"
 ]
+
+_MAINTENANCE_CACHE: tuple[float, bool] = (0.0, False)
+
+
+async def _maintenance_mode_enabled() -> bool:
+    """Read global command maintenance state with a short process-local cache."""
+    global _MAINTENANCE_CACHE
+    now = time.monotonic()
+    if now - _MAINTENANCE_CACHE[0] < 1.0:
+        return _MAINTENANCE_CACHE[1]
+
+    try:
+        async with aiosqlite.connect("db/admin_config.db", timeout=2) as db:
+            await db.execute(
+                "CREATE TABLE IF NOT EXISTS config (key TEXT PRIMARY KEY, value TEXT)"
+            )
+            async with db.execute(
+                "SELECT value FROM config WHERE key = 'maintenance_mode'"
+            ) as cursor:
+                row = await cursor.fetchone()
+        enabled = bool(row and str(row[0]).lower() == "true")
+    except Exception:
+        enabled = True
+
+    _MAINTENANCE_CACHE = (time.monotonic(), enabled)
+    return enabled
 
 class zyrox(commands.AutoShardedBot):
     def __init__(self, *arg, **kwargs):
@@ -53,6 +80,101 @@ class zyrox(commands.AutoShardedBot):
                          shard_count=1)
         self.status_index = 0
         self.status_list = []
+        # Prefix and slash commands share the same module switch. discord.py
+        # does not route application commands through Bot.invoke().
+        self.tree.interaction_check = self._module_interaction_check
+
+    @staticmethod
+    def _guild_id_from_event(args) -> int | None:
+        """Find the guild attached to common discord.py listener payloads."""
+        for value in args:
+            guild = getattr(value, "guild", None)
+            guild_id = getattr(guild, "id", None) or getattr(value, "guild_id", None)
+            if guild_id is None and isinstance(value, discord.Guild):
+                guild_id = value.id
+            if guild_id is not None:
+                return int(guild_id)
+        return None
+
+    async def add_cog(self, cog, /, *, override=False, guild=None, guilds=None):
+        """Guard mapped cog listeners as well as commands when a module is off."""
+        key = self._module_key_for_cog(cog)
+        if key:
+            listener_methods = []
+            for _event_name, method_name in getattr(cog, "__cog_listeners__", ()):
+                original = getattr(cog, method_name, None)
+                if original is None or getattr(original, "__haunted_module_guard__", False):
+                    continue
+                listener_methods.append((method_name, original))
+
+                async def guarded(*args, __callback=original, __key=key, **kwargs):
+                    guild_id = self._guild_id_from_event(args)
+                    if guild_id is not None:
+                        try:
+                            from utils.modules import is_module_enabled
+                            if not await is_module_enabled(guild_id, __key):
+                                return None
+                        except Exception:
+                            print(f"[Modules] Impossible de vérifier {__key}; écouteur ignoré par précaution.")
+                            return None
+                    return await __callback(*args, **kwargs)
+
+                guarded.__haunted_module_guard__ = True
+                setattr(cog, method_name, guarded)
+
+            try:
+                return await super().add_cog(cog, override=override, guild=guild, guilds=guilds)
+            except Exception:
+                for method_name, original in listener_methods:
+                    setattr(cog, method_name, original)
+                raise
+
+        return await super().add_cog(cog, override=override, guild=guild, guilds=guilds)
+
+    @staticmethod
+    def _module_key_for_cog(cog):
+        from api.modules_registry import COG_MODULE_MAP
+
+        return getattr(cog, "module_key", None) or COG_MODULE_MAP.get(type(cog).__name__)
+
+    async def _module_interaction_check(self, interaction: discord.Interaction) -> bool:
+        if interaction.user.id not in OWNER_IDS and await _maintenance_mode_enabled():
+            await self._respond_module_error(
+                interaction,
+                "Haunted est en maintenance. Réessayez plus tard.",
+            )
+            return False
+
+        command = interaction.command
+        cog = getattr(command, "binding", None) if command is not None else None
+        key = self._module_key_for_cog(cog) if cog is not None else None
+        if not key or interaction.guild_id is None:
+            return True
+
+        try:
+            from utils.modules import is_module_enabled
+            enabled = await is_module_enabled(interaction.guild_id, key)
+        except Exception:
+            print(f"[Modules] Impossible de vérifier l'état du module {key}; commande slash bloquée.")
+            await self._respond_module_error(interaction, "Configuration du module indisponible. Réessayez plus tard.")
+            return False
+
+        if enabled:
+            return True
+
+        from api.modules_registry import MODULE_LABELS
+        await self._respond_module_error(
+            interaction,
+            f"Le module {MODULE_LABELS.get(key, key)} est désactivé sur ce serveur.",
+        )
+        return False
+
+    @staticmethod
+    async def _respond_module_error(interaction: discord.Interaction, message: str) -> None:
+        if interaction.response.is_done():
+            await interaction.followup.send(message, ephemeral=True)
+        else:
+            await interaction.response.send_message(message, ephemeral=True)
 
     async def setup_hook(self):
         await self.load_extensions()
@@ -140,20 +262,24 @@ class zyrox(commands.AutoShardedBot):
 
     async def invoke(self, ctx: Context) -> None:
         """Bloque les commandes des modules désactivés depuis le dashboard."""
-        try:
-            if ctx.guild is not None and ctx.command is not None and ctx.command.cog is not None:
-                from api.modules_registry import COG_MODULE_MAP, MODULE_LABELS
-                cog = ctx.command.cog
-                key = getattr(cog, "module_key", None) or COG_MODULE_MAP.get(type(cog).__name__)
-                if key:
+        if ctx.author.id not in OWNER_IDS and await _maintenance_mode_enabled():
+            await ctx.send("Haunted est en maintenance. Réessayez plus tard.")
+            return
+
+        if ctx.guild is not None and ctx.command is not None and ctx.command.cog is not None:
+            key = self._module_key_for_cog(ctx.command.cog)
+            if key:
+                try:
+                    from api.modules_registry import MODULE_LABELS
                     from utils.modules import is_module_enabled
                     if not await is_module_enabled(ctx.guild.id, key):
                         from utils.i18n import t
-                        label = MODULE_LABELS.get(key, key)
-                        await ctx.send(t("module_disabled", module=label))
+                        await ctx.send(t("module_disabled", module=MODULE_LABELS.get(key, key)))
                         return
-        except Exception:
-            pass
+                except Exception:
+                    print(f"[Modules] Impossible de vérifier l'état du module {key}; commande préfixe bloquée.")
+                    await ctx.send("Configuration du module indisponible. Réessayez plus tard.")
+                    return
         await super().invoke(ctx)
 
 def setup_bot():

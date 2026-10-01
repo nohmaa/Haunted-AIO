@@ -41,7 +41,6 @@ import { cn } from "@/lib/utils";
 
 const BRAND = process.env.NEXT_PUBLIC_BRAND_NAME || "Haunted";
 const SUPPORT_SERVER = process.env.NEXT_PUBLIC_SUPPORT_SERVER || "https://discord.gg/DvetGPq9q5";
-const API_DOCS = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1"}/../docs`;
 
 const FEATURES = [
   {
@@ -196,7 +195,7 @@ export default function LandingPage() {
               Ce qui rôde <span className="text-red-500 italic">la nuit.</span>
             </h2>
             <p className="text-lg text-slate-400 leading-relaxed">
-              Quatre garde-fous actifs en permanence, configurables module par module.
+            Des outils de modération, de sécurité et d&apos;animation configurables par serveur.
             </p>
           </div>
 
@@ -362,11 +361,6 @@ export default function LandingPage() {
                 <li>
                   <Link href="/docs" className="hover:text-red-500 transition-colors">
                     Documentation
-                  </Link>
-                </li>
-                <li>
-                  <Link href={API_DOCS} target="_blank" rel="noreferrer" className="hover:text-red-500 transition-colors">
-                    Référence API
                   </Link>
                 </li>
               </ul>

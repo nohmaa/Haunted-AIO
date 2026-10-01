@@ -14,7 +14,7 @@
 
 import React from "react";
 import { BarChart4 } from "lucide-react";
-import { api } from "@/lib/api";
+import { api } from "@/lib/api-server";
 import { ModuleUnavailable } from "@/components/dashboard/module-unavailable";
 import { LevelingForm } from "@/components/dashboard/leveling-form";
 

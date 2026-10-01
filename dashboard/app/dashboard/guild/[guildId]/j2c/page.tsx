@@ -15,7 +15,7 @@
 import React from "react";
 import { Mic } from "lucide-react";
 import nextDynamic from "next/dynamic";
-import { api } from "@/lib/api";
+import { api } from "@/lib/api-server";
 import { ModuleUnavailable } from "@/components/dashboard/module-unavailable";
 
 export const revalidate = 0; // Never cache this page

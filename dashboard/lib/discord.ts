@@ -27,6 +27,7 @@ export interface DiscordUserGuild {
   name: string;
   permissions: string;
   owner: boolean;
+  icon?: string | null;
 }
 
 export function canManageGuild(guild: DiscordUserGuild): boolean {
@@ -51,7 +52,7 @@ export const getManageableGuildIds = cache(
     try {
       const response = await fetch("https://discord.com/api/users/@me/guilds", {
         headers: { Authorization: `Bearer ${accessToken}` },
-        next: { revalidate: 300 },
+        cache: "no-store",
       });
 
       if (!response.ok) {
@@ -66,4 +67,22 @@ export const getManageableGuildIds = cache(
       return null;
     }
   }
+);
+
+export const getManageableGuilds = cache(
+  async (accessToken: string): Promise<DiscordUserGuild[] | null> => {
+    try {
+      const response = await fetch("https://discord.com/api/users/@me/guilds", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        cache: "no-store",
+        signal: AbortSignal.timeout(10000),
+      });
+      if (!response.ok) return null;
+      const guilds = (await response.json()) as DiscordUserGuild[];
+      return guilds.filter(canManageGuild);
+    } catch (error) {
+      console.error("[Discord] Échec de récupération des serveurs de l'utilisateur :", error instanceof Error ? error.message : "unknown error");
+      return null;
+    }
+  },
 );

@@ -290,7 +290,7 @@ def _run_tunnel(binary: str, token: str, port: int, public_url: str) -> None:
                     announced = True
                     if public_url:
                         print(f"{_GREEN}◈ Tunnel: API is live at  {public_url}{_RESET}")
-                        print(f"{_CYAN}  ↳ NEXT_PUBLIC_API_URL = {public_url}/api/v1{_RESET}")
+                        print(f"{_CYAN}  ↳ API_URL = {public_url}/api/v1  (dashboard server){_RESET}")
                     else:
                         print(f"{_GREEN}◈ Tunnel: connected — check CF_TUNNEL_URL in .env for your public URL{_RESET}")
 

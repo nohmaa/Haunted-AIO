@@ -82,10 +82,13 @@ export default function PrivacyPage() {
               <p className="text-slate-400 leading-relaxed font-medium">
                 Les configurations sont enregistrées dans les bases SQLite du bot, sur son hébergement,
                 et ne sont <span className="text-slate-200 font-bold">pas chiffrées au repos</span>.
-                L&apos;accès à l&apos;API du bot exige une clé secrète et le dashboard ne conserve aucune
-                copie de ces données : il interroge l&apos;API à chaque affichage. Nous ne vendons ni ne
-                partageons vos données avec des tiers ; seul Discord (et le service Lavalink configuré
-                pour la musique) reçoit les informations nécessaires à son fonctionnement.
+                L&apos;accès à l&apos;API du bot est relayé par le serveur du dashboard, avec authentification
+                et contrôle des droits Discord. Le dashboard traite les identifiants OAuth et le jeton
+                Discord côté serveur ; les accès techniques peuvent générer des journaux de requêtes.
+                Discord et le service Lavalink configuré reçoivent les informations nécessaires au
+                fonctionnement. Les durées de conservation dépendent des bases SQLite et des journaux
+                du serveur d&apos;hébergement ; une politique de rétention centralisée n&apos;est pas encore
+                implémentée.
               </p>
             </section>
 
@@ -107,7 +110,7 @@ export default function PrivacyPage() {
 
             <div className="pt-12 border-t border-white/5">
               <p className="text-[10px] font-black uppercase text-slate-600 tracking-[0.4em]">
-                Dernière modification : septembre 2026
+                Dernière modification : octobre 2026
               </p>
             </div>
           </div>

@@ -89,6 +89,9 @@ def create_app() -> FastAPI:
         title=f"{BRAND_NAME} Bot API",
         description=f"REST API to manage the {BRAND_NAME} Discord Bot features",
         version="1.0",
+        docs_url=None,
+        redoc_url=None,
+        openapi_url=None,
         lifespan=lifespan
     )
 
@@ -98,9 +101,12 @@ def create_app() -> FastAPI:
         start_time = time.time()
         response = await call_next(request)
         process_time = time.time() - start_time
+        request_id = request.headers.get("x-request-id") or os.urandom(8).hex()
+        response.headers["X-Request-ID"] = request_id
         
         log_data = {
             "timestamp": time.strftime('%Y-%m-%d %H:%M:%S'),
+            "request_id": request_id,
             "method": request.method,
             "path": request.url.path,
             "status_code": response.status_code,
@@ -133,9 +139,9 @@ def create_app() -> FastAPI:
     app.add_middleware(
         CORSMiddleware,
         allow_origins=_allowed_origins,
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
+        allow_credentials=False,
+        allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+        allow_headers=["Authorization", "Content-Type"],
     )
 
     # Register Routers (all require the Bearer API key)
@@ -144,6 +150,22 @@ def create_app() -> FastAPI:
     app.include_router(guilds.router, prefix="/api/v1/guilds", tags=["Guilds"], dependencies=_auth)
     app.include_router(modules.router, prefix="/api/v1/guilds", tags=["Modules"], dependencies=_auth)
     app.include_router(admin.router, prefix="/api/v1/admin", tags=["Admin"], dependencies=_auth)
+
+    @app.get("/api/v1/public/notification", summary="Notification de service publique")
+    async def public_notification(request: Request):
+        """Une annonce de service non sensible, sans configuration admin."""
+        from api.dependencies import verify_api_key
+        from api.routes.admin import get_public_notification
+        from fastapi.security import HTTPAuthorizationCredentials
+
+        auth = request.headers.get("authorization", "")
+        scheme, _, token = auth.partition(" ")
+        if scheme.lower() != "bearer" or not token:
+            from fastapi import HTTPException
+            raise HTTPException(status_code=401, detail="Authentication required.")
+        credentials = HTTPAuthorizationCredentials(scheme="Bearer", credentials=token)
+        await verify_api_key(request=request, credentials=credentials)
+        return await get_public_notification()
 
     @app.get("/", summary="API Root", description="Returns basic API information and online status.")
     async def root():

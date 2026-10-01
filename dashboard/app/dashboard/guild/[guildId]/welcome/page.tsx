@@ -15,7 +15,7 @@
 import React from "react";
 import { SmilePlus } from "lucide-react";
 import nextDynamic from "next/dynamic";
-import { api } from "@/lib/api";
+import { api } from "@/lib/api-server";
 import { ModuleUnavailable } from "@/components/dashboard/module-unavailable";
 
 const WelcomeForm = nextDynamic(() => import("@/components/dashboard/welcome-form").then(mod => mod.WelcomeForm), {

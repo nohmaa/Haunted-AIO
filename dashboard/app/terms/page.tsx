@@ -92,15 +92,16 @@ export default function TermsPage() {
                 <h2 className="text-2xl font-bold font-outfit uppercase tracking-tight">Accès à l&apos;API</h2>
               </div>
               <p className="text-slate-400 leading-relaxed font-medium">
-                L&apos;API du bot est privée : elle exige une clé et son usage est réservé au dashboard.
-                Les requêtes sont limitées en débit, et un usage automatisé excessif peut entraîner un
-                blocage temporaire des appels.
+                Les appels dashboard sont relayés côté serveur et signés vers l&apos;API du bot ; la
+                session Discord et les permissions actuelles sur chaque guilde sont vérifiées. Une
+                limite de débit s&apos;applique aux requêtes authentifiées. Les routes de santé de base
+                restent accessibles publiquement ; la documentation OpenAPI détaillée est désactivée.
               </p>
             </section>
 
             <div className="pt-12 border-t border-white/5">
               <p className="text-[10px] font-black uppercase text-slate-600 tracking-[0.4em]">
-                Dernière modification : septembre 2026
+                Dernière modification : octobre 2026
               </p>
             </div>
           </div>

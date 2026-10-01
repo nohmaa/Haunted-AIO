@@ -23,7 +23,7 @@ import {
   Activity,
   AlertTriangle,
 } from "lucide-react";
-import { api } from "@/lib/api";
+import { api } from "@/lib/api-server";
 import { GuildDetails, ModulesConfig, AntiNukeConfig } from "@/types/api";
 
 export const dynamic = "force-dynamic";

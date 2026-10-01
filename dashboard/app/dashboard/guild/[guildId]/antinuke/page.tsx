@@ -15,7 +15,7 @@
 import React from "react";
 import { ShieldAlert } from "lucide-react";
 import nextDynamic from "next/dynamic";
-import { api } from "@/lib/api";
+import { api } from "@/lib/api-server";
 import { ModuleUnavailable } from "@/components/dashboard/module-unavailable";
 
 const AntiNukeForm = nextDynamic(() => import("@/components/dashboard/antinuke-form").then(mod => mod.AntiNukeForm), {

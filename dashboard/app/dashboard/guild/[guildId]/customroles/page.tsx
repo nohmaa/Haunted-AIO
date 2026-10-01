@@ -15,7 +15,7 @@
 import React from "react";
 import { Ghost } from "lucide-react";
 import nextDynamic from "next/dynamic";
-import { api } from "@/lib/api";
+import { api } from "@/lib/api-server";
 import { ModuleUnavailable } from "@/components/dashboard/module-unavailable";
 
 const CustomRolesForm = nextDynamic(() => import("@/components/dashboard/customroles-form").then(mod => mod.CustomRolesForm), {

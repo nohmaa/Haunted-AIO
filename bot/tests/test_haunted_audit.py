@@ -205,7 +205,7 @@ class DashboardContractTests(unittest.TestCase):
     def test_every_dashboard_call_has_a_route(self):
         import re
 
-        api_ts = (REPO_DIR / "dashboard" / "lib" / "api.ts").read_text(encoding="utf-8")
+        api_ts = (REPO_DIR / "dashboard" / "lib" / "api-factory.ts").read_text(encoding="utf-8")
         calls = re.findall(r"request<[^>]*>\(\s*`([^`]+)`", api_ts, re.S)
         self.assertGreater(len(calls), 30, "Extraction des appels cassée ?")
 
@@ -225,6 +225,7 @@ class DashboardContractTests(unittest.TestCase):
                     if method in ("HEAD", "OPTIONS"):
                         continue
                     routes.add((method, prefix + re.sub(r"\{[^}]+\}", "{id}", route.path)))
+        routes.add(("GET", "/api/v1/public/notification"))
 
         missing = []
         for raw in calls:
@@ -275,6 +276,32 @@ class AdminStatsTests(unittest.TestCase):
         self.assertEqual(by_name["Modules du bot"], "booting")
         self.assertEqual(by_name["Passerelle Discord"], "warning")
         self.assertNotIn("Healthy", by_name.values(), "statut code en dur detecte")
+
+
+class ModuleGateAuditTests(unittest.TestCase):
+    """Les entrées de commande slash et listeners ont un garde défini."""
+
+    def test_slash_command_and_listener_gates_are_present(self):
+        source = (BOT_DIR / "core" / "zyrox.py").read_text(encoding="utf-8")
+        self.assertIn("self.tree.interaction_check = self._module_interaction_check", source)
+        self.assertIn("async def _module_interaction_check", source)
+        self.assertIn("async def add_cog", source)
+        self.assertIn("guarded", source)
+
+    def test_vanity_event_maps_to_the_registered_module(self):
+        from api.modules_registry import COG_MODULE_MAP
+
+        self.assertEqual(COG_MODULE_MAP.get("_vanity"), "vanityroles")
+
+    def test_listener_guard_resolves_direct_guild_event_payloads(self):
+        source = (BOT_DIR / "core" / "zyrox.py").read_text(encoding="utf-8")
+        self.assertIn("isinstance(value, discord.Guild)", source)
+        self.assertIn("guild_id = value.id", source)
+
+    def test_dashboard_public_client_has_no_master_credentials(self):
+        source = (REPO_DIR / "dashboard" / "lib" / "api.ts").read_text(encoding="utf-8")
+        self.assertNotIn("DASHBOARD_API_KEY", source)
+        self.assertNotIn("Authorization", source)
 
 
 if __name__ == "__main__":

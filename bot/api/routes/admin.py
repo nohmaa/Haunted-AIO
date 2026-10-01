@@ -23,6 +23,7 @@ if TYPE_CHECKING:
 router = APIRouter()
 
 CONFIG_DB = "db/admin_config.db"
+_MAX_NOTIFICATION_LENGTH = 1000
 
 async def init_db():
     async with aiosqlite.connect(CONFIG_DB) as db:
@@ -31,6 +32,15 @@ async def init_db():
         await db.execute("INSERT OR IGNORE INTO config (key, value) VALUES ('maintenance_mode', 'false')")
         await db.execute("INSERT OR IGNORE INTO config (key, value) VALUES ('global_notification', '')")
         await db.commit()
+
+
+async def get_public_notification():
+    """Expose uniquement le texte public, sans état admin ni contrôle global."""
+    await init_db()
+    async with aiosqlite.connect(CONFIG_DB) as db:
+        async with db.execute("SELECT value FROM config WHERE key = 'global_notification'") as cursor:
+            row = await cursor.fetchone()
+    return {"global_notification": row[0] if row else None}
 
 import psutil
 import time
@@ -119,6 +129,8 @@ async def get_admin_config():
 
 @router.patch("/config")
 async def patch_admin_config(data: AdminConfigUpdate):
+    if data.global_notification is not None and len(data.global_notification) > _MAX_NOTIFICATION_LENGTH:
+        raise HTTPException(status_code=413, detail="La notification doit faire au maximum 1 000 caractères.")
     await init_db()
     async with aiosqlite.connect(CONFIG_DB) as db:
         if data.maintenance_mode is not None:

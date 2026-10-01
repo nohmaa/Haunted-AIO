@@ -15,7 +15,7 @@
 import React from "react";
 import { Ticket, ExternalLink } from "lucide-react";
 import nextDynamic from "next/dynamic";
-import { api } from "@/lib/api";
+import { api } from "@/lib/api-server";
 import { ModuleUnavailable } from "@/components/dashboard/module-unavailable";
 import { Button } from "@/components/ui/button";
 

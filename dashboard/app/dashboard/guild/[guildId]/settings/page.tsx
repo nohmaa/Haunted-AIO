@@ -14,7 +14,7 @@
 
 import React from "react";
 import { Settings2 } from "lucide-react";
-import { api } from "@/lib/api";
+import { api } from "@/lib/api-server";
 import { SettingsForm } from "@/components/dashboard/settings-form";
 
 export const dynamic = "force-dynamic";

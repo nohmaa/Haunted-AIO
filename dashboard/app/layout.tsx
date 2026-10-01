@@ -27,6 +27,13 @@ const brandName = process.env.NEXT_PUBLIC_BRAND_NAME || "Haunted";
 export const metadata: Metadata = {
   title: `${brandName} - Bot Discord ultime`,
   description: "Gestion et sécurité avancées pour communautés Discord.",
+  metadataBase: new URL(process.env.NEXTAUTH_URL || "http://localhost:3000"),
+  openGraph: {
+    title: `${brandName} — Bot et dashboard Discord`,
+    description: "Outils de modération, sécurité et animation configurables pour votre serveur Discord.",
+    type: "website",
+    locale: "fr_FR",
+  },
 };
 
 export default function RootLayout({

@@ -47,6 +47,11 @@ build/
 .env.local
 .env.*.local
 
+# Local runtime state and agent harness metadata (never publish)
+/db/
+/rr.db
+/.freebuff/
+
 # Données runtime du bot — modifiées à chaque exécution, recréées
 # automatiquement au démarrage (CREATE TABLE IF NOT EXISTS / fichiers
 # JSON). Ne jamais les commiter : sinon `git pull` échoue sur les

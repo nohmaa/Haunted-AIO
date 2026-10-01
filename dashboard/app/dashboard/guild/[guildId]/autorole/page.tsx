@@ -15,7 +15,7 @@
 import React from "react";
 import { UserPlus } from "lucide-react";
 import nextDynamic from "next/dynamic";
-import { api } from "@/lib/api";
+import { api } from "@/lib/api-server";
 
 export const revalidate = 0; // Never cache this page
 

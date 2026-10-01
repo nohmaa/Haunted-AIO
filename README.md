@@ -28,7 +28,7 @@
 
 ## ✦ Aperçu
 
-**Haunted** est un bot Discord complet, accompagné d'un dashboard web moderne pour tout gérer : de l'anti-nuke à la musique. Construit avec `discord.py v2`, `FastAPI` et `Next.js 14` + Tailwind CSS. L'interface (bot et dashboard) est en **français**, et chaque **module peut être activé ou désactivé depuis le dashboard**, serveur par serveur.
+**Haunted** est un bot Discord accompagné d'un dashboard web. Le dépôt installe `discord.py 2.7.1`, `FastAPI 0.141.1` et `Next.js 16.3.6` + Tailwind CSS 4. Les commandes préfixe et slash respectent les interrupteurs des modules ; les écouteurs automatiques ne sont pas tous couverts par ces interrupteurs à ce jour.
 
 > Basé sur [ZyroX-CV2](https://github.com/RayExo) par CodeX Devs — renommé, traduit et étendu (voir `SUIVI_HAUNTED.md`).
 
@@ -128,7 +128,7 @@ Haunted/
 - Synchronisation auto des emojis d'application au démarrage
 - Support d'évaluation Jishaku
 - Commandes slash + préfixe
-- Backend FastAPI avec clé API + limitation de débit
+- Backend FastAPI avec authentification du proxy signé + limitation de débit
 - Tunnel Cloudflare — bande passante illimitée, URL permanente
 - Traductions FR/EN (`bot/lang/`, `bot/utils/i18n.py`)
 
@@ -181,9 +181,10 @@ TOKEN              = collez_ici_le_token_du_bot
 # Plusieurs IDs possibles, séparés par des virgules.
 OWNER_IDS          = 123456789012345678
 
-# Inventez un mot de passe long et unique : il devra être IDENTIQUE
-# dans le .env du dashboard (NEXT_PUBLIC_DASHBOARD_API_KEY).
-DASHBOARD_API_KEY  = changez_moi_par_un_secret_long_et_unique
+# Générez un secret long et aléatoire partagé avec le dashboard côté serveur.
+DASHBOARD_API_KEY  = generez_un_nouveau_secret_long_et_aleatoire
+# Secret HMAC différent, 32 octets minimum, identique côté serveur dashboard.
+DASHBOARD_PROXY_SECRET = generez_un_second_secret_distinct_de_32_octets_minimum
 
 # ── Musique (Lavalink v4) ───────────────────────────────────────────
 # Sans nœud Lavalink, seul la musique est désactivée, le reste marche.
@@ -233,15 +234,15 @@ python haunted.py
 ```
 Loaded & Online!
 ◈ Tunnel: API is live at  https://api.votredomaine.com
-  ↳ NEXT_PUBLIC_API_URL = https://api.votredomaine.com/api/v1
+  ↳ API_URL = https://api.votredomaine.com/api/v1  (dashboard server)
 ```
-👉 **Copiez la ligne `NEXT_PUBLIC_API_URL`** : elle sert à remplir le `.env` du dashboard juste après.
+👉 **Copiez l'URL `…/api/v1`** : elle sert à remplir `API_URL` côté serveur du dashboard.
 
 ---
 
 ## ✦ Installation du dashboard
 
-À faire **après** le bot (il vous faut son URL d'API et sa clé, affichées dans sa console).
+À faire **après** le bot (il vous faut son URL d'API et les deux secrets définis dans le `.env` du bot).
 
 **Étape 1 — Remplir le `.env.local` (à faire en premier)**
 
@@ -251,11 +252,13 @@ cp .env.example .env.local
 ```
 
 ```env
-# URL affichée par le bot au démarrage (ligne NEXT_PUBLIC_API_URL)
-NEXT_PUBLIC_API_URL           = https://api.votredomaine.com/api/v1
+# URL affichée par le bot au démarrage
+API_URL                       = https://api.votredomaine.com/api/v1
 
-# RECOPIEZ ici le DASHBOARD_API_KEY du .env du bot (identique !)
-NEXT_PUBLIC_DASHBOARD_API_KEY = le_meme_secret_que_cote_bot
+# Ces valeurs restent côté serveur : ne jamais leur ajouter NEXT_PUBLIC_.
+API_URL                       = https://api.votredomaine.com/api/v1
+DASHBOARD_API_KEY             = le_meme_secret_prive_que_cote_bot
+DASHBOARD_PROXY_SECRET        = le_meme_secret_hmac_prive_que_cote_bot
 
 # En local, laissez tel quel. En production, mettez votre domaine.
 NEXTAUTH_URL                  = http://localhost:3000
@@ -270,7 +273,7 @@ DISCORD_CLIENT_ID             = votre_client_id_oauth_discord
 DISCORD_CLIENT_SECRET         = votre_client_secret_oauth_discord
 
 # Votre ID Discord (voir bot, étape 1). Laissez le reste par défaut.
-NEXT_PUBLIC_ADMIN_IDS         = 123456789012345678
+DASHBOARD_ADMIN_IDS           = 123456789012345678
 NEXT_PUBLIC_BRAND_NAME        = "Haunted"
 NEXT_PUBLIC_BRAND_NAME_WORD   = "H"
 ```
@@ -303,7 +306,9 @@ npm run dev
 | `EMOJI_SYNC` | `false` | Synchroniser les emojis custom d'application (inutile : les emojis du bot sont Unicode) |
 | `API_ENABLED` | `true` | Démarrer le backend FastAPI du dashboard |
 | `API_PORT` | `8000` | Port d'écoute du backend |
-| `DASHBOARD_API_KEY` | — | Secret partagé entre l'API du bot et le dashboard |
+| `DASHBOARD_API_KEY` | — | Clé privée partagée entre l'API du bot et le serveur dashboard |
+| `DASHBOARD_API_KEY_PREVIOUS` | — | Ancienne clé acceptée uniquement avec HMAC valide durant une rotation progressive ; à retirer ensuite |
+| `DASHBOARD_PROXY_SECRET` | — | Secret HMAC privé distinct, partagé entre le bot et le serveur dashboard (32 octets minimum) |
 | `CORS_ORIGINS` | _(vide)_ | Origines CORS supplémentaires, séparées par des virgules |
 | `WEBHOOK_URL` | — | Webhook Discord pour les journaux de commandes |
 | `TUNNEL_ENABLED` | `true` | Exposer l'API en HTTPS via tunnel Cloudflare |
@@ -315,13 +320,14 @@ npm run dev
 
 | Variable | Description |
 |---|---|
-| `NEXT_PUBLIC_API_URL` | URL complète du backend FastAPI — utilisez l'URL du tunnel Cloudflare |
-| `NEXT_PUBLIC_DASHBOARD_API_KEY` | Doit correspondre à `DASHBOARD_API_KEY` du bot |
+| `API_URL` | URL complète du backend FastAPI — utilisée exclusivement côté serveur |
+| `DASHBOARD_API_KEY` | Doit correspondre à `DASHBOARD_API_KEY` du bot, exclusivement côté serveur |
+| `DASHBOARD_PROXY_SECRET` | Secret HMAC distinct, doit correspondre à celui du bot |
 | `NEXTAUTH_URL` | URL publique de votre dashboard |
 | `NEXTAUTH_SECRET` | Secret aléatoire pour la signature des sessions NextAuth |
 | `DISCORD_CLIENT_ID` | ID client Discord OAuth2 |
 | `DISCORD_CLIENT_SECRET` | Secret client Discord OAuth2 |
-| `NEXT_PUBLIC_ADMIN_IDS` | IDs Discord des administrateurs, séparés par des virgules |
+| `DASHBOARD_ADMIN_IDS` | IDs Discord des administrateurs, séparés par des virgules, côté serveur uniquement |
 | `NEXT_PUBLIC_BRAND_NAME` | Nom du bot affiché dans le dashboard |
 | `NEXT_PUBLIC_BRAND_NAME_WORD` | Abréviation affichée dans le dashboard |
 
@@ -329,7 +335,7 @@ npm run dev
 
 ## ✦ Modules — activation / désactivation
 
-Depuis le dashboard, page **Modules** d'un serveur : chaque module possède un interrupteur. Un module désactivé ne répond plus aux commandes sur ce serveur (message en français) ; les autres serveurs ne sont pas affectés. Tous les modules sont **activés par défaut**.
+Depuis le dashboard, page **Modules** d'un serveur : chaque module possède un interrupteur. Les commandes préfixe/slash mappées au module sont bloquées par serveur ; les listeners Discord mappés sont ignorés. Les boutons, menus, modales et tâches déjà démarrées ne sont pas tous couverts de manière exhaustive, notamment lorsque plusieurs handlers partagent un même cog. Tous les modules sont **activés par défaut**.
 
 | Module | Clé | Page dashboard |
 |---|---|---|
@@ -357,7 +363,7 @@ Depuis le dashboard, page **Modules** d'un serveur : chaque module possède un i
 - Registre unique : `bot/api/modules_registry.py` (`MODULES`, `COG_MODULE_MAP`)
 - État par serveur en SQLite : `db/modules.db` (`bot/utils/modules.py`)
 - Endpoints : `GET /api/v1/guilds/{guild_id}/modules`, `PATCH /api/v1/guilds/{guild_id}/modules`, `PATCH /api/v1/guilds/{guild_id}/modules/{clé}` avec `{"enabled": true/false}`
-- Garde côté bot : `zyrox.invoke()` refuse les commandes des modules désactivés (chaque cog porte un attribut `module_key`)
+- Garde côté bot : commandes préfixe dans `zyrox.invoke()`, commandes slash via `tree.interaction_check`, listeners des cogs mappés ignorés côté serveur.
 
 ---
 
@@ -409,9 +415,9 @@ Le bot n'a pas d'IP publique : le tunnel Cloudflare expose son API FastAPI (port
 ```
 ◈ Tunnel: cloudflared binary ready — starting tunnel on port 8000…
 ◈ Tunnel: API is live at  https://api.votredomaine.com
-  ↳ NEXT_PUBLIC_API_URL = https://api.votredomaine.com/api/v1
+  ↳ API_URL = https://api.votredomaine.com/api/v1  (dashboard server)
 ```
-👉 La 3ᵉ ligne (`…/api/v1`, **avec** `/api/v1` au bout) est la valeur exacte de `NEXT_PUBLIC_API_URL` côté dashboard. Testez-la dans un navigateur : `https://api.votredomaine.com/api/v1/bot/info` doit répondre du JSON (erreur 401/403 sans clé = normal, ça prouve que le tunnel répond).
+👉 La 3ᵉ ligne (`…/api/v1`, **avec** `/api/v1` au bout) est la valeur exacte de `API_URL` côté serveur dashboard. Ne testez pas les routes protégées dans un navigateur ; `/health` est le contrôle public du tunnel.
 
 **Si le tunnel ne démarre pas :** `CF_TUNNEL_TOKEN` invalide (reprenez l'étape 3), `TUNNEL_ENABLED` à `"false"`, ou `API_ENABLED` à `"false"` (rien n'écoute sur le 8000). Mettez `TUNNEL_ENABLED=false` pour repasser en HTTP local le temps de déboguer (`http://localhost:8000/api/v1`).
 
@@ -464,11 +470,11 @@ Le bot affiche cette ligne dans la console quand il est connecté — le panel p
 - Créez le fichier `.env` (via **Files**) en copiant `.env.example`, puis renseignez au minimum `TOKEN`, `OWNER_IDS`, `DASHBOARD_API_KEY` et le tunnel Cloudflare (`CF_TUNNEL_TOKEN`, `CF_TUNNEL_URL`).
 - Onglet **Console** → **Start**. `pycloudflared` télécharge le binaire automatiquement au premier lancement.
 
-> Le dashboard Next.js ne tourne pas sur cette image Python : lancez-le en local (`npm run dev`) ou hébergez-le (Vercel ci-dessous, ou toute machine avec Node.js 22+), en pointant `NEXT_PUBLIC_API_URL` vers l'URL du tunnel du bot.
+> Le dashboard Next.js ne tourne pas sur cette image Python : lancez-le en local (`npm run dev`) ou hébergez-le (Vercel ci-dessous, ou toute machine avec Node.js 22+), en pointant `API_URL` vers l'URL du tunnel du bot.
 
 ### 🌐 Dashboard — Vercel (pas à pas)
 
-> Prérequis : le bot tourne sur Pterodactyl avec le tunnel actif (section précédente), et vous avez noté `NEXT_PUBLIC_API_URL` + la clé `DASHBOARD_API_KEY`.
+> Prérequis : le bot tourne sur Pterodactyl avec le tunnel actif et vous avez noté `API_URL`, `DASHBOARD_API_KEY` et `DASHBOARD_PROXY_SECRET`.
 
 1. Sur [vercel.com](https://vercel.com) → **Add New → Project** → importez `Haunted-AIO`.
 2. Dans **Configure Project**, réglez exactement :
@@ -482,12 +488,13 @@ Le bot affiche cette ligne dans la console quand il est connecté — le panel p
 3. Dépliez **Environment Variables** et ajoutez (toutes obligatoires) :
    | Variable | Quoi mettre |
    |---|---|
-   | `NEXT_PUBLIC_API_URL` | La ligne `…/api/v1` affichée par le bot (ex. `https://api.votredomaine.com/api/v1`) |
-   | `NEXT_PUBLIC_DASHBOARD_API_KEY` | **Recopie exacte** de `DASHBOARD_API_KEY` du `.env` du bot |
+   | `API_URL` | La ligne `…/api/v1` affichée par le bot (ex. `https://api.votredomaine.com/api/v1`) |
+   | `DASHBOARD_API_KEY` | Clé privée aléatoire neuve, identique côté bot et dashboard |
+   | `DASHBOARD_PROXY_SECRET` | Secret HMAC privé identique à celui du `.env` bot |
    | `NEXTAUTH_URL` | L'URL Vercel finale, ex. `https://haunted-dashboard.vercel.app` (voir étape 4 si inconnue) |
    | `NEXTAUTH_SECRET` | Sortie de `openssl rand -base64 32` |
    | `DISCORD_CLIENT_ID` / `DISCORD_CLIENT_SECRET` | Portail Discord → votre application → **OAuth2** (la même que le bot) |
-   | `NEXT_PUBLIC_ADMIN_IDS` | Votre ID Discord (mode développeur → clic droit → Copier l'identifiant) |
+   | `DASHBOARD_ADMIN_IDS` | Votre ID Discord (mode développeur → clic droit → Copier l'identifiant) |
    | `NEXT_PUBLIC_BRAND_NAME` / `NEXT_PUBLIC_BRAND_NAME_WORD` | `"Haunted"` / `"H"` |
 4. **Deploy** → notez l'URL produite (ex. `https://haunted-dashboard.vercel.app`).
    - Si elle diffère de `NEXTAUTH_URL` : mettez à jour la variable → onglet **Deployments** → **···** → **Redeploy**.
@@ -497,11 +504,9 @@ Le bot affiche cette ligne dans la console quand il est connecté — le panel p
    https://haunted-dashboard.vercel.app/api/auth/callback/discord
    ```
    (remplacez par votre vraie URL). Sans ça : erreur d'auth au login.
-6. Côté bot, autorisez le dashboard : dans `bot/.env`, ajoutez votre URL Vercel aux origines CORS (**apex ET www**, ex. `"https://haunted-mind.site,https://www.haunted-mind.site"`) puis **Restart** :
-   ```env
-   CORS_ORIGINS = "https://haunted-mind.site,https://www.haunted-mind.site"
-   ```
-   Sans ça : le navigateur bloque les appels API (`CORS errors`). Note : depuis cette version, le bot ajoute automatiquement la variante www/apex de chaque origine — renseigner l'une suffit, mettre les deux reste recommandé.
+ 6. Le navigateur parle au serveur Next sur son origine ; l'appel Next → FastAPI est serveur-à-serveur et ne dépend pas de CORS. Le tunnel doit être accessible depuis l'hébergement du dashboard.
+
+> **Déploiement de la nouvelle authentification du proxy :** l'API refuse toute requête de gestion sans signature HMAC. Configurez les nouvelles `DASHBOARD_API_KEY` et `DASHBOARD_PROXY_SECRET` des deux côtés, puis planifiez une courte fenêtre de maintenance : mettez en pause le dashboard, redémarrez le bot/API, déployez immédiatement le dashboard et validez les accès. Révoquez ensuite l'ancienne clé précédemment exposée. Aucun mode d'API non signé n'est disponible.
 
 ✅ **Ça marche si** : la page d'accueil s'ouvre, le login Discord aboutit, et vos serveurs s'affichent avec leurs modules.
 
@@ -533,10 +538,10 @@ L'utilitaire `EMOJI_SYNC` reste disponible si vous ajoutez vos propres emojis cu
 | Le bot ne démarre pas | Vérifiez `TOKEN` et les intents dans le portail développeur |
 | Musique hors service | Vérifiez `LAVALINK_HOST`, `LAVALINK_SECURE` et `LAVALINK_PORT` |
 | Erreur d'auth du dashboard | Vérifiez l'ID/secret OAuth Discord et l'URI de redirection |
-| Le dashboard ne charge pas les données | Vérifiez `API_ENABLED=true`, bot en ligne, `NEXT_PUBLIC_API_URL` correct |
+| Le dashboard ne charge pas les données | Vérifiez `API_ENABLED=true`, bot en ligne, `API_URL` et les deux secrets privés côté serveur |
 | Un module ne répond pas | Vérifiez qu'il est **activé** sur la page Modules du serveur |
 | Emojis affichés en texte brut | Les emojis sont désormais des emojis Unicode standards — vérifiez la version de Discord ou ajoutez vos emojis custom avec `EMOJI_SYNC=true` |
-| Erreurs CORS depuis le dashboard | Ajoutez l'URL de votre dashboard dans `CORS_ORIGINS` (`bot/.env`) |
+| Proxy indisponible | Vérifiez `API_URL`, `DASHBOARD_API_KEY`, `DASHBOARD_PROXY_SECRET` et le tunnel vu depuis l'hôte Next.js |
 | Tunnel ne démarre pas | Vérifiez `CF_TUNNEL_TOKEN` et que `pycloudflared` est installé |
 | URL du tunnel a changé | Renseignez `CF_TUNNEL_URL` — les tunnels nommés gardent la même URL |
 
@@ -546,8 +551,9 @@ L'utilitaire `EMOJI_SYNC` reste disponible si vous ajoutez vos propres emojis cu
 
 - Ne commitez jamais les fichiers `.env` — `.gitignore` les couvre déjà
 - Utilisez un `NEXTAUTH_SECRET` et un `DASHBOARD_API_KEY` forts et uniques
+- Utilisez également un `DASHBOARD_PROXY_SECRET` distinct (au moins 32 octets), côté serveur uniquement
 - Regénérez tout secret accidentellement exposé
-- L'API du bot est toujours protégée par clé API — ne l'exposez jamais sans elle
+- Les routes de gestion exigent clé Bearer et signature HMAC du proxy, sans accès direct navigateur
 
 ---
 

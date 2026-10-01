@@ -4,6 +4,55 @@
 > Objectifs actuels : (1) traduction en français, (2) nouvelle identité **Haunted**, (3) activation/désactivation des modules depuis le dashboard.
 > Mettre à jour ce fichier à chaque changement (date + fichiers + comportement).
 
+## 2026-10-01 — Audit dépôt + proxy dashboard sécurisé (Phase P0)
+
+### Constats vérifiés
+- `dashboard/.env.example`, `dashboard/lib/api.ts` et les anciens README prescrivaient `NEXT_PUBLIC_DASHBOARD_API_KEY` : une clé ainsi nommée est compilée dans le JavaScript client. La même clé Bearer autorisait l'ensemble des routeurs `bot`, `guilds`, `modules` et `admin` de FastAPI (`bot/api/server.py`, `bot/api/dependencies.py`). Les routes guilde ne vérifiaient pas d'identité Discord côté bot ; `/admin/config` dépendait d'un filtrage de page UI seulement.
+- `dashboard/lib/auth.ts` copiait l'access token OAuth Discord dans la session publique NextAuth. L'API de serveurs utilisateur était réutilisée en cache 300 s, retardant potentiellement la prise en compte d'une permission retirée.
+- Le garde de modules se trouvait seulement dans `zyrox.invoke()` ; les commandes slash ne passent pas par là. `COG_MODULE_MAP` associait `_vanity` à une clé inconnue (`vanity`), et les listeners n'étaient pas couverts de façon centrale.
+- Version réelle dans `dashboard/package.json` et `package-lock.json` : Next 16.3.6, React 19.3.0, Tailwind 4.3.3 ; le README dashboard annonçait Next 14. L'accueil public annonçait Next 16 et décrivait jusque-là des modules comme « actifs en permanence ».
+- L'environnement disponible expose Python 3.14.6 sans dépendances du bot ; Python 3.12 est installé aussi, mais sans dépendances. Les bases SQLite non suivies à la racine ont été laissées intactes et leurs données non consultées.
+- Le site public `https://www.haunted-mind.site/` est consultable : il présente 4 fonctionnalités principales, modules, FAQ et Next 16. Les pages `/privacy` et `/docs` n'ont pas pu être chargées par l'outil web (erreur transport). Les documents publics sont du rendu, non une preuve du comportement bot.
+
+### Modifications réalisées
+- Nouveau chemin navigateur → `/api/bot/*` → serveur Next.js (session OAuth vérifiée, contrôle frais `identify guilds`, vérification bot présent) → FastAPI.
+- `dashboard/lib/auth.ts` conserve le jeton OAuth dans le JWT NextAuth chiffré et renouvelle le token expiré ; la session publique ne renvoie plus le token. Allowlist admin privée `DASHBOARD_ADMIN_IDS` contrôlée côté serveur et par le proxy.
+- `bot/.env.example` avait `API_ENABLED=false` alors que le README et le défaut du bot nécessitent l'API pour le dashboard ; valeur alignée sur `true`.
+- Signature HMAC à durée de vie courte couvrant méthode, path/query, empreinte body, timestamp, nonce, utilisateur et portée (`dashboard`, `guild:<id>`, `admin`) ; FastAPI rejette les signatures absentes/invalides, les rejeux, scopes hors ressource et bot absent. Limite 120 requêtes/minute/utilisateur dans Next et FastAPI. Routes FastAPI de gestion ne sont pas accessibles avec une simple clé.
+- Mécanismes de rotation documentés (`DASHBOARD_API_KEY_PREVIOUS`, `DASHBOARD_PROXY_SECRET_PREVIOUS`) ; les anciennes clés sont acceptées uniquement avec une signature HMAC valide. Aucun pont non signé : activation avec courte coupure coordonnée pour éviter qu'une ancienne clé exposée permette encore l'accès.
+- Route `/public/notification` limitée à la seule annonce globale ; `/admin/config` reste admin et les messages ont une limite d'entrée de 1 000 caractères.
+- Dashboard : API client same-origin, appels SSR signés, serveurs où le bot est absent montrés sans accès à la configuration, vérification sans cache, headers de sécurité, robots/sitemap, réduction des animations et focus clavier.
+- Bot : contrôle command prefix/slash et listeners des cogs mappés (y compris événements recevant un objet `Guild` directement), refus fermé si état module indisponible, correction `_vanity -> vanityroles`, cache d'état modules TTL 1 s.
+- Le réglage `maintenance_mode` jusque-là sans effet bloque maintenant les commandes prefix/slash pour tous sauf `OWNER_IDS` ; lecture SQLite mise en cache 1 s, erreur DB fermée (owner bypass) et explication ajoutée au panneau admin.
+- Documentation README racine/dashboard/bot, vie privée/conditions et messages modules alignés sur comportements confirmés.
+
+### Vérifications réellement exécutées
+- `dashboard`: `npm ci --ignore-scripts --offline` **OK** (lockfile préexistant réutilisé, npm 12.0.2) ; `npm run typecheck` **OK** ; `npm run build` **OK** sous Node 26.5.1 / Next 16.3.6 ; routes `/api/bot/[...path]`, `/robots.txt`, `/sitemap.xml` incluses. Dernière exécution après les corrections finales : OK.
+- `dashboard`: `npm audit --audit-level=high` : **0 vulnérabilité** détectée dans l'ensemble des dépendances verrouillées.
+- `dashboard`: `npm run typecheck` : OK.
+- `dashboard`: `npm run lint -- --quiet` : **échec, 91 erreurs** (dette existante `any`, apostrophes JSX, set-state-in-effect). Le lint ne bloque pas le build.
+- `bot`: `py -3.12 -m unittest tests.test_proxy_auth -v` : **15 tests verts** sans dépendances externes ; `bot/tests/test_api_auth.py` ajoute six cas FastAPI (clé/signature absente, usurpation de scope, bot absent/présent, scope admin) pour la CI. Ils ne sont pas exécutables dans cette copie faute de FastAPI installé. `py -3.12 -m compileall -q .` : OK.
+- Tests complets bot après installation de `bot/requirements.txt` avec Python 3.12 : `python -m unittest discover -s tests -v` **45 tests verts** sans connexion Discord ; `compileall` OK. Les tests d'autorisation FastAPI sont inclus. Python 3.14 local sans dépendances n'a pas pu les exécuter.
+- Grep du bundle client `.next/static`: aucune occurrence `NEXT_PUBLIC_DASHBOARD_API_KEY`, `NEXT_PUBLIC_ADMIN_IDS`, `NEXT_PUBLIC_API_URL` après build.
+- `git diff --check`: un blanc EOF dans `dashboard/lib/utils.ts` a été corrigé ; avertissements CRLF/LF de Git liés à l'environnement.
+- CI ajoutée (`.github/workflows/ci.yml`) pour typecheck/build/npm audit + tests de signature Python; lint observé mais non bloquant jusqu'au traitement de la dette.
+- La suite complète bot n'a pas été relancée après ajout de ses dépendances CI ; l'exécution locale précédente échoue sur l'absence de `fastapi`/`discord.py` dans Python.
+
+### Déploiement progressif requis (aucune rotation prod effectuée)
+1. Générer une `DASHBOARD_API_KEY` fraîche et un `DASHBOARD_PROXY_SECRET` distinct (≥32 octets). Préparer côté bot `DASHBOARD_API_KEY` nouvelle, `DASHBOARD_API_KEY_PREVIOUS` ancienne clé potentiellement publique, `DASHBOARD_PROXY_SECRET` nouvelle et `DASHBOARD_PROXY_SECRET_PREVIOUS` vide ; préparer côté Next `API_URL`, les nouvelles clés privées, `DASHBOARD_ADMIN_IDS`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL` et OAuth.
+2. Coordonner une courte fenêtre de maintenance : arrêter ou mettre le dashboard en maintenance, redémarrer bot/API avec signatures obligatoires, puis déployer immédiatement le dashboard avec les nouvelles clés. L'ancienne instance dashboard cessera de fonctionner ; aucune requête directe non signée n'est acceptée. Pour Vercel sans mode maintenance, programmer la bascule dans une fenêtre courte et valider les secrets juste avant.
+3. Vérifier `/api/bot/*` connecté, refusé non connecté, guilde non autorisée, admin non allowlist, bot absent et que `/api/v1/guilds/{id}` direct sans signature donne 401. Retirer ensuite `DASHBOARD_API_KEY_PREVIOUS` et toute ancienne clé de signature.
+4. Révoquer/renouveler l'ancienne clé exposée dans tous les secrets de déploiement et invalider les sessions NextAuth en renouvelant `NEXTAUTH_SECRET` si risque de session/token antérieur ; aucun secret réel n'a été lu ou affiché par cette session.
+5. Aucun changement de schéma DB requis ; migration SQLite/rollback données non nécessaire. Un retour au build dashboard précédent n'est pas compatible avec l'API signée ; prévoir retour de version uniquement conjointement, et garder l'API en signature obligatoire après révocation des anciennes clés.
+
+### Limites et tâches restantes
+- La vérification d'autorisation guild est faite côté Next avant les requêtes et le bot confirme sa présence. FastAPI authentifie la signature et lie l'ID guild au scope, mais ne vérifie pas directement l'autorisation Discord utilisateur (il ne stocke pas de credentials OAuth) : ne pas exposer l'API/tunnel à des consommateurs directs ; `DASHBOARD_API_KEY` et HMAC sont la frontière de confiance du serveur dashboard.
+- Nonce et limites de débit sont en mémoire de processus ; mono-instance bot/Next attendu. Le bot purge les entrées nonces expirées, échoue fermé lorsque le cache atteint 100 000 entrées (503), limite le nombre de comptes suivis et limite par utilisateur ; pour plusieurs workers/processus, utiliser Redis/stockage partagé avant scale-out. Les limites SlowAPI IP restent également en place.
+- Les erreurs UX 401/403/503 sont structurées au proxy, mais aucune campagne manuelle mobile/clavier/axe ou e2e OAuth Discord live n'a été faite. Lint reste rouge.
+- Module disable : le garde couvre callbacks de cog mappés et slash de cog mappé, pas universellement les callbacks de composants existants, tâches de fond ou fonctions qui n'exposent pas de guilde ; ne pas annoncer « tous les points d'entrée neutralisés ».
+- Tests API intégration réelle, permissions retirées en live, bot Discord, migration rotation en production, disponibilité Cloudflare depuis l'hôte Next, CORS OpenAPI/docs et santé externe non vérifiés dans cet environnement.
+- P1 à poursuivre : inventaire exhaustif listeners/components/tasks et modération, revues des sanctions antinuke, tests d'intégration FastAPI sans Discord réel, CI, sauvegarde/restauration SQLite, logs corrélation/alertes, dé-dette lint et revue manuelle accessibilité.
+
 ## 2026-09-23 — Commandes cassées (help 50006 / play InvalidNodeException) : filet de sécurité + musique robuste
 - **Signalement** : « depuis la traduction beaucoup de commandes sont cassées ». Deux erreurs console Pterodactyl : `CommandInvokeError in help: HTTPException 400 (50006) Cannot send an empty message` et `CommandInvokeError in play: InvalidNodeException: No nodes are currently assigned to the wavelink.Pool in a CONNECTED state`.
 - **Audit `help` (payload réel capturé)** : harnais en venv qui intercepte `HTTPClient.send_message` → tous les chemins (`send_bot_help`, `send_cog_help`, `send_command_help`, `command_not_found`) envoient des payloads **valides** (composants v2 `type:17` + `flags: 32768`, ou embed). Donc le 50006 ne vient **pas** d'un payload vide construit par le bot : Discord **rejette/élague** le contenu (cause connue : permission « Intégrer des liens » absente dans le salon, embed invalide, ou discord.py trop ancien pour les composants v2). Vérifié aussi : `utils/emoji.py` (206 constantes, aucune vide/invisible), aucun `.send()` vide dans le code, `help.py` n'a reçu que des chaînes traduites depuis `88924d5`.
@@ -146,7 +195,7 @@ Inventaire par script AST (hors filigranes) + corrections :
 - Vérification : `compileall` OK, plus aucune URL support en dur hors valeur par défaut.
 
 ## 2026-09-23 — Installation simplifiée (.env d'abord)
-- `README.md` : parcours réécrit — prérequis en checklist avec liens, `.env` **avant** l'install, modèle annoté (où trouver chaque valeur), ordre bot → dashboard, et ✅ « ça marche si » avec la ligne `NEXT_PUBLIC_API_URL` à copier.
+- `README.md` : parcours réécrit — prérequis en checklist avec liens, `.env` **avant** l'install, modèle annoté (où trouver chaque valeur), ordre bot → dashboard, et ✅ « ça marche si » avec la ligne d'URL API à copier.
 - `bot/README.md` et `dashboard/README.md` alignés sur le même ordre (`.env` en étape 1, renvoi vers la version guidée du README racine).
 
 ## 2026-09-23 — Repo renommé `Haunted-AIO`
@@ -272,7 +321,7 @@ Repo d'origine : https://github.com/nohmaa/ZyroX-CV2-AIO-With-Dashboard
 ### Vérifications
 - Backend : `python -m compileall` OK sur tous les fichiers touchés (dont `core/zyrox.py`, `api/*`, `utils/*`, cogs marqués).
 - Backend : script de test `test_modules2.py` → **ALL TESTS PASSED** (registre 19 modules, schémas pydantic, `get/set/is_module_enabled` + bulk + clé inconnue rejetée, `i18n.t` FR/EN/fallback). Nécessite `aiosqlite`, `pydantic`, `python-dotenv` (installés dans le Python système pour le test ; le bot utilise son `requirements.txt`).
-- Dashboard : `npx tsc --noEmit` **impossible dans cette session** — `node_modules/` absent du checkout (`Cannot find module 'react'` sur tout le projet, pré-existant, non lié à ces changements). À valider avec `npm install` puis `npm run dev` (`NEXT_PUBLIC_API_URL` → tunnel/serveur local).
+- Dashboard : `npx tsc --noEmit` **impossible dans cette session historique** — `node_modules/` absent de ce checkout (`Cannot find module 'react'`). À valider après installation.
 - Bot live non testé : à valider avec `python haunted.py` (commande d'un module désactivé doit répondre le message FR).
 
 ---
@@ -291,7 +340,7 @@ Repo d'origine : https://github.com/nohmaa/ZyroX-CV2-AIO-With-Dashboard
 - `admin-content.tsx` : `stats?.x || "0"` affichait de **faux zéros** (0 membre, 0ms, 0 MB) quand l'API ne répondait pas → « — » + badge « Indisponible » au lieu du badge « En direct » ; section « État des nœuds » vide → message d'indisponibilité honnête.
 - `tickets/page.tsx` : badge « Système en direct » affiché en permanence avec une pastille animée (décoratif) → remplacé par l'état réel déduit de `panel_channel`.
 - **Droits d'accès** : `app/dashboard/guild/[guildId]/layout.tsx` **ne vérifiait aucune permission** — n'importe quel utilisateur connecté pouvait ouvrir la configuration de n'importe quel serveur du bot en changeant l'URL. Ajout de `dashboard/lib/discord.ts` (`getManageableGuildIds`, propriétaire / Administrateur / « Gérer le serveur », mémoïsé par requête) utilisé par le layout de guilde **et** par `dashboard/guilds/page.tsx` (logique de filtrage dédupliquée). Si Discord ne répond pas : « Vérification impossible », aucune donnée affichée.
-- Limite connue (non corrigée, voir « reste à faire ») : `NEXT_PUBLIC_DASHBOARD_API_KEY` est exposée au navigateur (les formulaires appellent l'API du bot en direct). La clé étant publique, les routes `/admin/*` et `/guilds/*` restent appelables hors dashboard par qui extrait la clé du bundle.
+- Limite connue à cette date (corrigée le 2026-10-01, entrée ci-dessus) : `NEXT_PUBLIC_DASHBOARD_API_KEY` était exposée au navigateur et donnait accès aux routes API protégées uniquement par clé partagée.
 
 ### 3. Commandes du bot — recensement et cause racine du `play` cassé
 - Inventaire statique : **558 commandes déclarées** (dont 89 groupes, 260 de premier niveau), **aucune collision** de nom ni d'alias au premier niveau, **aucun nom non ASCII**, aucun groupe sans sous-commande (les signalements `__Xxx__`/`app_commands.Group` sont des faux positifs d'analyse).
@@ -341,13 +390,13 @@ d'IPv6 et ne peuvent donc pas emprunter la route IPv6 saine).
 
 **Filet de sécurité appliqué en attendant** (`dashboard/lib/api.ts`) :
 - message d'erreur actionnable (hôte visé + cause) au lieu du seul `fetch failed` brut ;
-- hôte de secours optionnel via `NEXT_PUBLIC_API_URL_FALLBACK` (bascule automatique sur échec
+- hôte de secours optionnel via variable publique d'URL (bascule automatique sur échec
   **réseau** uniquement, avec avertissement en console). Testé en local : bascule effective et message
   explicite vérifiés en rendant `/dashboard` avec un hôte primaire inexistant.
 - Le prérequis DNS reste le vrai correctif.
 
 ### 6. Reste à faire (non bloquant, classé par valeur)
-1. **Sécurité (le plus important)** : passer les appels du dashboard par un proxy serveur (`app/api/bot/[...path]/route.ts`) avec une clé **non publique** (`DASHBOARD_API_KEY`), puis supprimer `NEXT_PUBLIC_DASHBOARD_API_KEY`. Aujourd'hui la clé est dans le bundle navigateur et `/admin/*` n'est pas vérifié côté bot.
+1. **Sécurité (corrigée le 2026-10-01)** : migrer progressivement au proxy serveur signé (`app/api/bot/[...path]/route.ts`), supprimer toutes les variables publiques de clé et vérifier l'autorisation guild/admin. Voir la procédure de déploiement datée ci-dessus.
 2. `maintenance_mode` : l'interrupteur admin enregistre un état que **personne ne lit** (aucun effet). À câbler (refus des commandes non-owner) ou à retirer de l'UI.
 3. Musique : le noeud doit être fourni par un vrai Lavalink v4 ; à valider en prod avec un noeud vivant (`Lavalink` public testé : `lava-v4.ajieblogs.eu.org` **incompatible v4**, `lavalink.jirayu.net` en panne ce jour).
 4. `DELETE /guilds/{id}/welcome` existe côté bot mais n'est appelé par aucune UI (pas de bouton « réinitialiser »).

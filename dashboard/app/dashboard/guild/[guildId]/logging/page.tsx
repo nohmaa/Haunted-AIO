@@ -15,7 +15,7 @@
 import React from "react";
 import { BellRing } from "lucide-react";
 import nextDynamic from "next/dynamic";
-import { api } from "@/lib/api";
+import { api } from "@/lib/api-server";
 import { ModuleUnavailable } from "@/components/dashboard/module-unavailable";
 
 const LoggingForm = nextDynamic(() => import("@/components/dashboard/logging-form").then(mod => mod.LoggingForm), {

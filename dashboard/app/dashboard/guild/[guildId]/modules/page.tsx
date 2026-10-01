@@ -1,6 +1,6 @@
 import React from "react";
 import { LayoutGrid } from "lucide-react";
-import { api } from "@/lib/api";
+import { api } from "@/lib/api-server";
 import { ModulesManager } from "@/components/dashboard/modules-manager";
 
 export const dynamic = "force-dynamic";
@@ -17,7 +17,7 @@ export default async function GuildModulesPage({ params }: { params: Promise<{ g
           Modules du serveur
         </h2>
         <p className="text-slate-400 mt-1">
-          Activez ou désactivez les fonctionnalités de Haunted pour ce serveur. Un module désactivé ne répond plus aux commandes.
+          Les commandes préfixe et slash mappées sont bloquées, et les écouteurs de cog mappés sont ignorés. Les vues interactives et certaines tâches ne sont pas toutes neutralisées par le même interrupteur.
         </p>
       </div>
 

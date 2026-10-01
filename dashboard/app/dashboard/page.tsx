@@ -23,7 +23,7 @@ import {
   FileText,
   LifeBuoy,
 } from "lucide-react";
-import { api } from "@/lib/api";
+import { api } from "@/lib/api-server";
 import { BotInfo, BotStatus } from "@/types/api";
 
 export const dynamic = "force-dynamic";

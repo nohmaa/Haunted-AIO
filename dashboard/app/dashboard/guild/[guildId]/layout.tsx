@@ -28,10 +28,10 @@ import {
   ArrowLeft,
   ShieldAlert
 } from "lucide-react";
-import { api } from "@/lib/api";
+import { api } from "@/lib/api-server";
 import { cn } from "@/lib/utils";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
+import { serverAuthOptions } from "@/lib/auth";
 import { getManageableGuildIds } from "@/lib/discord";
 import { redirect } from "next/navigation";
 
@@ -56,10 +56,10 @@ export default async function GuildLayout({
   // Contrôle d'accès : la clé d'API du bot ne porte aucune identité, donc
   // l'autorisation doit être vérifiée ici, avec les droits Discord réels de
   // l'utilisateur connecté (et non de simples hypothèses côté client).
-  const session = await getServerSession(authOptions);
-  const accessToken = (session as { accessToken?: string } | null)?.accessToken;
+  const session = await getServerSession(serverAuthOptions);
+  const accessToken = (session as typeof session & { accessToken?: string } | null)?.accessToken;
 
-  if (!session || !accessToken) {
+  if (!session || !accessToken || session.error) {
     redirect("/");
   }
 

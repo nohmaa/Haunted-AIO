@@ -24,7 +24,7 @@
 
 ## ✦ Aperçu
 
-Ce dossier contient le bot Discord **Haunted** construit avec `discord.py v2`, accompagné d'un backend `FastAPI` qui alimente le dashboard web. Tout tourne avec une seule commande : `python haunted.py`. Les messages sont en **français** (avec repli anglais) et chaque **module peut être activé/désactivé depuis le dashboard**.
+Ce dossier contient le bot Discord **Haunted** construit avec `discord.py 2.7.1`, accompagné d'un backend `FastAPI 0.141.1` qui alimente le dashboard web. Tout tourne avec une seule commande : `python haunted.py`. Les messages sont principalement en français. Les interrupteurs couvrent les commandes préfixe/slash et les listeners mappés, mais pas encore uniformément tous les composants interactifs et toutes les tâches.
 
 ```
 bot/
@@ -118,10 +118,10 @@ bot/
 <td>
 
 **🌐 Backend API**
-- FastAPI avec authentification par clé API
+- FastAPI avec clé serveur-à-serveur + HMAC daté anti-rejeu du proxy dashboard
 - Limitation de débit (SlowAPI)
 - Journaux de requêtes JSON structurés
-- CORS configuré pour le domaine du dashboard
+- Proxy same-origin dans Next.js ; FastAPI ne dépend plus de CORS pour les flux dashboard
 - Variable `CORS_ORIGINS` pour les domaines supplémentaires
 - Endpoints de modules : `GET/PATCH /guilds/{id}/modules`
 
@@ -159,7 +159,7 @@ bot/
 
 ### 1 — Remplir le `.env` en premier
 
-Créez un fichier `.env` (copié depuis `.env.example`) et remplissez **d'abord** les 4 valeurs obligatoires : `TOKEN` (onglet Bot du portail Discord), `OWNER_IDS` (votre ID Discord), `DASHBOARD_API_KEY` (secret inventé, à recopier côté dashboard), puis le tunnel Cloudflare (`CF_TUNNEL_TOKEN`, `CF_TUNNEL_URL`). Laissez le reste par défaut (voir le modèle annoté dans le README racine) :
+Créez un fichier `.env` (copié depuis `.env.example`) et remplissez **d'abord** les valeurs obligatoires : `TOKEN`, `OWNER_IDS`, `DASHBOARD_API_KEY`, un `DASHBOARD_PROXY_SECRET` distinct (32 octets minimum), puis le tunnel Cloudflare (`CF_TUNNEL_TOKEN`, `CF_TUNNEL_URL`). Configurez les deux secrets aussi côté serveur du dashboard, jamais sous des noms `NEXT_PUBLIC_*`.
 
 ```env
 # ── Cœur ────────────────────────────────────────────────────────────
@@ -182,6 +182,7 @@ EMOJI_SYNC         = "false"
 API_ENABLED        = "true"
 API_PORT           = "8000"
 DASHBOARD_API_KEY  = "changez_ce_secret_robuste"
+DASHBOARD_PROXY_SECRET = "autre_secret_aleatoire_de_32_octets_minimum"
 CORS_ORIGINS       = ""
 
 # ── Tunnel Cloudflare ───────────────────────────────────────────────
@@ -216,7 +217,7 @@ pip install -r requirements.txt
 python haunted.py
 ```
 
-✅ Vérifiez `Loaded & Online!` dans la console et copiez la ligne `NEXT_PUBLIC_API_URL` pour le dashboard.
+✅ Vérifiez `Loaded & Online!` dans la console et copiez l'URL `.../api/v1` pour la variable privée `API_URL` du dashboard.
 
 ---
 
@@ -236,6 +237,7 @@ python haunted.py
 | `API_ENABLED` | `true` | Démarrer le backend FastAPI du dashboard |
 | `API_PORT` | `8000` | Port d'écoute du backend |
 | `DASHBOARD_API_KEY` | — | Secret partagé entre l'API du bot et le dashboard |
+| `DASHBOARD_PROXY_SECRET` | — | Secret HMAC distinct pour les requêtes signées par le serveur dashboard (32 octets minimum) |
 | `CORS_ORIGINS` | _(vide)_ | Origines CORS supplémentaires, séparées par des virgules |
 | `WEBHOOK_URL` | — | Webhook Discord pour les journaux de commandes |
 | `TUNNEL_ENABLED` | `true` | Exposer l'API en HTTPS via tunnel Cloudflare |
@@ -251,7 +253,7 @@ Le registre unique `api/modules_registry.py` définit les 19 modules (`antinuke`
 
 - État stocké par serveur dans `db/modules.db` (`utils/modules.py`) — tout est **activé par défaut**.
 - Endpoints : `GET /api/v1/guilds/{guild_id}/modules`, `PATCH /api/v1/guilds/{guild_id}/modules` (`{"modules": {"leveling": false}}`), `PATCH /api/v1/guilds/{guild_id}/modules/{clé}` (`{"enabled": false}`).
-- Garde côté bot : `core/zyrox.py → invoke()` refuse les commandes des modules désactivés (message FR via `utils/i18n.py`). Chaque cog porte un attribut `module_key` ; la correspondance nom de cog → module est dans `COG_MODULE_MAP`.
+- Garde côté bot : `core/zyrox.py → invoke()` bloque les commandes préfixe, `tree.interaction_check` bloque les commandes slash et les listeners des cogs mappés sont ignorés lorsque le module est désactivé. Les composants interactifs partagés et les tâches déjà planifiées doivent encore être contrôlés par fonctionnalité ; cette désactivation n'est pas une garantie universelle de neutralisation.
 
 ---
 
@@ -287,7 +289,7 @@ Utilise **pycloudflared** — télécharge le binaire `cloudflared` automatiquem
 ```
 ◈ Tunnel: cloudflared binary ready — starting tunnel on port 8000…
 ◈ Tunnel: API is live at  https://api.votredomaine.com
-  ↳ NEXT_PUBLIC_API_URL = https://api.votredomaine.com/api/v1
+  ↳ API_URL = https://api.votredomaine.com/api/v1  (dashboard server)
 ```
 
 `TUNNEL_ENABLED=false` pour désactiver.
@@ -353,8 +355,8 @@ Loaded & Online!
 |---|---|
 | Le bot ne démarre pas | Vérifiez `TOKEN` et les intents dans le portail développeur |
 | Musique hors service | Vérifiez `LAVALINK_HOST`, `LAVALINK_SECURE`, `LAVALINK_PORT` |
-| Le dashboard n'atteint pas l'API | Vérifiez `API_ENABLED=true` et `NEXT_PUBLIC_API_URL` côté dashboard |
-| Erreurs CORS | Ajoutez l'URL de votre dashboard dans `CORS_ORIGINS` (`.env`) |
+| Le dashboard n'atteint pas l'API | Vérifiez `API_ENABLED=true`, `API_URL` et les secrets privés côté serveur dashboard |
+| Erreurs proxy | Vérifiez `DASHBOARD_API_KEY`, `DASHBOARD_PROXY_SECRET` et la joignabilité du tunnel depuis le serveur dashboard |
 | Emojis affichés en texte brut | Les emojis sont désormais des emojis Unicode standards — vérifiez la version de Discord ou ajoutez vos emojis custom avec `EMOJI_SYNC=true` |
 | Tunnel ne démarre pas | Vérifiez `CF_TUNNEL_TOKEN` et que `pycloudflared` est installé |
 | Ajouter un propriétaire | Ajoutez son ID dans `OWNER_IDS` (`.env`) — sans toucher au code |

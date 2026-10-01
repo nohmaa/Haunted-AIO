@@ -214,6 +214,7 @@ export function AdminContent() {
           <div className="p-8 flex-1 space-y-6">
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 pl-1">Mode maintenance</label>
+              <p className="text-xs text-slate-500">Bloque les commandes préfixe et slash sur tous les serveurs. Les propriétaires du bot restent autorisés.</p>
               <button 
                 onClick={handleToggleMaintenance}
                 disabled={saving}

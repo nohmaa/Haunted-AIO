@@ -6,10 +6,13 @@ désactivés depuis le dashboard sont stockés à `enabled = 0`.
 
 import aiosqlite
 import os
+import time
 
 from api.modules_registry import MODULE_KEYS
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "db", "modules.db")
+_STATE_CACHE_TTL_SECONDS = 1.0
+_STATE_CACHE: dict[int, tuple[float, dict[str, bool]]] = {}
 
 
 async def _ensure_table(db) -> None:
@@ -27,6 +30,11 @@ async def _ensure_table(db) -> None:
 
 async def get_modules_state(guild_id: int) -> dict:
     """Retourne {clé: bool} pour tous les modules connus (défaut True)."""
+    now = time.monotonic()
+    cached = _STATE_CACHE.get(guild_id)
+    if cached is not None and now - cached[0] < _STATE_CACHE_TTL_SECONDS:
+        return cached[1].copy()
+
     state = {key: True for key in MODULE_KEYS}
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     async with aiosqlite.connect(DB_PATH) as db:
@@ -39,6 +47,7 @@ async def get_modules_state(guild_id: int) -> dict:
             async for module_key, enabled in cursor:
                 if module_key in state:
                     state[module_key] = bool(enabled)
+    _STATE_CACHE[guild_id] = (time.monotonic(), state.copy())
     return state
 
 
@@ -61,6 +70,7 @@ async def set_module_state(guild_id: int, module_key: str, enabled: bool) -> Non
             (guild_id, module_key, 1 if enabled else 0),
         )
         await db.commit()
+    _STATE_CACHE.pop(guild_id, None)
 
 
 async def set_modules_bulk(guild_id: int, modules: dict) -> dict:
@@ -77,4 +87,10 @@ async def set_modules_bulk(guild_id: int, modules: dict) -> dict:
                 (guild_id, key, 1 if enabled else 0),
             )
         await db.commit()
+    _STATE_CACHE.pop(guild_id, None)
     return await get_modules_state(guild_id)
+
+
+def clear_modules_cache_for_tests() -> None:
+    """Reset process-local module state between isolated tests."""
+    _STATE_CACHE.clear()

@@ -251,6 +251,17 @@ export interface AutoRoleUpdate {
   humans?: string[];
 }
 
+export interface TrackingConfig { guild_id: string; channel_id: number | null; }
+export interface J2CConfig { guild_id: string; join_channel_id: string | null; control_channel_id: string | null; category_id: string | null; }
+export interface JoinDMConfig { guild_id: string; message: string | null; }
+export interface CustomRoleConfig { guild_id: string; staff: string | null; girl: string | null; vip: string | null; guest: string | null; frnd: string | null; reqrole: string | null; }
+export interface AutoReactTrigger { trigger: string; emojis: string; }
+export interface AutoReactConfig { guild_id: string; triggers: AutoReactTrigger[]; }
+export interface InvcConfig { guild_id: string; role_id: string | null; enabled: boolean; }
+export interface ReactionRoleEntry { message_id: string; emoji: string; role_id: string; }
+export interface RRConfig { guild_id: string; dm_enabled: boolean; roles: ReactionRoleEntry[]; }
+export interface InvitesLeaderboard { guild_id: string; data: Array<{ user_id: string; total: number; fake: number; left: number; rejoin: number }>; }
+
 export interface ModuleState {
   key: string;
   label: string;
